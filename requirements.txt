@@ -1,0 +1,6 @@
+openai
+z3-solver
+requests
+python-dotenv
+pandas
+matplotlib

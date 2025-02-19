@@ -1,0 +1,38 @@
+{
+    "puzzle_1": {
+        "text_description": "There are five houses in a row. Each house has a different color and the person living there is from a different country. The Norwegian lives in the first house. The Brit lives in the red house. The Swede owns a dog. The Dane drinks tea. Who owns the zebra?",
+        "z3_format": {
+            "variables": ["House1", "House2", "House3", "House4", "House5"],
+            "domains": ["Red", "Blue", "Green", "Yellow", "White"],
+            "constraints": [
+                {"type": "eq", "var1": "Norwegian", "var2": "House1"},
+                {"type": "neighbor", "var1": "Blue", "var2": "Norwegian"},
+                {"type": "eq", "var1": "Brit", "var2": "Red"},
+                {"type": "eq", "var1": "Swede", "var2": "Dog"},
+                {"type": "eq", "var1": "Dane", "var2": "Tea"}
+            ]
+        },
+        "ground_truth": [
+            "House1 = Norwegian",
+            "House2 = Blue",
+            "House3 = Brit",
+            "House4 = German",
+            "House5 = Zebra"
+        ]
+    },
+    "puzzle_2": {
+        "text_description": "There are two houses. One is red, the other is blue. Person A lives in the red house, and Person B lives in the blue house. Who lives in each house?",
+        "z3_format": {
+            "variables": ["House1", "House2"],
+            "domains": ["Red", "Blue"],
+            "constraints": [
+                {"type": "eq", "var1": "Person_A", "var2": "Red"},
+                {"type": "eq", "var1": "Person_B", "var2": "Blue"}
+            ]
+        },
+        "ground_truth": [
+            "House1 = Person A",
+            "House2 = Person B"
+        ]
+    }
+}
