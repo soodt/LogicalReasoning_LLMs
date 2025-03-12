@@ -20,9 +20,6 @@ class ZebraSolver:
                 self.item_vars[item] = Int(item)
 
     def add_constraints(self):
-        """
-        Interpret constraints from self.constraints into Z3.
-        """
         # 1) distinct_categories & range
         for c in self.constraints:
             if c["type"] == "distinct_categories":

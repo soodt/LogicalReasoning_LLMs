@@ -96,5 +96,501 @@
         "total_expected": 2,
         "z3_solution": "N/A",
         "llm_z3_constraints": "Error: Could not parse LLM's Z3 conversion."
+    },
+    {
+        "timestamp": "2025-03-12 18:29:12",
+        "puzzle": "puzzle_2",
+        "variant": "full_test",
+        "prompt": "There are two houses. One is red, the other is blue. Person A lives in the red house, and Person B lives in the blue house. Who lives in each house?",
+        "response": "{\"houses_count\": 2, \"categories\": {\"colors\": [\"Red\", \"Blue\"], \"people\": [\"A\", \"B\"]}, \"constraints\": [{\"type\": \"distinct_categories\", \"categories\": [\"colors\", \"people\"]}, {\"type\": \"range\", \"from\": 1, \"to\": 2}, {\"type\": \"eq\", \"var1\": \"A\", \"var2\": \"Red\"}, {\"type\": \"eq\", \"var1\": \"B\", \"var2\": \"Blue\"}, {\"type\": \"neighbor\", \"var1\": \"A\", \"var2\": \"B\"}]}",
+        "response_time": 0,
+        "token_usage": "N/A",
+        "accuracy": 0.0,
+        "correct_fields": 0,
+        "total_fields": 1,
+        "z3_solution": {
+            "Red": 1,
+            "Blue": 2,
+            "PersonA": 1,
+            "PersonB": 2
+        },
+        "llm_z3_constraints": {
+            "houses_count": 2,
+            "categories": {
+                "colors": [
+                    "Red",
+                    "Blue"
+                ],
+                "people": [
+                    "A",
+                    "B"
+                ]
+            },
+            "constraints": [
+                {
+                    "type": "distinct_categories",
+                    "categories": [
+                        "colors",
+                        "people"
+                    ]
+                },
+                {
+                    "type": "range",
+                    "from": 1,
+                    "to": 2
+                },
+                {
+                    "type": "eq",
+                    "var1": "A",
+                    "var2": "Red"
+                },
+                {
+                    "type": "eq",
+                    "var1": "B",
+                    "var2": "Blue"
+                },
+                {
+                    "type": "neighbor",
+                    "var1": "A",
+                    "var2": "B"
+                }
+            ]
+        }
+    },
+    {
+        "timestamp": "2025-03-12 20:27:16",
+        "puzzle": "puzzle_2",
+        "variant": "z3_conversion",
+        "prompt": "There are two houses. One is red, the other is blue. Person A lives in the red house, and Person B lives in the blue house. Who lives in each house?",
+        "response": "{\"houses_count\": 2, \"categories\": {\"colors\": [\"Red\", \"Blue\"], \"people\": [\"A\", \"B\"]}, \"constraints\": [{\"type\": \"distinct_categories\", \"categories\": [\"colors\", \"people\"]}, {\"type\": \"range\", \"from\": 1, \"to\": 2}, {\"type\": \"eq\", \"var1\": \"A\", \"var2\": \"Red\"}, {\"type\": \"eq\", \"var1\": \"B\", \"var2\": \"Blue\"}, {\"type\": \"neighbor\", \"var1\": \"A\", \"var2\": \"B\"}]}",
+        "response_time": 1.68,
+        "token_usage": 658,
+        "accuracy": 0.625,
+        "correct_fields": 5,
+        "total_fields": 8,
+        "z3_solution": {
+            "Red": 1,
+            "Blue": 2,
+            "PersonA": 1,
+            "PersonB": 2
+        },
+        "llm_z3_constraints": {
+            "houses_count": 2,
+            "categories": {
+                "colors": [
+                    "Red",
+                    "Blue"
+                ],
+                "people": [
+                    "A",
+                    "B"
+                ]
+            },
+            "constraints": [
+                {
+                    "type": "distinct_categories",
+                    "categories": [
+                        "colors",
+                        "people"
+                    ]
+                },
+                {
+                    "type": "range",
+                    "from": 1,
+                    "to": 2
+                },
+                {
+                    "type": "eq",
+                    "var1": "A",
+                    "var2": "Red"
+                },
+                {
+                    "type": "eq",
+                    "var1": "B",
+                    "var2": "Blue"
+                },
+                {
+                    "type": "neighbor",
+                    "var1": "A",
+                    "var2": "B"
+                }
+            ]
+        },
+        "llm_z3_solver_result": {
+            "Red": 2,
+            "Blue": 1,
+            "A": 2,
+            "B": 1
+        }
+    },
+    {
+        "timestamp": "2025-03-12 21:24:51",
+        "puzzle": "puzzle_2",
+        "variant": "z3_conversion",
+        "prompt": "There are two houses. One is red, the other is blue. Person A lives in the red house, and Person B lives in the blue house. Who lives in each house?",
+        "response": "{\"houses_count\": 2, \"categories\": {\"colors\": [\"Red\", \"Blue\"], \"people\": [\"A\", \"B\"]}, \"constraints\": [{\"type\": \"distinct_categories\", \"categories\": [\"colors\", \"people\"]}, {\"type\": \"range\", \"from\": 1, \"to\": 2}, {\"type\": \"eq\", \"var1\": \"A\", \"var2\": \"Red\"}, {\"type\": \"eq\", \"var1\": \"B\", \"var2\": \"Blue\"}, {\"type\": \"neighbor\", \"var1\": \"A\", \"var2\": \"B\"}]}",
+        "response_time": 1.74,
+        "token_usage": 658,
+        "accuracy": 0.625,
+        "correct_fields": 5,
+        "total_fields": 8,
+        "z3_solution": {
+            "Red": 1,
+            "Blue": 2,
+            "PersonA": 1,
+            "PersonB": 2
+        },
+        "llm_z3_constraints": {
+            "houses_count": 2,
+            "categories": {
+                "colors": [
+                    "Red",
+                    "Blue"
+                ],
+                "people": [
+                    "A",
+                    "B"
+                ]
+            },
+            "constraints": [
+                {
+                    "type": "distinct_categories",
+                    "categories": [
+                        "colors",
+                        "people"
+                    ]
+                },
+                {
+                    "type": "range",
+                    "from": 1,
+                    "to": 2
+                },
+                {
+                    "type": "eq",
+                    "var1": "A",
+                    "var2": "Red"
+                },
+                {
+                    "type": "eq",
+                    "var1": "B",
+                    "var2": "Blue"
+                },
+                {
+                    "type": "neighbor",
+                    "var1": "A",
+                    "var2": "B"
+                }
+            ]
+        },
+        "llm_z3_solver_result": {
+            "Red": 2,
+            "Blue": 1,
+            "A": 2,
+            "B": 1
+        },
+        "groundTruth_z3": {
+            "houses_count": 2,
+            "categories": {
+                "colors": [
+                    "Red",
+                    "Blue"
+                ],
+                "people": [
+                    "PersonA",
+                    "PersonB"
+                ]
+            },
+            "constraints": [
+                {
+                    "type": "distinct_categories",
+                    "categories": [
+                        "colors",
+                        "people"
+                    ]
+                },
+                {
+                    "type": "range",
+                    "from": 1,
+                    "to": 2
+                },
+                {
+                    "type": "eq",
+                    "var1": "PersonA",
+                    "var2": "Red"
+                },
+                {
+                    "type": "eq",
+                    "var1": "PersonB",
+                    "var2": "Blue"
+                }
+            ]
+        }
+    },
+    {
+        "timestamp": "2025-03-12 21:26:03",
+        "puzzle": "puzzle_2",
+        "variant": "z3_conversion",
+        "prompt": "There are two houses. One is red, the other is blue. Person A lives in the red house, and Person B lives in the blue house. Who lives in each house?",
+        "response": "{\"houses_count\": 2, \"categories\": {\"colors\": [\"Red\", \"Blue\"], \"people\": [\"PersonA\", \"PersonB\"]}, \"constraints\": [{\"type\": \"distinct_categories\", \"categories\": [\"colors\", \"people\"]}, {\"type\": \"range\", \"from\": 1, \"to\": 2}, {\"type\": \"eq\", \"var1\": \"PersonA\", \"var2\": \"Red\"}, {\"type\": \"eq\", \"var1\": \"PersonB\", \"var2\": \"Blue\"}, {\"type\": \"neighbor\", \"var1\": \"PersonA\", \"var2\": \"PersonB\"}]}",
+        "response_time": 2.22,
+        "token_usage": 688,
+        "accuracy": 1.0,
+        "correct_fields": 8,
+        "total_fields": 8,
+        "z3_solution": {
+            "Red": 1,
+            "Blue": 2,
+            "PersonA": 1,
+            "PersonB": 2
+        },
+        "llm_z3_constraints": {
+            "houses_count": 2,
+            "categories": {
+                "colors": [
+                    "Red",
+                    "Blue"
+                ],
+                "people": [
+                    "PersonA",
+                    "PersonB"
+                ]
+            },
+            "constraints": [
+                {
+                    "type": "distinct_categories",
+                    "categories": [
+                        "colors",
+                        "people"
+                    ]
+                },
+                {
+                    "type": "range",
+                    "from": 1,
+                    "to": 2
+                },
+                {
+                    "type": "eq",
+                    "var1": "PersonA",
+                    "var2": "Red"
+                },
+                {
+                    "type": "eq",
+                    "var1": "PersonB",
+                    "var2": "Blue"
+                },
+                {
+                    "type": "neighbor",
+                    "var1": "PersonA",
+                    "var2": "PersonB"
+                }
+            ]
+        },
+        "llm_z3_solver_result": {
+            "Red": 2,
+            "Blue": 1,
+            "PersonA": 2,
+            "PersonB": 1
+        },
+        "groundTruth_z3": {
+            "houses_count": 2,
+            "categories": {
+                "colors": [
+                    "Red",
+                    "Blue"
+                ],
+                "people": [
+                    "PersonA",
+                    "PersonB"
+                ]
+            },
+            "constraints": [
+                {
+                    "type": "distinct_categories",
+                    "categories": [
+                        "colors",
+                        "people"
+                    ]
+                },
+                {
+                    "type": "range",
+                    "from": 1,
+                    "to": 2
+                },
+                {
+                    "type": "eq",
+                    "var1": "PersonA",
+                    "var2": "Red"
+                },
+                {
+                    "type": "eq",
+                    "var1": "PersonB",
+                    "var2": "Blue"
+                }
+            ]
+        }
+    },
+    {
+        "timestamp": "2025-03-12 21:26:28",
+        "puzzle": "puzzle_2",
+        "variant": "full_test",
+        "prompt": "There are two houses. One is red, the other is blue. Person A lives in the red house, and Person B lives in the blue house. Who lives in each house?",
+        "response": "{\"houses\":[{\"House\":1, \"Color\":\"Red\", \"Person\":\"A\"},{\"House\":2, \"Color\":\"Blue\", \"Person\":\"B\"}]}",
+        "response_time": 0.73,
+        "token_usage": 177,
+        "accuracy": 1.0,
+        "correct_fields": 4,
+        "total_fields": 4
+    },
+    {
+        "timestamp": "2025-03-12 21:27:32",
+        "puzzle": "puzzle_3",
+        "variant": "full_test",
+        "prompt": "There are 3 houses, numbered 1 to 3 from left to right. Each house is occupied by a different person. Each house has a unique attribute for each characteristic:\n- Names: Peter, Eric, Arnold\n- Drinks: tea, water, milk\n\n## Clues\n1. Peter is in the second house.\n2. Arnold is directly left of the one who only drinks water.\n3. The one who only drinks water is directly left of the person who likes milk.\n\nWe want to know who lives in each house and who drinks what.",
+        "response": "{\"houses\":[{\"House\":1,\"Name\":\"Arnold\",\"Drink\":\"water\"},{\"House\":2,\"Name\":\"Peter\",\"Drink\":\"tea\"},{\"House\":3,\"Name\":\"Eric\",\"Drink\":\"milk\"}]}",
+        "response_time": 0.81,
+        "token_usage": 280,
+        "accuracy": 0.6666666666666666,
+        "correct_fields": 4,
+        "total_fields": 6,
+        "ground_Truth": {
+            "houses": [
+                {
+                    "House": 1,
+                    "Name": "Arnold",
+                    "Drink": "tea"
+                },
+                {
+                    "House": 2,
+                    "Name": "Peter",
+                    "Drink": "water"
+                },
+                {
+                    "House": 3,
+                    "Name": "Eric",
+                    "Drink": "milk"
+                }
+            ]
+        }
+    },
+    {
+        "timestamp": "2025-03-12 21:29:34",
+        "puzzle": "puzzle_3",
+        "variant": "z3_conversion",
+        "prompt": "There are 3 houses, numbered 1 to 3 from left to right. Each house is occupied by a different person. Each house has a unique attribute for each characteristic:\n- Names: Peter, Eric, Arnold\n- Drinks: tea, water, milk\n\n## Clues\n1. Peter is in the second house.\n2. Arnold is directly left of the one who only drinks water.\n3. The one who only drinks water is directly left of the person who likes milk.\n\nWe want to know who lives in each house and who drinks what.",
+        "response": "{\"houses_count\": 3, \"categories\": {\"names\": [\"Peter\", \"Eric\", \"Arnold\"], \"drinks\": [\"tea\", \"water\", \"milk\"]}, \"constraints\": [{\"type\": \"distinct_categories\", \"categories\": [\"names\", \"drinks\"]}, {\"type\": \"eq\", \"var1\": \"Peter\", \"var2\": \"Eric\", \"offset\": 1}, {\"type\": \"eq\", \"var1\": \"Eric\", \"var2\": \"Arnold\", \"offset\": -1}, {\"type\": \"eq\", \"var1\": \"Arnold\", \"var2\": \"water\", \"offset\": -2}, {\"type\": \"eq\", \"var1\": \"Peter\", \"var2\": \"tea\", \"offset\": 0}, {\"type\": \"eq\", \"var1\": \"Arnold\", \"var2\": \"milk\", \"offset\": -1}]}",
+        "response_time": 2.57,
+        "token_usage": 861,
+        "accuracy": 0.5555555555555556,
+        "correct_fields": 5,
+        "total_fields": 9,
+        "z3_solution": {
+            "Peter": 2,
+            "Eric": 3,
+            "Arnold": 1,
+            "tea": 1,
+            "water": 2,
+            "milk": 3
+        },
+        "llm_z3_constraints": {
+            "houses_count": 3,
+            "categories": {
+                "names": [
+                    "Peter",
+                    "Eric",
+                    "Arnold"
+                ],
+                "drinks": [
+                    "tea",
+                    "water",
+                    "milk"
+                ]
+            },
+            "constraints": [
+                {
+                    "type": "distinct_categories",
+                    "categories": [
+                        "names",
+                        "drinks"
+                    ]
+                },
+                {
+                    "type": "eq",
+                    "var1": "Peter",
+                    "var2": "Eric",
+                    "offset": 1
+                },
+                {
+                    "type": "eq",
+                    "var1": "Eric",
+                    "var2": "Arnold",
+                    "offset": -1
+                },
+                {
+                    "type": "eq",
+                    "var1": "Arnold",
+                    "var2": "water",
+                    "offset": -2
+                },
+                {
+                    "type": "eq",
+                    "var1": "Peter",
+                    "var2": "tea",
+                    "offset": 0
+                },
+                {
+                    "type": "eq",
+                    "var1": "Arnold",
+                    "var2": "milk",
+                    "offset": -1
+                }
+            ]
+        },
+        "llm_z3_solver_result": null,
+        "groundTruth_z3": {
+            "houses_count": 3,
+            "categories": {
+                "names": [
+                    "Peter",
+                    "Eric",
+                    "Arnold"
+                ],
+                "drinks": [
+                    "tea",
+                    "water",
+                    "milk"
+                ]
+            },
+            "constraints": [
+                {
+                    "type": "distinct_categories",
+                    "categories": [
+                        "names",
+                        "drinks"
+                    ]
+                },
+                {
+                    "type": "range",
+                    "from": 1,
+                    "to": 3
+                },
+                {
+                    "type": "eq",
+                    "var1": "Peter",
+                    "var2int": 2
+                },
+                {
+                    "type": "eq_offset",
+                    "var1": "water",
+                    "var2": "Arnold",
+                    "offset": 1
+                },
+                {
+                    "type": "eq_offset",
+                    "var1": "milk",
+                    "var2": "water",
+                    "offset": 1
+                }
+            ]
+        }
     }
 ]

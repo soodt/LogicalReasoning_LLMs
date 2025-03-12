@@ -13,16 +13,13 @@ class MistralSolver:
         self.url = "https://api.mistral.ai/v1/chat/completions"
 
     def query_llm(self, prompt):
-        """
-        Queries the LLM API and returns the response, response time, and token usage.
-        """
         start_time = time.time()
         headers = {"Authorization": f"Bearer {self.api_key}", "Content-Type": "application/json"}
 
         data = {
             "model": "mistral-tiny",
             "messages": [
-                {"role": "system", "content": "Solve this logic puzzle and output ONLY the answer in this exact format:\n\nHouse1 = Person A\nHouse2 = Person B\n\nDo NOT include any explanations, reasoning, or extra text. Only output the answers in this format."},
+                {"role": "system", "content": "Solve this logic puzzle and output ONLY the answer in the exact format described below:Do NOT include any explanations, reasoning, or extra text. Only output the answers in the described format."},
                 {"role": "user", "content": prompt}
             ],
             "temperature": 0.3
@@ -61,7 +58,12 @@ class MistralSolver:
         Uses LLM to solve the logic puzzle from text.
         Returns the response, response time, and token usage.
         """
-        return self.query_llm(puzzle_text)
+        prompt = (
+            "Solve the following puzzle by labeling each house from 1..N left to right, and produce a JSON, DO NOT include any explanations or commentory:\n"
+            "{\"houses\":[{\"House\":1, ...}, ...]}\n\nPuzzle:\n"
+            f"{puzzle_text}"
+        )
+        return self.query_llm(prompt)
 
     def convert_to_z3_format(self, puzzle_text):
         """

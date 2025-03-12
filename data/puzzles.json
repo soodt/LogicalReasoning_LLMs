@@ -12,19 +12,19 @@
             },
             "constraints": [
                 {
-                "type": "distinct_categories",
-                "categories": [
-                    "nationalities",
-                    "colors",
-                    "pets",
-                    "drinks",
-                    "cigarettes"
-                ]
+                    "type": "distinct_categories",
+                    "categories": [
+                        "nationalities",
+                        "colors",
+                        "pets",
+                        "drinks",
+                        "cigarettes"
+                    ]
                 },
                 {
-                "type": "range",
-                "from": 1,
-                "to": 5
+                    "type": "range",
+                    "from": 1,
+                    "to": 5
                 },
                 {"type": "eq", "var1": "Englishman", "var2": "Red"},
                 {"type": "eq", "var1": "Spaniard", "var2": "Dog"},
@@ -42,15 +42,53 @@
                 {"type": "neighbor", "var1": "Norwegian", "var2": "Blue"}
             ]
         },
-        "ground_truth": [
-            "House1 = Norwegian",
-            "House2 = Blue",
-            "House3 = Brit",
-            "House4 = German",
-            "House5 = Zebra"
-        ]
+        "ground_truth": {
+            "houses": [
+                {
+                    "House": 1,
+                    "Nationality": "Norwegian",
+                    "Color": "Yellow",
+                    "Pet": "Fox",
+                    "Drink": "Water",
+                    "Cigarette": "Kools"
+                },
+                {
+                    "House": 2,
+                    "Nationality": "Ukrainian",
+                    "Color": "Blue",
+                    "Pet": "Horse",
+                    "Drink": "Tea",
+                    "Cigarette": "Chesterfields"
+                },
+                {
+                    "House": 3,
+                    "Nationality": "Englishman",
+                    "Color": "Red",
+                    "Pet": "Snails",
+                    "Drink": "Milk",
+                    "Cigarette": "OldGold"
+                },
+                {
+                    "House": 4,
+                    "Nationality": "Japanese",
+                    "Color": "Green",
+                    "Pet": "Zebra",
+                    "Drink": "Coffee",
+                    "Cigarette": "Parliaments"
+                },
+                {
+                    "House": 5,
+                    "Nationality": "Spaniard",
+                    "Color": "Ivory",
+                    "Pet": "Dog",
+                    "Drink": "OrangeJuice",
+                    "Cigarette": "LuckyStrike"
+                }
+            ]
+        }
     },
-   "puzzle_2": {
+
+    "puzzle_2": {
         "text_description": "There are two houses. One is red, the other is blue. Person A lives in the red house, and Person B lives in the blue house. Who lives in each house?",
         "z3_format": {
             "houses_count": 2,
@@ -60,23 +98,34 @@
             },
             "constraints": [
                 {
-                "type": "distinct_categories",
-                "categories": ["colors", "people"]
+                    "type": "distinct_categories",
+                    "categories": ["colors", "people"]
                 },
                 {
-                "type": "range",
-                "from": 1,
-                "to": 2
+                    "type": "range",
+                    "from": 1,
+                    "to": 2
                 },
                 {"type": "eq", "var1": "PersonA", "var2": "Red"},
                 {"type": "eq", "var1": "PersonB", "var2": "Blue"}
             ]
         },
-        "ground_truth": [
-            "House1 = Person A",
-            "House2 = Person B"
-        ]
+        "ground_truth": {
+            "houses": [
+                {
+                    "House": 1,
+                    "Person": "A",
+                    "Color": "Red"
+                },
+                {
+                    "House": 2,
+                    "Person": "B",
+                    "Color": "Blue"
+                }
+            ]
+        }
     },
+
     "puzzle_3": {
         "text_description": "There are 3 houses, numbered 1 to 3 from left to right. Each house is occupied by a different person. Each house has a unique attribute for each characteristic:\n- Names: Peter, Eric, Arnold\n- Drinks: tea, water, milk\n\n## Clues\n1. Peter is in the second house.\n2. Arnold is directly left of the one who only drinks water.\n3. The one who only drinks water is directly left of the person who likes milk.\n\nWe want to know who lives in each house and who drinks what.",
         "z3_format": {
@@ -110,44 +159,90 @@
                 }
             ]
         },
-        "ground_truth": [
-            "House1 = Arnold, tea",
-            "House2 = Peter, water",
-            "House3 = Eric, milk"
-        ]
+        "ground_truth": {
+            "houses": [
+                {
+                    "House": 1,
+                    "Name": "Arnold",
+                    "Drink": "tea"
+                },
+                {
+                    "House": 2,
+                    "Name": "Peter",
+                    "Drink": "water"
+                },
+                {
+                    "House": 3,
+                    "Name": "Eric",
+                    "Drink": "milk"
+                }
+            ]
+        }
     },
 
     "puzzle_4": {
-        "text_description": "There are 5 houses, numbered 1 to 5 from left to right, as seen from across the street. Each house is occupied by a different person. Each house has a unique attribute for these characteristics:\n- Each person has a unique name: `Peter`, `Alice`, `Bob`, `Eric`, `Arnold`\n- The people are of nationalities: `norwegian`, `german`, `dane`, `brit`, `swede`\n- People have unique favorite book genres: `fantasy`, `biography`, `romance`, `mystery`, `science fiction`\n- Everyone has something unique for lunch: `stir fry`, `grilled cheese`, `pizza`, `spaghetti`, `stew`\n- Each person has a favorite color: `red`, `green`, `blue`, `yellow`, `white`\n- The people keep unique animals: `bird`, `dog`, `cat`, `horse`, `fish`\n\n## Clues:\n1. The person who loves fantasy books is the Norwegian.\n2. The cat lover and the person who loves biography books are next to each other.\n3. The German is Bob.\n4. The person who loves yellow is Bob.\n5. The person whose favorite color is green is Peter.\n6. There is one house between the Dane and the person who is a pizza lover.\n7. The person who loves blue is somewhere to the left of the Dane.\n8. The person who loves eating grilled cheese is somewhere to the left of the Norwegian.\n9. The person who loves the spaghetti eater is Peter.\n10. The person who keeps horses is Alice.\n11. The fish enthusiast is directly left of the person who loves science fiction books.\n12. There is one house between the Norwegian and Arnold.\n13. The person who loves romance books is the British person.\n14. There are two houses between the Norwegian and Alice.\n15. The bird keeper is the person whose favorite color is red.\n16. The dog owner is directly left of the fish enthusiast.\n17. The person who loves the stew is the Norwegian.\n",
+        "text_description": "There are 4 houses in a row, numbered 1 to 4 (left to right). Each house is occupied by a different person and has unique attributes: names (Eric, Arnold, Alice, Peter), mothers (Holly, Kailyn, Aniya, Janelle), birthdays (april, feb, sept, jan), and house styles (ranch, colonial, victorian, craftsman).\n\nClues:\n1. Peter is the person whose birthday is in February.\n2. The person whose birthday is in February is not in the fourth house.\n3. The person whose birthday is in January is somewhere to the right of the person in a ranch-style home.\n4. The person whose birthday is in January is directly left of Eric.\n5. The person in a ranch-style home is the person whose birthday is in April.\n6. The person whose mother's name is Janelle is the person whose birthday is in September.\n7. The person in a ranch-style home and the person whose mother's name is Kailyn are next to each other.\n8. Arnold is the person whose mother's name is Holly.\n9. The person whose mother's name is Kailyn is directly left of the person residing in a Victorian house.\n10. The person whose birthday is in January is the person in a Craftsman-style house.\n",
         "z3_format": {
-            "houses_count": 5,
+            "houses_count": 4,
             "categories": {
-                "names": ["Peter", "Alice", "Bob", "Eric", "Arnold"],
-                "nationalities": ["norwegian", "german", "dane", "brit", "swede"],
-                "book_genres": ["fantasy", "biography", "romance", "mystery", "science fiction"],
-                "food": ["stir fry", "grilled cheese", "pizza", "spaghetti", "stew"],
-                "colors": ["red", "green", "blue", "yellow", "white"],
-                "animals": ["bird", "dog", "cat", "horse", "fish"]
+                "names": ["Eric", "Arnold", "Alice", "Peter"],
+                "mothers": ["Holly", "Kailyn", "Aniya", "Janelle"],
+                "birthdays": ["april", "feb", "sept", "jan"],
+                "house_styles": ["ranch", "colonial", "victorian", "craftsman"]
             },
             "constraints": [
                 {
                     "type": "distinct_categories",
-                    "categories": [
-                        "names",
-                        "nationalities",
-                        "book_genres",
-                        "food",
-                        "colors",
-                        "animals"
-                    ]
+                    "categories": ["names", "mothers", "birthdays", "house_styles"]
                 },
                 {
                     "type": "range",
                     "from": 1,
-                    "to": 5
-                }
+                    "to": 4
+                },
+                { "type": "eq", "var1": "Peter", "var2": "feb" },
+                { "type": "neq", "var1": "feb", "var2int": 4 },
+                { "type": "left", "var1": "ranch", "var2": "jan" },
+                { "type": "eq_offset", "var1": "Eric", "var2": "jan", "offset": 1 },
+                { "type": "eq", "var1": "ranch", "var2": "april" },
+                { "type": "eq", "var1": "Janelle", "var2": "sept" },
+                { "type": "neighbor", "var1": "ranch", "var2": "Kailyn" },
+                { "type": "eq", "var1": "Arnold", "var2": "Holly" },
+                { "type": "eq_offset", "var1": "victorian", "var2": "Kailyn", "offset": 1 },
+                { "type": "eq", "var1": "jan", "var2": "craftsman" }
             ]
         },
-        "ground_truth": []
+        "ground_truth": {
+            "houses": [
+                {
+                    "House": 1,
+                    "Name": "Peter",
+                    "Mother": "Aniya",
+                    "Birthday": "feb",
+                    "HouseStyle": "colonial"
+                },
+                {
+                    "House": 2,
+                    "Name": "Arnold",
+                    "Mother": "Holly",
+                    "Birthday": "april",
+                    "HouseStyle": "ranch"
+                },
+                {
+                    "House": 3,
+                    "Name": "Alice",
+                    "Mother": "Kailyn",
+                    "Birthday": "jan",
+                    "HouseStyle": "craftsman"
+                },
+                {
+                    "House": 4,
+                    "Name": "Eric",
+                    "Mother": "Janelle",
+                    "Birthday": "sept",
+                    "HouseStyle": "victorian"
+                }
+            ]
+        }
     }
 }
