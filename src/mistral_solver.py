@@ -19,7 +19,8 @@ class MistralSolver:
         data = {
             "model": "mistral-tiny",
             "messages": [
-                {"role": "system", "content": "Solve this logic puzzle and output ONLY the answer in the exact format described below:Do NOT include any explanations, reasoning, or extra text. Only output the answers in the described format."},
+                {"role": "system", "content": "You are an expert puzzle solver. Output only the final dictionary or JSON, "
+                        "with no extra commentary or explanations."},
                 {"role": "user", "content": prompt}
             ],
             "temperature": 0.3
@@ -58,11 +59,22 @@ class MistralSolver:
         Uses LLM to solve the logic puzzle from text.
         Returns the response, response time, and token usage.
         """
-        prompt = (
-            "Solve the following puzzle by labeling each house from 1..N left to right, and produce a JSON, DO NOT include any explanations or commentory:\n"
-            "{\"houses\":[{\"House\":1, ...}, ...]}\n\nPuzzle:\n"
-            f"{puzzle_text}"
-        )
+        prompt = f"""Solve this puzzle by returning a Python/JSON dictionary
+                that maps each distinct item (like colors or names) to an integer house index,
+                where House #1 is the leftmost and House #N is the rightmost. No explanations
+                or commentary, just the dictionary.
+
+                For example, if there are two items: Red, Blue for houses left to right,
+                and we know Red=1 (left), Blue=2 (right). If the puzzle also says PersonA=1, PersonB=2,
+                the final dictionary is exactly:
+
+                {{'Red':1,'Blue':2,'PersonA':1,'PersonB':2}}
+
+                No extra text, just that dictionary structure.
+
+                Puzzle:
+                {puzzle_text}
+                """
         return self.query_llm(prompt)
 
     def convert_to_z3_format(self, puzzle_text):
@@ -71,38 +83,49 @@ class MistralSolver:
         Returns the response as a parsed dictionary (if valid JSON), response time, and token usage.
         """
         prompt = f"""You are given a logic puzzle:\n\n{puzzle_text}\n
-            Convert this puzzle into a JSON structure usable by a Z3 solver:
-            - The JSON must have: "houses_count", "categories", "constraints".
-            - "categories" is a dict of category_name -> list of items (strings).
-            - "constraints" is a list of objects describing each constraint, using keys like "type", "var1", "var2", "offset", etc.
-            - Do NOT include any explanations or extraneous text, ONLY valid JSON.
 
-            Example Output (dummy puzzle, not your real puzzle):
+        Convert this puzzle into a JSON structure usable by a Z3 solver:
+        - The JSON must have: "houses_count", "categories", and "constraints".
+        - "categories" is a dict of category_name -> list of items (strings).
+        - "constraints" is a list of objects describing each constraint, strictly using:
+            - "type": one of ["eq","eq_offset","neighbor","neq","left","right","distinct_categories","range"]
+            - "var1","var2","offset","var2int","categories" as needed
+        - For "distinct_categories", ALWAYS use the format:
             {{
-            "houses_count": 5,
-            "categories": {{
-                "colors": ["Red", "Green", "Blue", "Yellow", "White"],
-                "people": ["Alice", "Bob", "Charlie", "Diana", "Evan"]
-            }},
-            "constraints": [
-                {{
-                "type": "distinct_categories",
-                "categories": ["colors", "people"]
-                }},
-                {{
-                "type": "range",
-                "from": 1,
-                "to": 5
-                }},
-                {{ "type": "eq", "var1": "Alice", "var2": "Red" }},
-                {{ "type": "eq_offset", "var1": "Blue", "var2": "Green", "offset": 1 }},
-                {{ "type": "neighbor", "var1": "Bob", "var2": "Alice" }}
-            ]
+            "type":"distinct_categories",
+            "categories":["colors","names",...]
             }}
+        Do not produce var1/var2 for distinct_categories.
 
-            ONLY output valid JSON. Do not add reasoning or commentary.
-"""
-        
+        - Do NOT invent new constraint types or items that aren't in the puzzle's categories.
+        - Do NOT include explanations, reasoning, or extraneous text. Only output valid JSON.
+
+        Example output (dummy puzzle, not your real puzzle):
+        {{
+        "houses_count": 5,
+        "categories": {{
+            "colors": ["Red","Green","Blue","Yellow","White"],
+            "people": ["Alice","Bob","Charlie","Diana","Evan"]
+        }},
+        "constraints": [
+            {{
+            "type":"distinct_categories",
+            "categories":["colors","people"]
+            }},
+            {{
+            "type":"range",
+            "from":1,
+            "to":5
+            }},
+            {{ "type":"eq","var1":"Alice","var2":"Red" }},
+            {{ "type":"eq_offset","var1":"Blue","var2":"Green","offset":1 }},
+            {{ "type":"neighbor","var1":"Bob","var2":"Alice" }}
+        ]
+        }}
+
+        ONLY output valid JSON. No commentary.
+        """
+
         llm_response, response_time, token_usage = self.query_llm(prompt)
 
         # Attempt to parse the response as JSON

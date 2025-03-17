@@ -592,5 +592,1081 @@
                 }
             ]
         }
+    },
+    {
+        "timestamp": "2025-03-15 00:08:30",
+        "puzzle": "puzzle_5",
+        "variant": "z3_conversion",
+        "prompt": "There are 2 houses, numbered 1 to 2 from left to right, as seen from across the street. Each house is occupied by a different person. Each house has a unique attribute for each of the following characteristics:\n- Each person has a unique name: Eric, Arnold\n- Each person has a unique type of pet: dog, cat\n\n## Clues:\n1. Eric is somewhere to the left of Arnold.\n2. The person who owns a dog is not in the first house.\n\nsolution:\n{\n\"header\": [\n\"House\",\n\"Name\",\n\"Pet\"\n],\n\"rows\": [\n[\n\"1\",\n\"Eric\",\n\"cat\"\n],\n[\n\"2\",\n\"Arnold\",\n\"dog\"\n]\n]\n}",
+        "response": "{\"houses_count\": 2, \"categories\": {\"names\": [\"Eric\", \"Arnold\"], \"pets\": [\"dog\", \"cat\"]}, \"constraints\": [{\"type\": \"distinct_categories\", \"categories\": [\"names\", \"pets\"]}, {\"type\": \"range\", \"from\": 1, \"to\": 2}, {\"type\": \"neighbor\", \"var1\": \"Eric\", \"var2\": \"Arnold\"}, {\"type\": \"not_eq\", \"var1\": \"dog\", \"var2\": \"pets[0]\", \"offset\": 0}, {\"type\": \"not_eq\", \"var1\": \"Eric\", \"var2\": \"names[1]\"}]}",
+        "response_time": 2.19,
+        "token_usage": 849,
+        "accuracy": 0.75,
+        "correct_fields": 6,
+        "total_fields": 8,
+        "z3_solution": {
+            "Eric": 1,
+            "Arnold": 2,
+            "dog": 1,
+            "cat": 2
+        },
+        "llm_z3_constraints": {
+            "houses_count": 2,
+            "categories": {
+                "names": [
+                    "Eric",
+                    "Arnold"
+                ],
+                "pets": [
+                    "dog",
+                    "cat"
+                ]
+            },
+            "constraints": [
+                {
+                    "type": "distinct_categories",
+                    "categories": [
+                        "names",
+                        "pets"
+                    ]
+                },
+                {
+                    "type": "range",
+                    "from": 1,
+                    "to": 2
+                },
+                {
+                    "type": "neighbor",
+                    "var1": "Eric",
+                    "var2": "Arnold"
+                },
+                {
+                    "type": "not_eq",
+                    "var1": "dog",
+                    "var2": "pets[0]",
+                    "offset": 0
+                },
+                {
+                    "type": "not_eq",
+                    "var1": "Eric",
+                    "var2": "names[1]"
+                }
+            ]
+        },
+        "llm_z3_solver_result": {
+            "Eric": 2,
+            "Arnold": 1,
+            "dog": 1,
+            "cat": 2
+        },
+        "groundTruth_z3": {
+            "houses_count": 2,
+            "categories": {
+                "names": [
+                    "Eric",
+                    "Arnold"
+                ],
+                "pets": [
+                    "dog",
+                    "cat"
+                ]
+            },
+            "constraints": [
+                {
+                    "type": "distinct_categories",
+                    "categories": [
+                        "names",
+                        "pets"
+                    ]
+                },
+                {
+                    "type": "range",
+                    "from": 1,
+                    "to": 2
+                },
+                {
+                    "type": "left",
+                    "var1": "Eric",
+                    "var2": "Arnold"
+                },
+                {
+                    "type": "neq",
+                    "var1": "dog",
+                    "var2int": 1
+                }
+            ]
+        }
+    },
+    {
+        "timestamp": "2025-03-15 00:10:19",
+        "puzzle": "puzzle_5",
+        "variant": "full_test",
+        "prompt": "There are 2 houses, numbered 1 to 2 from left to right, as seen from across the street. Each house is occupied by a different person. Each house has a unique attribute for each of the following characteristics:\n- Each person has a unique name: Eric, Arnold\n- Each person has a unique type of pet: dog, cat\n\n## Clues:\n1. Eric is somewhere to the left of Arnold.\n2. The person who owns a dog is not in the first house.\n\nsolution:\n{\n\"header\": [\n\"House\",\n\"Name\",\n\"Pet\"\n],\n\"rows\": [\n[\n\"1\",\n\"Eric\",\n\"cat\"\n],\n[\n\"2\",\n\"Arnold\",\n\"dog\"\n]\n]\n}",
+        "response": "{\n\"houses\": [\n{\"House\": 1, \"Name\": \"Eric\", \"Pet\": \"cat\"},\n{\"House\": 2, \"Name\": \"Arnold\", \"Pet\": \"dog\"}\n]\n}",
+        "response_time": 0.66,
+        "token_usage": 334,
+        "accuracy": 0.0,
+        "correct_fields": 0,
+        "total_fields": 1,
+        "ground_Truth": {
+            "header": [
+                "House",
+                "Name",
+                "Pet"
+            ],
+            "rows": [
+                [
+                    "1",
+                    "Eric",
+                    "cat"
+                ],
+                [
+                    "2",
+                    "Arnold",
+                    "dog"
+                ]
+            ]
+        }
+    },
+    {
+        "timestamp": "2025-03-15 00:22:44",
+        "puzzle": "puzzle_5",
+        "variant": "z3_conversion",
+        "prompt": "There are 2 houses, numbered 1 to 2 from left to right, as seen from across the street. Each house is occupied by a different person. Each house has a unique attribute for each of the following characteristics:\n- Each person has a unique name: Eric, Arnold\n- Each person has a unique type of pet: dog, cat\n\n## Clues:\n1. Eric is somewhere to the left of Arnold.\n2. The person who owns a dog is not in the first house.\n\n(Answer: In House 1 is Eric with the cat, and in House 2 is Arnold with the dog.)",
+        "response": "{\"houses_count\": 2, \"categories\": {\"people\": [\"Eric\", \"Arnold\"], \"pets\": [\"dog\", \"cat\"]}, \"constraints\": [{\"type\": \"distinct_categories\", \"categories\": [\"people\", \"pets\"]}, {\"type\": \"range\", \"from\": 1, \"to\": 2}, {\"type\": \"eq_offset\", \"var1\": \"Eric\", \"var2\": \"Arnold\", \"offset\": -1}, {\"type\": \"ne\", \"var1\": \"dog\", \"var2\": \"House 1\"}]}",
+        "response_time": 2.09,
+        "token_usage": 766,
+        "accuracy": 0.5,
+        "correct_fields": 4,
+        "total_fields": 8,
+        "z3_solution": {
+            "Eric": 1,
+            "Arnold": 2,
+            "dog": 2,
+            "cat": 1
+        },
+        "llm_z3_constraints": {
+            "houses_count": 2,
+            "categories": {
+                "people": [
+                    "Eric",
+                    "Arnold"
+                ],
+                "pets": [
+                    "dog",
+                    "cat"
+                ]
+            },
+            "constraints": [
+                {
+                    "type": "distinct_categories",
+                    "categories": [
+                        "people",
+                        "pets"
+                    ]
+                },
+                {
+                    "type": "range",
+                    "from": 1,
+                    "to": 2
+                },
+                {
+                    "type": "eq_offset",
+                    "var1": "Eric",
+                    "var2": "Arnold",
+                    "offset": -1
+                },
+                {
+                    "type": "ne",
+                    "var1": "dog",
+                    "var2": "House 1"
+                }
+            ]
+        },
+        "llm_z3_solver_result": {
+            "Eric": 1,
+            "Arnold": 2,
+            "dog": 1,
+            "cat": 2
+        },
+        "groundTruth_z3": {
+            "houses_count": 2,
+            "categories": {
+                "names": [
+                    "Eric",
+                    "Arnold"
+                ],
+                "pets": [
+                    "dog",
+                    "cat"
+                ]
+            },
+            "constraints": [
+                {
+                    "type": "distinct_categories",
+                    "categories": [
+                        "names",
+                        "pets"
+                    ]
+                },
+                {
+                    "type": "range",
+                    "from": 1,
+                    "to": 2
+                },
+                {
+                    "type": "left",
+                    "var1": "Eric",
+                    "var2": "Arnold"
+                },
+                {
+                    "type": "neq",
+                    "var1": "dog",
+                    "var2int": 1
+                }
+            ]
+        }
+    },
+    {
+        "timestamp": "2025-03-15 00:24:51",
+        "puzzle": "puzzle_5",
+        "variant": "full_test",
+        "prompt": "There are 2 houses, numbered 1 to 2 from left to right, as seen from across the street. Each house is occupied by a different person. Each house has a unique attribute for each of the following characteristics:\n- Each person has a unique name: Eric, Arnold\n- Each person has a unique type of pet: dog, cat\n\n## Clues:\n1. Eric is somewhere to the left of Arnold.\n2. The person who owns a dog is not in the first house.\n\n(Answer: In House 1 is Eric with the cat, and in House 2 is Arnold with the dog.)",
+        "response": "{\"houses\":[{\"House\":1,\"Name\":\"Eric\",\"Pet\":\"cat\"},{\"House\":2,\"Name\":\"Arnold\",\"Pet\":\"dog\"}]}",
+        "response_time": 0.52,
+        "token_usage": 273,
+        "accuracy": 1.0,
+        "correct_fields": 4,
+        "total_fields": 4,
+        "ground_Truth": {
+            "houses": [
+                {
+                    "House": 1,
+                    "Name": "Eric",
+                    "Pet": "cat"
+                },
+                {
+                    "House": 2,
+                    "Name": "Arnold",
+                    "Pet": "dog"
+                }
+            ]
+        }
+    },
+    {
+        "timestamp": "2025-03-15 15:52:52",
+        "puzzle": "puzzle_1",
+        "variant": "full_test",
+        "prompt": "There are five houses. The Englishman lives in the red house. The Spaniard owns the dog. Coffee is drunk in the green house. The Ukrainian drinks tea. The green house is immediately to the right of the ivory house. The Old Gold smoker owns snails. Kools are smoked in the yellow house. Milk is drunk in the middle house. The Norwegian lives in the first house. The man who smokes Chesterfields lives in the house next to the man with the fox. Kools are smoked in the house next to the house where the horse is kept. The Lucky Strike smoker drinks orange juice. The Japanese smokes Parliaments. The Norwegian lives next to the blue house. Now, who drinks water? Who owns the zebra?",
+        "response": "{\"houses\":[\n  {\"House\":1, \"Resident\":\"Norwegian\", \"Color\":\"Blue\", \"Pet\":\"None\", \"Smoke\":\"None\", \"Drink\":\"Water\", \"Animal\":\"None\"},\n  {\"House\":2, \"Resident\":\"Englishman\", \"Color\":\"Red\", \"Pet\":\"None\", \"Smoke\":\"Old Gold\", \"Drink\":\"Coffee\", \"Animal\":\"None\"},\n  {\"House\":3, \"Resident\":\"None\", \"Color\":\"Green\", \"Pet\":\"None\", \"Smoke\":\"Kools\", \"Drink\":\"Milk\", \"Animal\":\"None\"},\n  {\"House\":4, \"Resident\":\"Spaniard\", \"Color\":\"Ivory\", \"Pet\":\"Dog\", \"Smoke\":\"None\", \"Drink\":\"Tea\", \"Animal\":\"Dog\"},\n  {\"House\":5, \"Resident\":\"Ukrainian\", \"Color\":\"Yellow\", \"Pet\":\"None\", \"Smoke\":\"Kools\", \"Drink\":\"None\", \"Animal\":\"Horse\"}\n]}\n\n\"Who drinks water?\" - The Norwegian (House 1)\n\"Who owns the zebra?\" - No zebra was mentioned in the puzzle.",
+        "response_time": 2.42,
+        "token_usage": 546,
+        "accuracy": 0.0,
+        "correct_fields": 0,
+        "total_fields": 1,
+        "ground_Truth": {
+            "houses": [
+                {
+                    "House": 1,
+                    "Nationality": "Norwegian",
+                    "Color": "Yellow",
+                    "Pet": "Fox",
+                    "Drink": "Water",
+                    "Cigarette": "Kools"
+                },
+                {
+                    "House": 2,
+                    "Nationality": "Ukrainian",
+                    "Color": "Blue",
+                    "Pet": "Horse",
+                    "Drink": "Tea",
+                    "Cigarette": "Chesterfields"
+                },
+                {
+                    "House": 3,
+                    "Nationality": "Englishman",
+                    "Color": "Red",
+                    "Pet": "Snails",
+                    "Drink": "Milk",
+                    "Cigarette": "OldGold"
+                },
+                {
+                    "House": 4,
+                    "Nationality": "Japanese",
+                    "Color": "Green",
+                    "Pet": "Zebra",
+                    "Drink": "Coffee",
+                    "Cigarette": "Parliaments"
+                },
+                {
+                    "House": 5,
+                    "Nationality": "Spaniard",
+                    "Color": "Ivory",
+                    "Pet": "Dog",
+                    "Drink": "OrangeJuice",
+                    "Cigarette": "LuckyStrike"
+                }
+            ]
+        }
+    },
+    {
+        "timestamp": "2025-03-15 15:53:48",
+        "puzzle": "puzzle_5",
+        "variant": "full_test",
+        "prompt": "There are 2 houses, numbered 1 to 2 from left to right, as seen from across the street. Each house is occupied by a different person. Each house has a unique attribute for each of the following characteristics:\n- Each person has a unique name: Eric, Arnold\n- Each person has a unique type of pet: dog, cat\n\n## Clues:\n1. Eric is somewhere to the left of Arnold.\n2. The person who owns a dog is not in the first house.\n\n(Answer: In House 1 is Eric with the cat, and in House 2 is Arnold with the dog.)",
+        "response": "{\"houses\":[{\"House\":1,\"Name\":\"Eric\",\"Pet\":\"cat\"},{\"House\":2,\"Name\":\"Arnold\",\"Pet\":\"dog\"}]}",
+        "response_time": 0.5,
+        "token_usage": 273,
+        "accuracy": 1.0,
+        "correct_fields": 4,
+        "total_fields": 4,
+        "ground_Truth": {
+            "houses": [
+                {
+                    "House": 1,
+                    "Name": "Eric",
+                    "Pet": "cat"
+                },
+                {
+                    "House": 2,
+                    "Name": "Arnold",
+                    "Pet": "dog"
+                }
+            ]
+        }
+    },
+    {
+        "timestamp": "2025-03-15 15:54:09",
+        "puzzle": "puzzle_2",
+        "variant": "z3_conversion",
+        "prompt": "There are two houses. One is red, the other is blue. Person A lives in the red house, and Person B lives in the blue house. Who lives in each house?",
+        "response": "{\"houses_count\": 2, \"categories\": {\"colors\": [\"Red\", \"Blue\"], \"people\": [\"A\", \"B\"]}, \"constraints\": [{\"type\": \"distinct_categories\", \"categories\": [\"colors\", \"people\"]}, {\"type\": \"range\", \"from\": 1, \"to\": 2}, {\"type\": \"eq\", \"var1\": \"A\", \"var2\": \"Red\"}, {\"type\": \"eq\", \"var1\": \"B\", \"var2\": \"Blue\"}, {\"type\": \"neighbor\", \"var1\": \"B\", \"var2\": \"A\"}]}",
+        "response_time": 3.34,
+        "token_usage": 658,
+        "accuracy": 0.625,
+        "correct_fields": 5,
+        "total_fields": 8,
+        "z3_solution": {
+            "Red": 1,
+            "Blue": 2,
+            "PersonA": 1,
+            "PersonB": 2
+        },
+        "llm_z3_constraints": {
+            "houses_count": 2,
+            "categories": {
+                "colors": [
+                    "Red",
+                    "Blue"
+                ],
+                "people": [
+                    "A",
+                    "B"
+                ]
+            },
+            "constraints": [
+                {
+                    "type": "distinct_categories",
+                    "categories": [
+                        "colors",
+                        "people"
+                    ]
+                },
+                {
+                    "type": "range",
+                    "from": 1,
+                    "to": 2
+                },
+                {
+                    "type": "eq",
+                    "var1": "A",
+                    "var2": "Red"
+                },
+                {
+                    "type": "eq",
+                    "var1": "B",
+                    "var2": "Blue"
+                },
+                {
+                    "type": "neighbor",
+                    "var1": "B",
+                    "var2": "A"
+                }
+            ]
+        },
+        "llm_z3_solver_result": {
+            "Red": 1,
+            "Blue": 2,
+            "A": 1,
+            "B": 2
+        },
+        "groundTruth_z3": {
+            "houses_count": 2,
+            "categories": {
+                "colors": [
+                    "Red",
+                    "Blue"
+                ],
+                "people": [
+                    "PersonA",
+                    "PersonB"
+                ]
+            },
+            "constraints": [
+                {
+                    "type": "distinct_categories",
+                    "categories": [
+                        "colors",
+                        "people"
+                    ]
+                },
+                {
+                    "type": "range",
+                    "from": 1,
+                    "to": 2
+                },
+                {
+                    "type": "eq",
+                    "var1": "PersonA",
+                    "var2": "Red"
+                },
+                {
+                    "type": "eq",
+                    "var1": "PersonB",
+                    "var2": "Blue"
+                }
+            ]
+        }
+    },
+    {
+        "timestamp": "2025-03-17 14:50:34",
+        "puzzle": "puzzle_2",
+        "variant": "z3_conversion",
+        "prompt": "There are two houses. One is red, the other is blue. Person A lives in the red house, and Person B lives in the blue house. Who lives in each house?",
+        "response": "{\"houses_count\": 2, \"categories\": {\"colors\": [\"Red\", \"Blue\"], \"people\": [\"A\", \"B\"]}, \"constraints\": [{\"type\": \"distinct_categories\", \"categories\": [\"colors\", \"people\"]}, {\"type\": \"range\", \"from\": 1, \"to\": 2}, {\"type\": \"eq\", \"var1\": \"A\", \"var2\": \"Red\"}, {\"type\": \"eq\", \"var1\": \"B\", \"var2\": \"Blue\"}, {\"type\": \"neighbor\", \"var1\": \"A\", \"var2\": \"B\"}]}",
+        "response_time": 1.7,
+        "token_usage": 658,
+        "accuracy": 0.625,
+        "correct_fields": 5,
+        "total_fields": 8,
+        "z3_solution": {
+            "Red": 1,
+            "Blue": 2,
+            "PersonA": 1,
+            "PersonB": 2
+        },
+        "llm_z3_constraints": {
+            "houses_count": 2,
+            "categories": {
+                "colors": [
+                    "Red",
+                    "Blue"
+                ],
+                "people": [
+                    "A",
+                    "B"
+                ]
+            },
+            "constraints": [
+                {
+                    "type": "distinct_categories",
+                    "categories": [
+                        "colors",
+                        "people"
+                    ]
+                },
+                {
+                    "type": "range",
+                    "from": 1,
+                    "to": 2
+                },
+                {
+                    "type": "eq",
+                    "var1": "A",
+                    "var2": "Red"
+                },
+                {
+                    "type": "eq",
+                    "var1": "B",
+                    "var2": "Blue"
+                },
+                {
+                    "type": "neighbor",
+                    "var1": "A",
+                    "var2": "B"
+                }
+            ]
+        },
+        "llm_z3_solver_result": {
+            "Red": 2,
+            "Blue": 1,
+            "A": 2,
+            "B": 1
+        },
+        "groundTruth_z3": {
+            "houses_count": 2,
+            "categories": {
+                "colors": [
+                    "Red",
+                    "Blue"
+                ],
+                "people": [
+                    "PersonA",
+                    "PersonB"
+                ]
+            },
+            "constraints": [
+                {
+                    "type": "distinct_categories",
+                    "categories": [
+                        "colors",
+                        "people"
+                    ]
+                },
+                {
+                    "type": "range",
+                    "from": 1,
+                    "to": 2
+                },
+                {
+                    "type": "eq",
+                    "var1": "PersonA",
+                    "var2": "Red"
+                },
+                {
+                    "type": "eq",
+                    "var1": "PersonB",
+                    "var2": "Blue"
+                }
+            ]
+        }
+    },
+    {
+        "timestamp": "2025-03-17 14:52:29",
+        "puzzle": "puzzle_5",
+        "variant": "z3_conversion",
+        "prompt": "There are 2 houses, numbered 1 to 2 from left to right, as seen from across the street. Each house is occupied by a different person. Each house has a unique attribute for each of the following characteristics:\n- Each person has a unique name: Eric, Arnold\n- Each person has a unique type of pet: dog, cat\n\n## Clues:\n1. Eric is somewhere to the left of Arnold.\n2. The person who owns a dog is not in the first house.\n\n(Answer: In House 1 is Eric with the cat, and in House 2 is Arnold with the dog.)",
+        "response": "{\"houses_count\": 2, \"categories\": {\"people\": [\"Eric\", \"Arnold\"], \"pets\": [\"dog\", \"cat\"]}, \"constraints\": [{\"type\": \"distinct_categories\", \"categories\": [\"people\", \"pets\"]}, {\"type\": \"range\", \"from\": 1, \"to\": 2}, {\"type\": \"ne\", \"var1\": \"Eric\", \"var2\": 1}, {\"type\": \"ne\", \"var1\": \"Arnold\", \"var2\": 1}, {\"type\": \"ne\", \"var1\": \"dog\", \"var2\": \"cat\", \"house\": 1}]}",
+        "response_time": 1.93,
+        "token_usage": 791,
+        "accuracy": 0.5,
+        "correct_fields": 4,
+        "total_fields": 8,
+        "z3_solution": {
+            "Eric": 1,
+            "Arnold": 2,
+            "dog": 2,
+            "cat": 1
+        },
+        "llm_z3_constraints": {
+            "houses_count": 2,
+            "categories": {
+                "people": [
+                    "Eric",
+                    "Arnold"
+                ],
+                "pets": [
+                    "dog",
+                    "cat"
+                ]
+            },
+            "constraints": [
+                {
+                    "type": "distinct_categories",
+                    "categories": [
+                        "people",
+                        "pets"
+                    ]
+                },
+                {
+                    "type": "range",
+                    "from": 1,
+                    "to": 2
+                },
+                {
+                    "type": "ne",
+                    "var1": "Eric",
+                    "var2": 1
+                },
+                {
+                    "type": "ne",
+                    "var1": "Arnold",
+                    "var2": 1
+                },
+                {
+                    "type": "ne",
+                    "var1": "dog",
+                    "var2": "cat",
+                    "house": 1
+                }
+            ]
+        },
+        "llm_z3_solver_result": {
+            "Eric": 1,
+            "Arnold": 2,
+            "dog": 1,
+            "cat": 2
+        },
+        "groundTruth_z3": {
+            "houses_count": 2,
+            "categories": {
+                "names": [
+                    "Eric",
+                    "Arnold"
+                ],
+                "pets": [
+                    "dog",
+                    "cat"
+                ]
+            },
+            "constraints": [
+                {
+                    "type": "distinct_categories",
+                    "categories": [
+                        "names",
+                        "pets"
+                    ]
+                },
+                {
+                    "type": "range",
+                    "from": 1,
+                    "to": 2
+                },
+                {
+                    "type": "left",
+                    "var1": "Eric",
+                    "var2": "Arnold"
+                },
+                {
+                    "type": "neq",
+                    "var1": "dog",
+                    "var2int": 1
+                }
+            ]
+        }
+    },
+    {
+        "timestamp": "2025-03-17 16:06:22",
+        "puzzle": "puzzle_1",
+        "variant": "full_test",
+        "prompt": "There are five houses. The Englishman lives in the red house. The Spaniard owns the dog. Coffee is drunk in the green house. The Ukrainian drinks tea. The green house is immediately to the right of the ivory house. The Old Gold smoker owns snails. Kools are smoked in the yellow house. Milk is drunk in the middle house. The Norwegian lives in the first house. The man who smokes Chesterfields lives in the house next to the man with the fox. Kools are smoked in the house next to the house where the horse is kept. The Lucky Strike smoker drinks orange juice. The Japanese smokes Parliaments. The Norwegian lives next to the blue house. Now, who drinks water? Who owns the zebra?",
+        "puzzle_ground_truth_dict": {
+            "Englishman": 3,
+            "Spaniard": 4,
+            "Ukrainian": 2,
+            "Norwegian": 1,
+            "Japanese": 5,
+            "Red": 3,
+            "Green": 5,
+            "Ivory": 4,
+            "Blue": 2,
+            "Yellow": 1,
+            "Fox": 1,
+            "Horse": 2,
+            "Zebra": 5,
+            "Dog": 4,
+            "Snails": 3,
+            "Coffee": 5,
+            "Milk": 3,
+            "OrangeJuice": 4,
+            "Tea": 2,
+            "Water": 1,
+            "Parliaments": 5,
+            "Kools": 1,
+            "LuckyStrike": 4,
+            "OldGold": 3,
+            "Chesterfields": 2
+        },
+        "solve_dict_str": "{'Englishman': 1, 'Red': 1, 'Spaniard': 2, 'Dog': 2, 'Green': 3, 'Ukrainian': 3, 'Tea': 3, 'Coffee': 3, 'Norwegian': 4, 'First': 4, 'Blue': 5, 'Norwegian_neighbor': 5, 'Chesterfields': 2, 'Fox': 2, 'Ivory': 4, 'Old_Gold': 1, 'Snails': 1, 'Yellow': 5, 'Kools': [5, 4], 'Milk': 2, 'Middle': 2, 'Horse': 3, 'Orange_juice': 1, 'Lucky_Strike': 5, 'Parliaments': 3, 'Japanese': 3, 'Water': None, 'Zebra': None}",
+        "solve_response_time": 1.99,
+        "solve_token_usage": 589,
+        "solve_accuracy": 0.0,
+        "solve_correct_fields": 0,
+        "solve_total_fields": 25,
+        "solve_parsed": {},
+        "convert_constraints": "{\"houses_count\": 5, \"categories\": {\"people\": [\"Englishman\", \"Spaniard\", \"Ukrainian\", \"Norwegian\", \"Old Gold smoker\", \"Chesterfield smoker\", \"Kools smoker\", \"Lucky Strike smoker\", \"Japanese\"], \"colors\": [\"Red\", \"Green\", \"Ivory\", \"Blue\", \"Yellow\"], \"animals\": [\"Dog\", \"Fox\", \"Horse\", \"Zebra\"], \"drinks\": [\"Coffee\", \"Tea\", \"Milk\", \"Water\", \"Orange juice\"], \"smokes\": [\"Old Gold\", \"Chesterfields\", \"Kools\", \"Parliaments\"]}, \"constraints\": [{\"type\": \"distinct_categories\", \"categories\": [\"colors\", \"people\", \"animals\", \"drinks\", \"smokes\"]}, {\"type\": \"eq\", \"var1\": \"Englishman\", \"var2\": \"Red\"}, {\"type\": \"eq\", \"var1\": \"Spaniard\", \"var2\": \"Dog\"}, {\"type\": \"eq\", \"var1\": \"Coffee\", \"var2\": \"Green\"}, {\"type\": \"eq\", \"var1\": \"Ukrainian\", \"var2\": \"Tea\"}, {\"type\": \"eq\", \"var1\": \"Norwegian\", \"var2\": \"First\"}, {\"type\": \"eq\", \"var1\": \"Ivory\", \"var2\": \"Offset\", \"offset\": 1}, {\"type\": \"eq\", \"var1\": \"Green\", \"var2\": \"Right\", \"var2int\": 2}, {\"type\": \"eq\", \"var1\": \"Old Gold\", \"var2\": \"Snails\"}, {\"type\": \"eq\", \"var1\": \"Kools\", \"var2\": \"Yellow\"}, {\"type\": \"eq\", \"var1\": \"Milk\", \"var2\": \"Middle\"}, {\"type\": \"neighbor\", \"var1\": \"Chesterfield smoker\", \"var2\": \"Norwegian\"}, {\"type\": \"neighbor\", \"var1\": \"Kools\", \"var2\": \"Horse\"}, {\"type\": \"neighbor\", \"var1\": \"Lucky Strike smoker\", \"var2\": \"Orange juice\"}, {\"type\": \"eq\", \"var1\": \"Japanese\", \"var2\": \"Parliaments\"}, {\"type\": \"neighbor\", \"var1\": \"Norwegian\", \"var2\": \"Blue\"}]}",
+        "convert_response_time": 6.22,
+        "convert_token_usage": 1435,
+        "convert_solver_str": "N/A",
+        "convert_solver_accuracy": 0.0,
+        "convert_correct_fields": 0,
+        "convert_total_fields": 1,
+        "convert_solver_parsed": {},
+        "official_z3_constraints_present": true,
+        "constraints_accuracy": 0.46153846153846156,
+        "constraints_correct_fields": 12,
+        "constraints_total_fields": 26,
+        "error": "eq referencing missing/unknown var2: {'type': 'eq', 'var1': 'Norwegian', 'var2': 'First'}; eq referencing missing/unknown var2: {'type': 'eq', 'var1': 'Ivory', 'var2': 'Offset', 'offset': 1}; eq referencing missing/unknown var2: {'type': 'eq', 'var1': 'Old Gold', 'var2': 'Snails'}; eq referencing missing/unknown var2: {'type': 'eq', 'var1': 'Milk', 'var2': 'Middle'}"
+    },
+    {
+        "timestamp": "2025-03-17 16:15:47",
+        "puzzle": "puzzle_1",
+        "variant": "full_test",
+        "prompt": "There are five houses. The Englishman lives in the red house. The Spaniard owns the dog. Coffee is drunk in the green house. The Ukrainian drinks tea. The green house is immediately to the right of the ivory house. The Old Gold smoker owns snails. Kools are smoked in the yellow house. Milk is drunk in the middle house. The Norwegian lives in the first house. The man who smokes Chesterfields lives in the house next to the man with the fox. Kools are smoked in the house next to the house where the horse is kept. The Lucky Strike smoker drinks orange juice. The Japanese smokes Parliaments. The Norwegian lives next to the blue house. Now, who drinks water? Who owns the zebra?",
+        "puzzle_ground_truth_dict": {
+            "Englishman": 3,
+            "Spaniard": 4,
+            "Ukrainian": 2,
+            "Norwegian": 1,
+            "Japanese": 5,
+            "Red": 3,
+            "Green": 5,
+            "Ivory": 4,
+            "Blue": 2,
+            "Yellow": 1,
+            "Fox": 1,
+            "Horse": 2,
+            "Zebra": 5,
+            "Dog": 4,
+            "Snails": 3,
+            "Coffee": 5,
+            "Milk": 3,
+            "OrangeJuice": 4,
+            "Tea": 2,
+            "Water": 1,
+            "Parliaments": 5,
+            "Kools": 1,
+            "LuckyStrike": 4,
+            "OldGold": 3,
+            "Chesterfields": 2
+        },
+        "solve_dict_str": "{'Englishman': 1, 'Red': 1, 'Spaniard': 2, 'Dog': 2, 'Green': 3, 'Ukrainian': 3, 'Tea': 3, 'Coffee': 3, 'Norwegian': 4, 'First': 4, 'Blue': 5, 'Norwegian_next': 5, 'Chesterfields': 6, 'Fox': 6, 'Ivory': 7, 'Old_Gold': 7, 'Snails': 7, 'Yellow': 8, 'Kools': 8, 'Horse': 9, 'Milk': 9, 'Middle': 9, 'Orange_Juice': 10, 'Japanese': 10, 'Parliaments': 10, 'Zebra': 11, 'Water': None}",
+        "solve_response_time": 1.8,
+        "solve_token_usage": 581,
+        "solve_accuracy": 0.0,
+        "solve_correct_fields": 0,
+        "solve_total_fields": 25,
+        "solve_parsed": {},
+        "convert_constraints": "{\"houses_count\": 5, \"categories\": {\"people\": [\"Englishman\", \"Spaniard\", \"Ukrainian\", \"Norwegian\", \"Old Gold smoker\", \"Chesterfields smoker\", \"Kools smoker\", \"Lucky Strike smoker\", \"Japanese\"], \"colors\": [\"Red\", \"Green\", \"Ivory\", \"Blue\", \"Yellow\", \"Unknown\"], \"animals\": [\"Dog\", \"Unknown\", \"Unknown\", \"Unknown\", \"Unknown\", \"Unknown\", \"Unknown\", \"Unknown\", \"Unknown\", \"Unknown\", \"Zebra\"], \"drinks\": [\"Coffee\", \"Tea\", \"Water\", \"Milk\", \"Unknown\"], \"smokes\": [\"Old Gold\", \"Kools\", \"Chesterfields\", \"Parliaments\", \"Lucky Strike\"]}, \"constraints\": [{\"type\": \"distinct_categories\", \"categories\": [\"colors\", \"people\", \"animals\", \"drinks\", \"smokes\"]}, {\"type\": \"eq\", \"var1\": \"Englishman\", \"var2\": \"Red\"}, {\"type\": \"eq\", \"var1\": \"Spaniard\", \"var2\": \"Dog\"}, {\"type\": \"eq\", \"var1\": \"Coffee\", \"var2\": \"Green\"}, {\"type\": \"eq\", \"var1\": \"Tea\", \"var2\": \"Ukrainian\"}, {\"type\": \"eq\", \"var1\": \"Milk\", \"var2\": \"middle\"}, {\"type\": \"eq\", \"var1\": \"Norwegian\", \"var2\": \"1\"}, {\"type\": \"eq\", \"var1\": \"Old Gold smoker\", \"var2\": \"snails\"}, {\"type\": \"eq\", \"var1\": \"Kools\", \"var2\": \"yellow\"}, {\"type\": \"left\", \"var1\": \"Green\", \"var2\": \"Ivory\"}, {\"type\": \"neighbor\", \"var1\": \"Chesterfields smoker\", \"var2\": \"fox\"}, {\"type\": \"neighbor\", \"var1\": \"Kools\", \"var2\": \"horse\"}, {\"type\": \"eq\", \"var1\": \"Lucky Strike smoker\", \"var2\": \"Orange juice\"}, {\"type\": \"eq\", \"var1\": \"Parliaments\", \"var2\": \"Japanese\"}, {\"type\": \"neighbor\", \"var1\": \"Norwegian\", \"var2\": \"Blue\"}]}",
+        "convert_response_time": 7.51,
+        "convert_token_usage": 1410,
+        "convert_solver_str": "N/A",
+        "convert_solver_accuracy": 0.0,
+        "convert_correct_fields": 0,
+        "convert_total_fields": 1,
+        "convert_solver_parsed": {},
+        "official_z3_constraints_present": true,
+        "constraints_accuracy": 0.25925925925925924,
+        "constraints_correct_fields": 7,
+        "constraints_total_fields": 27,
+        "error": "eq referencing missing/unknown var2: {'type': 'eq', 'var1': 'Milk', 'var2': 'middle'}; eq referencing missing/unknown var2: {'type': 'eq', 'var1': 'Norwegian', 'var2': '1'}; eq referencing missing/unknown var2: {'type': 'eq', 'var1': 'Old Gold smoker', 'var2': 'snails'}; eq referencing missing/unknown var2: {'type': 'eq', 'var1': 'Kools', 'var2': 'yellow'}; neighbor referencing unknown items: {'type': 'neighbor', 'var1': 'Chesterfields smoker', 'var2': 'fox'}; neighbor referencing unknown items: {'type': 'neighbor', 'var1': 'Kools', 'var2': 'horse'}; eq referencing missing/unknown var2: {'type': 'eq', 'var1': 'Lucky Strike smoker', 'var2': 'Orange juice'}"
+    },
+    {
+        "timestamp": "2025-03-17 16:15:50",
+        "puzzle": "puzzle_2",
+        "variant": "full_test",
+        "prompt": "There are two houses. One is red, the other is blue. Person A lives in the red house, and Person B lives in the blue house. Who lives in each house?",
+        "puzzle_ground_truth_dict": {
+            "Red": 1,
+            "Blue": 2,
+            "PersonA": 1,
+            "PersonB": 2
+        },
+        "solve_dict_str": "{'Red': 1, 'Blue': 2, 'PersonA': 1, 'PersonB': 2}",
+        "solve_response_time": 0.67,
+        "solve_token_usage": 269,
+        "solve_accuracy": 1.0,
+        "solve_correct_fields": 4,
+        "solve_total_fields": 4,
+        "solve_parsed": {
+            "Red": 1,
+            "Blue": 2,
+            "PersonA": 1,
+            "PersonB": 2
+        },
+        "convert_constraints": "{\"houses_count\": 2, \"categories\": {\"colors\": [\"Red\", \"Blue\"], \"people\": [\"A\", \"B\"]}, \"constraints\": [{\"type\": \"distinct_categories\", \"categories\": [\"colors\", \"people\"]}, {\"type\": \"eq\", \"var1\": \"A\", \"var2\": \"Red\"}, {\"type\": \"eq\", \"var1\": \"B\", \"var2\": \"Blue\"}, {\"type\": \"left\", \"var1\": \"A\", \"var2\": \"Red\"}, {\"type\": \"left\", \"var1\": \"B\", \"var2\": \"Blue\"}, {\"type\": \"right\", \"var1\": \"A\", \"var2\": \"Red\"}, {\"type\": \"right\", \"var1\": \"B\", \"var2\": \"Blue\"}, {\"type\": \"distinct_categories\", \"categories\": [\"colors\", \"people\", \"houses\"]}]}",
+        "convert_response_time": 2.74,
+        "convert_token_usage": 839,
+        "convert_solver_str": "N/A",
+        "convert_solver_accuracy": 0.0,
+        "convert_correct_fields": 0,
+        "convert_total_fields": 1,
+        "convert_solver_parsed": {},
+        "official_z3_constraints_present": true,
+        "constraints_accuracy": 0.5555555555555556,
+        "constraints_correct_fields": 5,
+        "constraints_total_fields": 9,
+        "error": "Unknown category 'houses' in distinct_categories: {'type': 'distinct_categories', 'categories': ['colors', 'people', 'houses']}"
+    },
+    {
+        "timestamp": "2025-03-17 16:15:54",
+        "puzzle": "puzzle_3",
+        "variant": "full_test",
+        "prompt": "There are 3 houses, numbered 1 to 3 from left to right. Each house is occupied by a different person. Each house has a unique attribute for each characteristic:\n- Names: Peter, Eric, Arnold\n- Drinks: tea, water, milk\n\n## Clues\n1. Peter is in the second house.\n2. Arnold is directly left of the one who only drinks water.\n3. The one who only drinks water is directly left of the person who likes milk.\n\nWe want to know who lives in each house and who drinks what.",
+        "puzzle_ground_truth_dict": {
+            "Peter": 2,
+            "Eric": 3,
+            "Arnold": 1,
+            "tea": 1,
+            "water": 2,
+            "milk": 3
+        },
+        "solve_dict_str": "{'Peter': 2, 'Eric': 1, 'Arnold': 3, 'tea': None, 'water': 1, 'milk': 3}",
+        "solve_response_time": 0.57,
+        "solve_token_usage": 368,
+        "solve_accuracy": 0.0,
+        "solve_correct_fields": 0,
+        "solve_total_fields": 6,
+        "solve_parsed": {},
+        "convert_constraints": "N/A",
+        "convert_response_time": 0,
+        "convert_token_usage": "N/A",
+        "convert_solver_str": "N/A",
+        "convert_solver_accuracy": 0.0,
+        "convert_correct_fields": 0,
+        "convert_total_fields": 1,
+        "convert_solver_parsed": {},
+        "official_z3_constraints_present": true,
+        "constraints_accuracy": 0.0,
+        "constraints_correct_fields": 0,
+        "constraints_total_fields": 1,
+        "error": "Error parsing solve_dict_str: Expecting value: line 1 column 45 (char 44)"
+    },
+    {
+        "timestamp": "2025-03-17 16:16:01",
+        "puzzle": "puzzle_4",
+        "variant": "full_test",
+        "prompt": "There are 4 houses in a row, numbered 1 to 4 (left to right). Each house is occupied by a different person and has unique attributes: names (Eric, Arnold, Alice, Peter), mothers (Holly, Kailyn, Aniya, Janelle), birthdays (april, feb, sept, jan), and house styles (ranch, colonial, victorian, craftsman).\n\nClues:\n1. Peter is the person whose birthday is in February.\n2. The person whose birthday is in February is not in the fourth house.\n3. The person whose birthday is in January is somewhere to the right of the person in a ranch-style home.\n4. The person whose birthday is in January is directly left of Eric.\n5. The person in a ranch-style home is the person whose birthday is in April.\n6. The person whose mother's name is Janelle is the person whose birthday is in September.\n7. The person in a ranch-style home and the person whose mother's name is Kailyn are next to each other.\n8. Arnold is the person whose mother's name is Holly.\n9. The person whose mother's name is Kailyn is directly left of the person residing in a Victorian house.\n10. The person whose birthday is in January is the person in a Craftsman-style house.\n",
+        "puzzle_ground_truth_dict": {
+            "Eric": 2,
+            "Arnold": 1,
+            "Alice": 4,
+            "Peter": 3,
+            "Holly": 1,
+            "Kailyn": 3,
+            "Aniya": 2,
+            "Janelle": 4,
+            "april": 2,
+            "feb": 3,
+            "sept": 4,
+            "jan": 1,
+            "ranch": 2,
+            "colonial": 3,
+            "victorian": 4,
+            "craftsman": 1
+        },
+        "solve_dict_str": "{'Eric': 3, 'Arnold': 1, 'Alice': 4, 'Peter': 2, 'Holly': 1, 'Kailyn': 3, 'Aniya': 4, 'Janelle': 2, 'april': 5, 'feb': 2, 'sept': 3, 'jan': 1, 'ranch': 5, 'colonial': None, 'victorian': 4, 'craftsman': 1}",
+        "solve_response_time": 1.5,
+        "solve_token_usage": 625,
+        "solve_accuracy": 0.0,
+        "solve_correct_fields": 0,
+        "solve_total_fields": 16,
+        "solve_parsed": {},
+        "convert_constraints": "{\"houses_count\": 4, \"categories\": {\"names\": [\"Eric\", \"Arnold\", \"Alice\", \"Peter\"], \"mothers\": [\"Holly\", \"Kailyn\", \"Aniya\", \"Janelle\"], \"birthdays\": [\"april\", \"feb\", \"sept\", \"jan\"], \"house_styles\": [\"ranch\", \"colonial\", \"victorian\", \"craftsman\"]}, \"constraints\": [{\"type\": \"distinct_categories\", \"categories\": [\"names\", \"mothers\", \"birthdays\", \"house_styles\"]}, {\"type\": \"range\", \"from\": 1, \"to\": 4}, {\"type\": \"eq\", \"var1\": \"Peter\", \"var2\": \"feb\"}, {\"type\": \"ne\", \"var1\": \"Peter\", \"var2\": 4}, {\"type\": \"ne\", \"var1\": \"jan\", \"var2\": \"4\"}, {\"type\": \"right\", \"var1\": \"jan\", \"var2\": \"ranch\"}, {\"type\": \"left\", \"var1\": \"jan\", \"var2\": \"Eric\"}, {\"type\": \"eq\", \"var1\": \"april\", \"var2\": \"ranch\"}, {\"type\": \"eq\", \"var1\": \"sept\", \"var2\": \"Janelle\"}, {\"type\": \"left\", \"var1\": \"Kailyn\", \"var2\": \"Victorian\"}, {\"type\": \"eq\", \"var1\": \"jan\", \"var2\": \"Craftsman\"}, {\"type\": \"neighbor\", \"var1\": \"ranch\", \"var2\": \"Kailyn\"}, {\"type\": \"eq\", \"var1\": \"Arnold\", \"var2\": \"Holly\"}]}",
+        "convert_response_time": 5.25,
+        "convert_token_usage": 1369,
+        "convert_solver_str": "N/A",
+        "convert_solver_accuracy": 0.0,
+        "convert_correct_fields": 0,
+        "convert_total_fields": 1,
+        "convert_solver_parsed": {},
+        "official_z3_constraints_present": true,
+        "constraints_accuracy": 0.6666666666666666,
+        "constraints_correct_fields": 14,
+        "constraints_total_fields": 21,
+        "error": "Unknown constraint type 'ne': {'type': 'ne', 'var1': 'Peter', 'var2': 4}; Unknown constraint type 'ne': {'type': 'ne', 'var1': 'jan', 'var2': '4'}; left referencing unknown items: {'type': 'left', 'var1': 'Kailyn', 'var2': 'Victorian'}; eq referencing missing/unknown var2: {'type': 'eq', 'var1': 'jan', 'var2': 'Craftsman'}"
+    },
+    {
+        "timestamp": "2025-03-17 16:16:03",
+        "puzzle": "puzzle_5",
+        "variant": "full_test",
+        "prompt": "There are 2 houses, numbered 1 to 2 from left to right, as seen from across the street. Each house is occupied by a different person. Each house has a unique attribute for each of the following characteristics:\n- Each person has a unique name: Eric, Arnold\n- Each person has a unique type of pet: dog, cat\n\n## Clues:\n1. Eric is somewhere to the left of Arnold.\n2. The person who owns a dog is not in the first house.\n",
+        "puzzle_ground_truth_dict": {
+            "Eric": 1,
+            "Arnold": 2,
+            "dog": 2,
+            "cat": 1
+        },
+        "solve_dict_str": "{'Eric': 1, 'Arnold': 2, 'dog': 2, 'cat': 1}",
+        "solve_response_time": 0.44,
+        "solve_token_usage": 340,
+        "solve_accuracy": 1.0,
+        "solve_correct_fields": 4,
+        "solve_total_fields": 4,
+        "solve_parsed": {
+            "Eric": 1,
+            "Arnold": 2,
+            "dog": 2,
+            "cat": 1
+        },
+        "convert_constraints": "{\"houses_count\": 2, \"categories\": {\"names\": [\"Eric\", \"Arnold\"], \"pets\": [\"dog\", \"cat\"]}, \"constraints\": [{\"type\": \"distinct_categories\", \"categories\": [\"names\", \"pets\"]}, {\"type\": \"left\", \"var1\": \"Eric\"}, {\"type\": \"neighbor\", \"var1\": \"Arnold\", \"var2\": \"Eric\"}, {\"type\": \"neq_offset\", \"var1\": \"dog\", \"var2\": \"1\", \"categories\": [\"pets\"]}]}",
+        "convert_response_time": 1.88,
+        "convert_token_usage": 794,
+        "convert_solver_str": "N/A",
+        "convert_solver_accuracy": 0.0,
+        "convert_correct_fields": 0,
+        "convert_total_fields": 1,
+        "convert_solver_parsed": {},
+        "official_z3_constraints_present": true,
+        "constraints_accuracy": 0.6666666666666666,
+        "constraints_correct_fields": 6,
+        "constraints_total_fields": 9,
+        "error": "left referencing unknown items: {'type': 'left', 'var1': 'Eric'}; Unknown constraint type 'neq_offset': {'type': 'neq_offset', 'var1': 'dog', 'var2': '1', 'categories': ['pets']}"
+    },
+    {
+        "timestamp": "2025-03-17 17:37:15",
+        "puzzle": "puzzle_6",
+        "variant": "convert",
+        "prompt": "There are 3 houses, numbered 1 to 3 from left to right, as seen from across the street. Each house is occupied by a different person. Each house has a unique attribute for each of the following characteristics:\n- Each person has a unique name: Peter, Eric, Arnold\n- Each person has a favorite color: white, red, yellow\n- People use unique phone models: google pixel 6, samsung galaxy s21, iphone 13\n- People have unique favorite music genres: classical, rock, pop\n- Each person has a unique level of education: high school, bachelor, associate\n\n## Clues:\n1. The person who loves pop music is Peter.\n2. Arnold is the person who loves classical music.\n3. The person with a bachelor's degree is not in the first house.\n4. The person who loves white is in the second house.\n5. The person who loves pop music is in the first house.\n6. The person who uses a Samsung Galaxy S21 is the person with an associate's degree.\n7. The person with a bachelor's degree is the person whose favorite color is red.\n8. The person with a high school diploma is the person who uses a Google Pixel 6.\n9. The person who uses a Samsung Galaxy S21 is the person who loves rock music.\n",
+        "puzzle_ground_truth_dict": {
+            "Peter": 1,
+            "Arnold": 3,
+            "Eric": 2,
+            "yellow": 1,
+            "white": 2,
+            "red": 3,
+            "google pixel 6": 1,
+            "samsung galaxy s21": 2,
+            "iphone 13": 3,
+            "classical": 3,
+            "rock": 2,
+            "pop": 1,
+            "high school": 1,
+            "associate": 2,
+            "bachelor": 3
+        },
+        "solve_dict_str": "N/A",
+        "solve_response_time": 0,
+        "solve_token_usage": "N/A",
+        "solve_accuracy": 0.0,
+        "solve_correct_fields": 0,
+        "solve_total_fields": 1,
+        "solve_parsed": {},
+        "convert_constraints": "{\"houses_count\": 3, \"categories\": {\"names\": [\"Peter\", \"Eric\", \"Arnold\"], \"colors\": [\"white\", \"red\", \"yellow\"], \"phones\": [\"google pixel 6\", \"samsung galaxy s21\", \"iphone 13\"], \"music\": [\"classical\", \"pop\", \"rock\"], \"education\": [\"high school\", \"bachelor\", \"associate\"]}, \"constraints\": [{\"type\": \"distinct_categories\", \"categories\": [\"names\", \"colors\", \"phones\", \"music\", \"education\"]}, {\"type\": \"eq\", \"var1\": \"Peter\", \"var2\": \"pop\"}, {\"type\": \"eq\", \"var1\": \"Arnold\", \"var2\": \"classical\"}, {\"type\": \"ne\", \"var1\": \"1\", \"var2\": \"bachelor\"}, {\"type\": \"eq\", \"var1\": \"2\", \"var2\": \"white\"}, {\"type\": \"eq\", \"var1\": \"1\", \"var2\": \"pop\"}, {\"type\": \"eq\", \"var1\": \"samsung galaxy s21\", \"var2\": \"associate\"}, {\"type\": \"eq\", \"var1\": \"bachelor\", \"var2\": \"red\"}, {\"type\": \"eq\", \"var1\": \"high school\", \"var2\": \"google pixel 6\"}, {\"type\": \"eq\", \"var1\": \"samsung galaxy s21\", \"var2\": \"rock\"}]}",
+        "convert_response_time": 4.27,
+        "convert_token_usage": 1274,
+        "convert_solver_str": "N/A",
+        "convert_solver_accuracy": 0.0,
+        "convert_correct_fields": 0,
+        "convert_total_fields": 1,
+        "convert_solver_parsed": {},
+        "official_z3_constraints_present": false,
+        "constraints_accuracy": 0.0,
+        "constraints_correct_fields": 0,
+        "constraints_total_fields": 1,
+        "error": "Unknown constraint type 'ne': {'type': 'ne', 'var1': '1', 'var2': 'bachelor'}; eq referencing missing/unknown var1: {'type': 'eq', 'var1': '2', 'var2': 'white'}; eq referencing missing/unknown var1: {'type': 'eq', 'var1': '1', 'var2': 'pop'}"
+    },
+    {
+        "timestamp": "2025-03-17 17:40:01",
+        "puzzle": "puzzle_6",
+        "variant": "solve",
+        "prompt": "There are 3 houses, numbered 1 to 3 from left to right, as seen from across the street. Each house is occupied by a different person. Each house has a unique attribute for each of the following characteristics:\n- Each person has a unique name: Peter, Eric, Arnold\n- Each person has a favorite color: white, red, yellow\n- People use unique phone models: google pixel 6, samsung galaxy s21, iphone 13\n- People have unique favorite music genres: classical, rock, pop\n- Each person has a unique level of education: high school, bachelor, associate\n\n## Clues:\n1. The person who loves pop music is Peter.\n2. Arnold is the person who loves classical music.\n3. The person with a bachelor's degree is not in the first house.\n4. The person who loves white is in the second house.\n5. The person who loves pop music is in the first house.\n6. The person who uses a Samsung Galaxy S21 is the person with an associate's degree.\n7. The person with a bachelor's degree is the person whose favorite color is red.\n8. The person with a high school diploma is the person who uses a Google Pixel 6.\n9. The person who uses a Samsung Galaxy S21 is the person who loves rock music.\n",
+        "puzzle_ground_truth_dict": {
+            "Peter": 1,
+            "Arnold": 3,
+            "Eric": 2,
+            "yellow": 1,
+            "white": 2,
+            "red": 3,
+            "google pixel 6": 1,
+            "samsung galaxy s21": 2,
+            "iphone 13": 3,
+            "classical": 3,
+            "rock": 2,
+            "pop": 1,
+            "high school": 1,
+            "associate": 2,
+            "bachelor": 3
+        },
+        "solve_dict_str": "{'Peter': 1, 'Eric': 2, 'Arnold': 3, 'white': 2, 'red': 3, 'yellow': 1, 'google pixel 6': 3, 'samsung galaxy s21': 2, 'iphone 13': 1, 'classical': 3, 'rock': 2, 'pop': 1, 'high school': 3, 'bachelor': 2, 'associate': 1}",
+        "solve_response_time": 1.36,
+        "solve_token_usage": 619,
+        "solve_accuracy": 0.6666666666666666,
+        "solve_correct_fields": 10,
+        "solve_total_fields": 15,
+        "solve_parsed": {
+            "Peter": 1,
+            "Eric": 2,
+            "Arnold": 3,
+            "white": 2,
+            "red": 3,
+            "yellow": 1,
+            "google pixel 6": 3,
+            "samsung galaxy s21": 2,
+            "iphone 13": 1,
+            "classical": 3,
+            "rock": 2,
+            "pop": 1,
+            "high school": 3,
+            "bachelor": 2,
+            "associate": 1
+        },
+        "convert_constraints": "N/A",
+        "convert_response_time": 0,
+        "convert_token_usage": "N/A",
+        "convert_solver_str": "N/A",
+        "convert_solver_accuracy": 0.0,
+        "convert_correct_fields": 0,
+        "convert_total_fields": 1,
+        "convert_solver_parsed": {},
+        "official_z3_constraints_present": false,
+        "constraints_accuracy": 0.0,
+        "constraints_correct_fields": 0,
+        "constraints_total_fields": 1,
+        "error": "N/A"
+    },
+    {
+        "timestamp": "2025-03-17 17:55:33",
+        "puzzle": "puzzle_2",
+        "variant": "convert",
+        "prompt": "There are two houses. One is red, the other is blue. Person A lives in the red house, and Person B lives in the blue house. Who lives in each house?",
+        "puzzle_ground_truth_dict": {
+            "Red": 1,
+            "Blue": 2,
+            "PersonA": 1,
+            "PersonB": 2
+        },
+        "solve_dict_str": "N/A",
+        "solve_response_time": 0,
+        "solve_token_usage": "N/A",
+        "solve_accuracy": 0.0,
+        "solve_correct_fields": 0,
+        "solve_total_fields": 4,
+        "solve_parsed": {},
+        "convert_constraints": "{\"houses_count\": 2, \"categories\": {\"colors\": [\"Red\", \"Blue\"], \"names\": [\"A\", \"B\"]}, \"constraints\": [{\"type\": \"distinct_categories\", \"categories\": [\"colors\", \"names\"]}, {\"type\": \"eq\", \"var1\": \"A\", \"var2\": \"Red\"}, {\"type\": \"eq\", \"var1\": \"B\", \"var2\": \"Blue\"}, {\"type\": \"left\", \"var1\": \"A\", \"var2\": \"Person\"}, {\"type\": \"left\", \"var1\": \"B\", \"var2\": \"Person\"}]}",
+        "convert_response_time": 2.09,
+        "convert_token_usage": 743,
+        "convert_solver_str": "N/A",
+        "convert_solver_accuracy": 0.0,
+        "convert_correct_fields": 0,
+        "convert_total_fields": 4,
+        "convert_solver_parsed": {},
+        "official_z3_constraints_present": true,
+        "constraints_accuracy": 0.375,
+        "constraints_correct_fields": 3,
+        "constraints_total_fields": 8,
+        "error": "Z3 solver returned no solution for LLM constraints."
+    },
+    {
+        "timestamp": "2025-03-17 18:07:15",
+        "puzzle": "puzzle_2",
+        "variant": "convert",
+        "prompt": "There are two houses. One is red, the other is blue. Person A lives in the red house, and Person B lives in the blue house. Who lives in each house?",
+        "puzzle_ground_truth_dict": {
+            "Red": 1,
+            "Blue": 2,
+            "PersonA": 1,
+            "PersonB": 2
+        },
+        "solve_dict_str": "N/A",
+        "solve_response_time": 0,
+        "solve_token_usage": "N/A",
+        "solve_accuracy": 0.0,
+        "solve_correct_fields": 0,
+        "solve_total_fields": 1,
+        "solve_parsed": "N/A",
+        "convert_constraints": "{\"houses_count\": 2, \"categories\": {\"colors\": [\"Red\", \"Blue\"], \"people\": [\"A\", \"B\"]}, \"constraints\": [{\"type\": \"distinct_categories\", \"categories\": [\"colors\", \"people\"]}, {\"type\": \"eq\", \"var1\": \"A\", \"var2\": \"Red\"}, {\"type\": \"eq\", \"var1\": \"B\", \"var2\": \"Blue\"}, {\"type\": \"left\", \"var1\": \"A\", \"var2\": \"Red\"}, {\"type\": \"left\", \"var1\": \"B\", \"var2\": \"Blue\"}, {\"type\": \"right\", \"var1\": \"A\", \"var2\": \"Red\"}, {\"type\": \"right\", \"var1\": \"B\", \"var2\": \"Blue\"}, {\"type\": \"distinct_categories\", \"categories\": [\"colors\", \"people\", \"houses\"]}]}",
+        "convert_response_time": 2.59,
+        "convert_token_usage": 839,
+        "convert_solver_str": "N/A",
+        "convert_solver_accuracy": 0.0,
+        "convert_correct_fields": 0,
+        "convert_total_fields": 1,
+        "convert_solver_parsed": "N/A",
+        "official_z3_constraints_present": true,
+        "constraints_accuracy": 0.5,
+        "constraints_correct_fields": 4,
+        "constraints_total_fields": 8,
+        "error": "Z3 solver returned no solution for LLM constraints."
     }
 ]

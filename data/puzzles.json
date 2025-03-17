@@ -42,49 +42,32 @@
                 {"type": "neighbor", "var1": "Norwegian", "var2": "Blue"}
             ]
         },
-        "ground_truth": {
-            "houses": [
-                {
-                    "House": 1,
-                    "Nationality": "Norwegian",
-                    "Color": "Yellow",
-                    "Pet": "Fox",
-                    "Drink": "Water",
-                    "Cigarette": "Kools"
-                },
-                {
-                    "House": 2,
-                    "Nationality": "Ukrainian",
-                    "Color": "Blue",
-                    "Pet": "Horse",
-                    "Drink": "Tea",
-                    "Cigarette": "Chesterfields"
-                },
-                {
-                    "House": 3,
-                    "Nationality": "Englishman",
-                    "Color": "Red",
-                    "Pet": "Snails",
-                    "Drink": "Milk",
-                    "Cigarette": "OldGold"
-                },
-                {
-                    "House": 4,
-                    "Nationality": "Japanese",
-                    "Color": "Green",
-                    "Pet": "Zebra",
-                    "Drink": "Coffee",
-                    "Cigarette": "Parliaments"
-                },
-                {
-                    "House": 5,
-                    "Nationality": "Spaniard",
-                    "Color": "Ivory",
-                    "Pet": "Dog",
-                    "Drink": "OrangeJuice",
-                    "Cigarette": "LuckyStrike"
-                }
-            ]
+        "ground_truth_dict": {
+            "Englishman": 3,
+            "Spaniard": 4,
+            "Ukrainian": 2,
+            "Norwegian": 1,
+            "Japanese": 5,
+            "Red": 3,
+            "Green": 5,
+            "Ivory": 4,
+            "Blue": 2,
+            "Yellow": 1,
+            "Fox": 1,
+            "Horse": 2,
+            "Zebra": 5,
+            "Dog": 4,
+            "Snails": 3,
+            "Coffee": 5,
+            "Milk": 3,
+            "OrangeJuice": 4,
+            "Tea": 2,
+            "Water": 1,
+            "Parliaments": 5,
+            "Kools": 1,
+            "LuckyStrike": 4,
+            "OldGold": 3,
+            "Chesterfields": 2
         }
     },
 
@@ -110,19 +93,11 @@
                 {"type": "eq", "var1": "PersonB", "var2": "Blue"}
             ]
         },
-        "ground_truth": {
-            "houses": [
-                {
-                    "House": 1,
-                    "Person": "A",
-                    "Color": "Red"
-                },
-                {
-                    "House": 2,
-                    "Person": "B",
-                    "Color": "Blue"
-                }
-            ]
+        "ground_truth_dict": {
+            "Red": 1,
+            "Blue": 2,
+            "PersonA": 1,
+            "PersonB": 2
         }
     },
 
@@ -159,24 +134,13 @@
                 }
             ]
         },
-        "ground_truth": {
-            "houses": [
-                {
-                    "House": 1,
-                    "Name": "Arnold",
-                    "Drink": "tea"
-                },
-                {
-                    "House": 2,
-                    "Name": "Peter",
-                    "Drink": "water"
-                },
-                {
-                    "House": 3,
-                    "Name": "Eric",
-                    "Drink": "milk"
-                }
-            ]
+        "ground_truth_dict": {
+            "Peter": 2,
+            "Eric": 3,
+            "Arnold": 1,
+            "tea": 1,
+            "water": 2,
+            "milk": 3
         }
     },
 
@@ -212,37 +176,85 @@
                 { "type": "eq", "var1": "jan", "var2": "craftsman" }
             ]
         },
-        "ground_truth": {
-            "houses": [
+        "ground_truth_dict": {
+            "Eric": 2,
+            "Arnold": 1,
+            "Alice": 4,
+            "Peter": 3,
+            "Holly": 1,
+            "Kailyn": 3,
+            "Aniya": 2,
+            "Janelle": 4,
+            "april": 2,
+            "feb": 3,
+            "sept": 4,
+            "jan": 1,
+            "ranch": 2,
+            "colonial": 3,
+            "victorian": 4,
+            "craftsman": 1
+        }
+    },
+
+    "puzzle_5": {
+        "text_description": "There are 2 houses, numbered 1 to 2 from left to right, as seen from across the street. Each house is occupied by a different person. Each house has a unique attribute for each of the following characteristics:\n- Each person has a unique name: Eric, Arnold\n- Each person has a unique type of pet: dog, cat\n\n## Clues:\n1. Eric is somewhere to the left of Arnold.\n2. The person who owns a dog is not in the first house.\n",
+        "z3_format": {
+            "houses_count": 2,
+            "categories": {
+                "names": ["Eric", "Arnold"],
+                "pets": ["dog", "cat"]
+            },
+            "constraints": [
                 {
-                    "House": 1,
-                    "Name": "Peter",
-                    "Mother": "Aniya",
-                    "Birthday": "feb",
-                    "HouseStyle": "colonial"
+                    "type": "distinct_categories",
+                    "categories": ["names", "pets"]
                 },
                 {
-                    "House": 2,
-                    "Name": "Arnold",
-                    "Mother": "Holly",
-                    "Birthday": "april",
-                    "HouseStyle": "ranch"
+                    "type": "range",
+                    "from": 1,
+                    "to": 2
                 },
                 {
-                    "House": 3,
-                    "Name": "Alice",
-                    "Mother": "Kailyn",
-                    "Birthday": "jan",
-                    "HouseStyle": "craftsman"
+                    "type": "left",
+                    "var1": "Eric",
+                    "var2": "Arnold"
                 },
                 {
-                    "House": 4,
-                    "Name": "Eric",
-                    "Mother": "Janelle",
-                    "Birthday": "sept",
-                    "HouseStyle": "victorian"
+                    "type": "neq",
+                    "var1": "dog",
+                    "var2int": 1
                 }
             ]
+        },
+        "ground_truth_dict": {
+            "Eric": 1,
+            "Arnold": 2,
+            "dog": 2,
+            "cat": 1
+        }
+    },
+    "puzzle_6": {
+        "text_description": "There are 3 houses, numbered 1 to 3 from left to right, as seen from across the street. Each house is occupied by a different person. Each house has a unique attribute for each of the following characteristics:\n- Each person has a unique name: Peter, Eric, Arnold\n- Each person has a favorite color: white, red, yellow\n- People use unique phone models: google pixel 6, samsung galaxy s21, iphone 13\n- People have unique favorite music genres: classical, rock, pop\n- Each person has a unique level of education: high school, bachelor, associate\n\n## Clues:\n1. The person who loves pop music is Peter.\n2. Arnold is the person who loves classical music.\n3. The person with a bachelor's degree is not in the first house.\n4. The person who loves white is in the second house.\n5. The person who loves pop music is in the first house.\n6. The person who uses a Samsung Galaxy S21 is the person with an associate's degree.\n7. The person with a bachelor's degree is the person whose favorite color is red.\n8. The person with a high school diploma is the person who uses a Google Pixel 6.\n9. The person who uses a Samsung Galaxy S21 is the person who loves rock music.\n",
+        "ground_truth_dict": {
+          "Peter": 1,
+          "Arnold": 3,
+          "Eric": 2,
+    
+          "yellow": 1,
+          "white": 2,
+          "red": 3,
+    
+          "google pixel 6": 1,
+          "samsung galaxy s21": 2,
+          "iphone 13": 3,
+    
+          "classical": 3,
+          "rock": 2,
+          "pop": 1,
+    
+          "high school": 1,
+          "associate": 2,
+          "bachelor": 3
         }
     }
 }
