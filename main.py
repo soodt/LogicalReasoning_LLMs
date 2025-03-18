@@ -30,6 +30,7 @@ for puzzle_name, puzzle_data in puzzles.items():
     text_description = puzzle_data["text_description"]
     puzzle_z3 = puzzle_data.get("z3_format", None)  # official constraints if present
     puzzle_ground_truth_dict = puzzle_data["ground_truth_dict"]
+    puzzle_size = puzzle_data["size"]
 
     print(f"\nProcessing puzzle: {puzzle_name}")
     print("-" * 50)
@@ -95,6 +96,7 @@ for puzzle_name, puzzle_data in puzzles.items():
 
     logger.log_run(
         puzzle_name=puzzle_name,
+        puzzle_size=puzzle_size,
         variant=variant,
         prompt=text_description,
         puzzle_ground_truth_dict=puzzle_ground_truth_dict,

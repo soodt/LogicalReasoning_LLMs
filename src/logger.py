@@ -131,6 +131,7 @@ class Logger:
     def log_run(
         self,
         puzzle_name,
+        puzzle_size,
         variant,  # "solve", "convert", or "full_test"
         prompt,
         puzzle_ground_truth_dict,
@@ -179,7 +180,7 @@ class Logger:
         if convert_solver_str == "N/A":
             convert_sol_acc = 0.0
             convert_sol_correct = 0
-            convert_sol_total = 1
+            convert_sol_total = len(puzzle_ground_truth_dict)
             convert_sol_parsed = "N/A"
         else:
             try:
@@ -189,13 +190,13 @@ class Logger:
                 convert_sol_parsed = f"Parse error: {str(e)}"
                 convert_sol_acc = 0.0
                 convert_sol_correct = 0
-                convert_sol_total = 1
+                convert_sol_total = len(puzzle_ground_truth_dict)
                 error_msg = (error_msg + " | " if error_msg else "") + f"Error parsing convert_solver_str: {str(e)}"
             else:
                 m2, t2 = self.compare_dict_solution(convert_sol_parsed, puzzle_ground_truth_dict)
                 convert_sol_acc = m2 / t2 if t2 > 0 else 0
                 convert_sol_correct = m2
-                convert_sol_total = t2
+                convert_sol_total = len(puzzle_ground_truth_dict)
 
         # If official Z3 constraints were provided and we obtained LLM constraints, compare them
         if puzzle_z3 and convert_constraints != "N/A":
@@ -216,6 +217,7 @@ class Logger:
         entry = {
             "timestamp": time.strftime("%Y-%m-%d %H:%M:%S"),
             "puzzle": puzzle_name,
+            "puzzle_size": puzzle_size, 
             "variant": variant,
             "prompt": prompt,
             "puzzle_ground_truth_dict": puzzle_ground_truth_dict,
