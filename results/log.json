@@ -1668,5 +1668,46 @@
         "constraints_correct_fields": 4,
         "constraints_total_fields": 8,
         "error": "Z3 solver returned no solution for LLM constraints."
+    },
+    {
+        "timestamp": "2025-03-17 18:31:07",
+        "puzzle": "puzzle_7",
+        "variant": "full_test",
+        "prompt": "There are 2 houses, numbered 1 to 2 from left to right, as seen from across the street. Each house is occupied by a different person. Each house has a unique attribute for each of the following characteristics:\n- Each person has a unique name: `Eric`, `Arnold`\n- Everyone has something unique for lunch: `pizza`, `grilled cheese`\n- People own unique car models: `tesla model 3`, `ford f150`\n\n## Clues:\n1. Eric is in the first house.\n2. The person who loves eating grilled cheese is not in the second house.\n3. The person who owns a Ford F-150 is the person who is a pizza lover.\n\nSolve the puzzle: Who is in each house and what are their lunch and car model assignments?",
+        "puzzle_ground_truth_dict": {
+            "Eric": 1,
+            "Arnold": 2,
+            "grilled cheese": 1,
+            "pizza": 2,
+            "tesla model 3": 1,
+            "ford f150": 2
+        },
+        "solve_dict_str": "{'Eric': 1, 'Arnold': 2, 'pizza': 1, 'grilled cheese': 2, 'tesla model 3': 1, 'ford f150': 2}",
+        "solve_response_time": 0.72,
+        "solve_token_usage": 440,
+        "solve_accuracy": 0.6666666666666666,
+        "solve_correct_fields": 4,
+        "solve_total_fields": 6,
+        "solve_parsed": {
+            "Eric": 1,
+            "Arnold": 2,
+            "pizza": 1,
+            "grilled cheese": 2,
+            "tesla model 3": 1,
+            "ford f150": 2
+        },
+        "convert_constraints": "{\"houses_count\": 2, \"categories\": {\"names\": [\"Eric\", \"Arnold\"], \"lunches\": [\"pizza\", \"grilled cheese\"], \"cars\": [\"tesla model 3\", \"ford f150\"]}, \"constraints\": [{\"type\": \"distinct_categories\", \"categories\": [\"names\", \"lunches\", \"cars\"]}, {\"type\": \"eq\", \"var1\": \"Eric\", \"var2\": \"1\"}, {\"type\": \"ne\", \"var1\": \"Arnold\", \"var2\": \"2\"}, {\"type\": \"ne\", \"var1\": \"grilled cheese\", \"var2\": \"2\"}, {\"type\": \"eq\", \"var1\": \"ford f150\", \"var2\": \"pizza\"}]}",
+        "convert_response_time": 4.23,
+        "convert_token_usage": 932,
+        "convert_solver_str": "N/A",
+        "convert_solver_accuracy": 0.0,
+        "convert_correct_fields": 0,
+        "convert_total_fields": 1,
+        "convert_solver_parsed": "N/A",
+        "official_z3_constraints_present": false,
+        "constraints_accuracy": 0.0,
+        "constraints_correct_fields": 0,
+        "constraints_total_fields": 1,
+        "error": "Z3 solver returned no solution for LLM constraints."
     }
 ]
