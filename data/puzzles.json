@@ -1,15 +1,45 @@
 {
     "puzzle_1": {
-        "text_description": "There are five houses in a row. The Englishman lives in the red house. The Spaniard owns the dog. Coffee is drunk in the green house. The Ukrainian drinks tea. Who owns the zebra?",
+        "text_description": "There are five houses. The Englishman lives in the red house. The Spaniard owns the dog. Coffee is drunk in the green house. The Ukrainian drinks tea. The green house is immediately to the right of the ivory house. The Old Gold smoker owns snails. Kools are smoked in the yellow house. Milk is drunk in the middle house. The Norwegian lives in the first house. The man who smokes Chesterfields lives in the house next to the man with the fox. Kools are smoked in the house next to the house where the horse is kept. The Lucky Strike smoker drinks orange juice. The Japanese smokes Parliaments. The Norwegian lives next to the blue house. Now, who drinks water? Who owns the zebra?",
         "z3_format": {
-            "variables": ["House1", "House2", "House3", "House4", "House5"],
-            "domains": ["Red", "Blue", "Green", "Yellow", "White"],
+            "houses_count": 5,
+            "categories": {
+                "nationalities": ["Englishman", "Spaniard", "Ukrainian", "Norwegian", "Japanese"],
+                "colors": ["Red", "Green", "Ivory", "Blue", "Yellow"],
+                "pets": ["Fox", "Horse", "Zebra", "Dog", "Snails"],
+                "drinks": ["Coffee", "Milk", "OrangeJuice", "Tea", "Water"],
+                "cigarettes": ["Parliaments", "Kools", "LuckyStrike", "OldGold", "Chesterfields"]
+            },
             "constraints": [
-                {"type": "eq", "var1": "Norwegian", "var2": "House1"},
-                {"type": "neighbor", "var1": "Blue", "var2": "Norwegian"},
-                {"type": "eq", "var1": "Brit", "var2": "Red"},
-                {"type": "eq", "var1": "Swede", "var2": "Dog"},
-                {"type": "eq", "var1": "Dane", "var2": "Tea"}
+                {
+                    "type": "distinct_categories",
+                    "categories": [
+                        "nationalities",
+                        "colors",
+                        "pets",
+                        "drinks",
+                        "cigarettes"
+                    ]
+                },
+                {
+                    "type": "range",
+                    "from": 1,
+                    "to": 5
+                },
+                {"type": "eq", "var1": "Englishman", "var2": "Red"},
+                {"type": "eq", "var1": "Spaniard", "var2": "Dog"},
+                {"type": "eq", "var1": "Coffee", "var2": "Green"},
+                {"type": "eq", "var1": "Ukrainian", "var2": "Tea"},
+                {"type": "eq_offset", "var1": "Green", "var2": "Ivory", "offset": 1},
+                {"type": "eq", "var1": "OldGold", "var2": "Snails"},
+                {"type": "eq", "var1": "Kools", "var2": "Yellow"},
+                {"type": "eq", "var1": "Milk", "var2int": 3},
+                {"type": "eq", "var1": "Norwegian", "var2int": 1},
+                {"type": "neighbor", "var1": "Chesterfields", "var2": "Fox"},
+                {"type": "neighbor", "var1": "Kools", "var2": "Horse"},
+                {"type": "eq", "var1": "LuckyStrike", "var2": "OrangeJuice"},
+                {"type": "eq", "var1": "Japanese", "var2": "Parliaments"},
+                {"type": "neighbor", "var1": "Norwegian", "var2": "Blue"}
             ]
         },
         "ground_truth_dict": {
@@ -38,17 +68,29 @@
             "LuckyStrike": 4,
             "OldGold": 3,
             "Chesterfields": 2
-        },
-        "size": "5x5"
+        }
     },
+
     "puzzle_2": {
         "text_description": "There are two houses. One is red, the other is blue. Person A lives in the red house, and Person B lives in the blue house. Who lives in each house?",
         "z3_format": {
-            "variables": ["House1", "House2"],
-            "domains": ["Red", "Blue"],
+            "houses_count": 2,
+            "categories": {
+                "colors": ["Red", "Blue"],
+                "people": ["PersonA", "PersonB"]
+            },
             "constraints": [
-                {"type": "eq", "var1": "Person_A", "var2": "Red"},
-                {"type": "eq", "var1": "Person_B", "var2": "Blue"}
+                {
+                    "type": "distinct_categories",
+                    "categories": ["colors", "people"]
+                },
+                {
+                    "type": "range",
+                    "from": 1,
+                    "to": 2
+                },
+                {"type": "eq", "var1": "PersonA", "var2": "Red"},
+                {"type": "eq", "var1": "PersonB", "var2": "Blue"}
             ]
         },
         "ground_truth_dict": {
@@ -56,9 +98,9 @@
             "Blue": 2,
             "PersonA": 1,
             "PersonB": 2
-        },
-        "size": "2x2"
+        }
     },
+
     "puzzle_3": {
         "text_description": "There are 3 houses, numbered 1 to 3 from left to right. Each house is occupied by a different person. Each house has a unique attribute for each characteristic:\n- Names: Peter, Eric, Arnold\n- Drinks: tea, water, milk\n\n## Clues\n1. Peter is in the second house.\n2. Arnold is directly left of the one who only drinks water.\n3. The one who only drinks water is directly left of the person who likes milk.\n\nWe want to know who lives in each house and who drinks what.",
         "z3_format": {
@@ -68,11 +110,28 @@
                 "drinks": ["tea", "water", "milk"]
             },
             "constraints": [
-                {"type": "distinct_categories", "categories": ["names", "drinks"]},
-                {"type": "range", "from": 1, "to": 3},
-                {"type": "eq", "var1": "Peter", "var2int": 2},
-                {"type": "eq_offset", "var1": "water", "var2": "Arnold", "offset": 1},
-                {"type": "eq_offset", "var1": "milk", "var2": "water", "offset": 1}
+                {
+                    "type": "distinct_categories",
+                    "categories": ["names", "drinks"]
+                },
+                {
+                    "type": "range",
+                    "from": 1,
+                    "to": 3
+                },
+                { "type": "eq", "var1": "Peter", "var2int": 2 },
+                {
+                    "type": "eq_offset",
+                    "var1": "water",
+                    "var2": "Arnold",
+                    "offset": 1
+                },
+                {
+                    "type": "eq_offset",
+                    "var1": "milk",
+                    "var2": "water",
+                    "offset": 1
+                }
             ]
         },
         "ground_truth_dict": {
@@ -82,9 +141,9 @@
             "tea": 1,
             "water": 2,
             "milk": 3
-        },
-        "size": "3x2"
+        }
     },
+
     "puzzle_4": {
         "text_description": "There are 4 houses in a row, numbered 1 to 4 (left to right). Each house is occupied by a different person and has unique attributes: names (Eric, Arnold, Alice, Peter), mothers (Holly, Kailyn, Aniya, Janelle), birthdays (april, feb, sept, jan), and house styles (ranch, colonial, victorian, craftsman).\n\nClues:\n1. Peter is the person whose birthday is in February.\n2. The person whose birthday is in February is not in the fourth house.\n3. The person whose birthday is in January is somewhere to the right of the person in a ranch-style home.\n4. The person whose birthday is in January is directly left of Eric.\n5. The person in a ranch-style home is the person whose birthday is in April.\n6. The person whose mother's name is Janelle is the person whose birthday is in September.\n7. The person in a ranch-style home and the person whose mother's name is Kailyn are next to each other.\n8. Arnold is the person whose mother's name is Holly.\n9. The person whose mother's name is Kailyn is directly left of the person residing in a Victorian house.\n10. The person whose birthday is in January is the person in a Craftsman-style house.\n",
         "z3_format": {
@@ -96,18 +155,25 @@
                 "house_styles": ["ranch", "colonial", "victorian", "craftsman"]
             },
             "constraints": [
-                {"type": "distinct_categories", "categories": ["names", "mothers", "birthdays", "house_styles"]},
-                {"type": "range", "from": 1, "to": 4},
-                {"type": "eq", "var1": "Peter", "var2": "feb"},
-                {"type": "neq", "var1": "feb", "var2int": 4},
-                {"type": "left", "var1": "ranch", "var2": "jan"},
-                {"type": "eq_offset", "var1": "Eric", "var2": "jan", "offset": 1},
-                {"type": "eq", "var1": "ranch", "var2": "april"},
-                {"type": "eq", "var1": "Janelle", "var2": "sept"},
-                {"type": "neighbor", "var1": "ranch", "var2": "Kailyn"},
-                {"type": "eq", "var1": "Arnold", "var2": "Holly"},
-                {"type": "eq_offset", "var1": "victorian", "var2": "Kailyn", "offset": 1},
-                {"type": "eq", "var1": "jan", "var2": "craftsman"}
+                {
+                    "type": "distinct_categories",
+                    "categories": ["names", "mothers", "birthdays", "house_styles"]
+                },
+                {
+                    "type": "range",
+                    "from": 1,
+                    "to": 4
+                },
+                { "type": "eq", "var1": "Peter", "var2": "feb" },
+                { "type": "neq", "var1": "feb", "var2int": 4 },
+                { "type": "left", "var1": "ranch", "var2": "jan" },
+                { "type": "eq_offset", "var1": "Eric", "var2": "jan", "offset": 1 },
+                { "type": "eq", "var1": "ranch", "var2": "april" },
+                { "type": "eq", "var1": "Janelle", "var2": "sept" },
+                { "type": "neighbor", "var1": "ranch", "var2": "Kailyn" },
+                { "type": "eq", "var1": "Arnold", "var2": "Holly" },
+                { "type": "eq_offset", "var1": "victorian", "var2": "Kailyn", "offset": 1 },
+                { "type": "eq", "var1": "jan", "var2": "craftsman" }
             ]
         },
         "ground_truth_dict": {
@@ -127,11 +193,11 @@
             "colonial": 3,
             "victorian": 4,
             "craftsman": 1
-        },
-        "size": "4x4"
+        }
     },
+
     "puzzle_5": {
-        "text_description": "There are 2 houses, numbered 1 to 2 from left to right, as seen from across the street. Each house is occupied by a different person. Each house has a unique attribute for each characteristic:\n- Each person has a unique name: Eric, Arnold\n- Each person has a unique type of pet: dog, cat\n\n## Clues:\n1. Eric is somewhere to the left of Arnold.\n2. The person who owns a dog is not in the first house.\n",
+        "text_description": "There are 2 houses, numbered 1 to 2 from left to right, as seen from across the street. Each house is occupied by a different person. Each house has a unique attribute for each of the following characteristics:\n- Each person has a unique name: Eric, Arnold\n- Each person has a unique type of pet: dog, cat\n\n## Clues:\n1. Eric is somewhere to the left of Arnold.\n2. The person who owns a dog is not in the first house.\n",
         "z3_format": {
             "houses_count": 2,
             "categories": {
@@ -139,10 +205,25 @@
                 "pets": ["dog", "cat"]
             },
             "constraints": [
-                {"type": "distinct_categories", "categories": ["names", "pets"]},
-                {"type": "range", "from": 1, "to": 2},
-                {"type": "left", "var1": "Eric", "var2": "Arnold"},
-                {"type": "neq", "var1": "dog", "var2int": 1}
+                {
+                    "type": "distinct_categories",
+                    "categories": ["names", "pets"]
+                },
+                {
+                    "type": "range",
+                    "from": 1,
+                    "to": 2
+                },
+                {
+                    "type": "left",
+                    "var1": "Eric",
+                    "var2": "Arnold"
+                },
+                {
+                    "type": "neq",
+                    "var1": "dog",
+                    "var2int": 1
+                }
             ]
         },
         "ground_truth_dict": {
@@ -150,309 +231,296 @@
             "Arnold": 2,
             "dog": 2,
             "cat": 1
-        },
-        "size": "2x2"
+        }
     },
     "puzzle_6": {
-        "text_description": "There are 3 houses, numbered 1 to 3 from left to right, as seen from across the street. Each house is occupied by a different person. Each house has a unique attribute for each characteristic:\n- Each person has a unique name: Peter, Eric, Arnold\n- Each person has a favorite color: white, red, yellow\n- People use unique phone models: google pixel 6, samsung galaxy s21, iphone 13\n- People have unique favorite music genres: classical, rock, pop\n- Each person has a unique level of education: high school, bachelor, associate\n\n## Clues:\n1. The person who loves pop music is Peter.\n2. Arnold is the person who loves classical music.\n3. The person with a bachelor's degree is not in the first house.\n4. The person who loves white is in the second house.\n5. The person who loves pop music is in the first house.\n6. The person who uses a Samsung Galaxy S21 is the person with an associate's degree.\n7. The person with a bachelor's degree is the person whose favorite color is red.\n8. The person with a high school diploma is the person who uses a Google Pixel 6.\n9. The person who uses a Samsung Galaxy S21 is the person who loves rock music.\n",
+        "text_description": "There are 3 houses, numbered 1 to 3 from left to right, as seen from across the street. Each house is occupied by a different person. Each house has a unique attribute for each of the following characteristics:\n- Each person has a unique name: Peter, Eric, Arnold\n- Each person has a favorite color: white, red, yellow\n- People use unique phone models: google pixel 6, samsung galaxy s21, iphone 13\n- People have unique favorite music genres: classical, rock, pop\n- Each person has a unique level of education: high school, bachelor, associate\n\n## Clues:\n1. The person who loves pop music is Peter.\n2. Arnold is the person who loves classical music.\n3. The person with a bachelor's degree is not in the first house.\n4. The person who loves white is in the second house.\n5. The person who loves pop music is in the first house.\n6. The person who uses a Samsung Galaxy S21 is the person with an associate's degree.\n7. The person with a bachelor's degree is the person whose favorite color is red.\n8. The person with a high school diploma is the person who uses a Google Pixel 6.\n9. The person who uses a Samsung Galaxy S21 is the person who loves rock music.\n",
         "ground_truth_dict": {
-            "Peter": 1,
-            "Arnold": 3,
-            "Eric": 2,
-            "yellow": 1,
-            "white": 2,
-            "red": 3,
-            "google pixel 6": 1,
-            "samsung galaxy s21": 2,
-            "iphone 13": 3,
-            "classical": 3,
-            "rock": 2,
-            "pop": 1,
-            "high school": 1,
-            "associate": 2,
-            "bachelor": 3
-        },
-        "size": "3x5"
+          "Peter": 1,
+          "Arnold": 3,
+          "Eric": 2,
+    
+          "yellow": 1,
+          "white": 2,
+          "red": 3,
+    
+          "google pixel 6": 1,
+          "samsung galaxy s21": 2,
+          "iphone 13": 3,
+    
+          "classical": 3,
+          "rock": 2,
+          "pop": 1,
+    
+          "high school": 1,
+          "associate": 2,
+          "bachelor": 3
+        }
     },
     "puzzle_7": {
-        "text_description": "There are 2 houses, numbered 1 to 2 from left to right, as seen from across the street. Each house is occupied by a different person. Each house has a unique attribute for each characteristic:\n- Each person has a unique name: Eric, Arnold\n- Everyone has something unique for lunch: pizza, grilled cheese\n- People own unique car models: tesla model 3, ford f150\n\n## Clues:\n1. Eric is in the first house.\n2. The person who loves eating grilled cheese is not in the second house.\n3. The person who owns a Ford F-150 is the person who is a pizza lover.\n\nSolve the puzzle: Who is in each house and what are their lunch and car model assignments?",
+        "text_description": "There are 2 houses, numbered 1 to 2 from left to right, as seen from across the street. Each house is occupied by a different person. Each house has a unique attribute for each of the following characteristics:\n- Each person has a unique name: `Eric`, `Arnold`\n- Everyone has something unique for lunch: `pizza`, `grilled cheese`\n- People own unique car models: `tesla model 3`, `ford f150`\n\n## Clues:\n1. Eric is in the first house.\n2. The person who loves eating grilled cheese is not in the second house.\n3. The person who owns a Ford F-150 is the person who is a pizza lover.\n\nSolve the puzzle: Who is in each house and what are their lunch and car model assignments?",
         "ground_truth_dict": {
-            "Eric": 1,
-            "Arnold": 2,
-            "grilled cheese": 1,
-            "pizza": 2,
-            "tesla model 3": 1,
-            "ford f150": 2
-        },
-        "size": "2x3"
-    },
+        "Eric": 1,
+        "Arnold": 2,
+        "grilled cheese": 1,
+        "pizza": 2,
+        "tesla model 3": 1,
+        "ford f150": 2
+        }
+  },
     "puzzle_8": {
-        "text_description": "There are 6 houses, numbered 1 to 6 from left to right, as seen from across the street. Each house is occupied by a different person. Each house has a unique attribute for each characteristic:\n- Each person has a unique name: Alice, Carol, Eric, Peter, Bob, Arnold\n- People have unique favorite music genres: hip hop, classical, country, pop, rock, jazz\n- The mothers' names in different houses are unique: Penny, Holly, Aniya, Kailyn, Janelle, Sarah\n- Each mother is accompanied by their child: Ben, Cody, Derek, Evan, Frank, Gabe\n- People have unique heights: very short, super tall, tall, short, very tall, average\n- The people keep unique animals: dog, rabbit, horse, cat, fish, bird\n\n## Clues:\n1. The person who loves pop music is the cat lover.\n2. The rabbit owner is directly left of the person whose mother's name is Aniya.\n3. The person whose mother's name is Holly is directly left of Carol.\n4. The person whose mother's name is Holly is the person whose child is Ben.\n5. The person whose mother's name is Holly is the person who loves classical music.\n6. The person who loves jazz music is the person whose mother's name is Sarah.\n7. The person whose child is named Gabe is somewhere to the right of the person whose mother's name is Aniya.\n8. The person who is super tall is the person whose mother's name is Holly.\n9. The person whose mother's name is Janelle is the mother of Evan.\n10. The person who is very short is somewhere to the left of the person whose mother's name is Aniya.\n11. Eric is the fish enthusiast.\n12. The person whose child is named Cody is somewhere to the right of the person who is very tall.\n13. The person who loves rock music is the person whose mother's name is Janelle.\n14. There is one house between the person who keeps horses and the person whose child is named Frank.\n15. The person whose child is named Derek is somewhere to the right of Peter.\n16. The fish enthusiast is somewhere to the left of the bird keeper.\n17. The fish enthusiast is somewhere to the right of the person whose child is named Ben.\n18. There is one house between the person whose child is named Derek and the person who loves rock music.\n19. The person who is short is the cat lover.\n20. Alice is directly left of the person who loves classical music.\n21. The person whose child is named Derek is the person whose mother's name is Aniya.\n22. There are two houses between the person whose mother's name is Penny and the person who is short.\n23. The person who loves hip hop music is in the first house.\n24. Carol is the person who is tall.\n\nSolve the puzzle: Who is in each house and what are their attributes?",
+        "text_description": "There are 6 houses, numbered 1 to 6 from left to right, as seen from across the street. Each house is occupied by a different person. Each house has a unique attribute for each of the following characteristics:\n- Each person has a unique name: `Alice`, `Carol`, `Eric`, `Peter`, `Bob`, `Arnold`\n- People have unique favorite music genres: `hip hop`, `classical`, `country`, `pop`, `rock`, `jazz`\n- The mothers' names in different houses are unique: `Penny`, `Holly`, `Aniya`, `Kailyn`, `Janelle`, `Sarah`\n- Each mother is accompanied by their child: `Ben`, `Cody`, `Derek`, `Evan`, `Frank`, `Gabe`\n- People have unique heights: `very short`, `super tall`, `tall`, `short`, `very tall`, `average`\n- The people keep unique animals: `dog`, `rabbit`, `horse`, `cat`, `fish`, `bird`\n\n## Clues:\n1. The person who loves pop music is the cat lover.\n2. The rabbit owner is directly left of the person whose mother's name is Aniya.\n3. The person whose mother's name is Holly is directly left of Carol.\n4. The person whose mother's name is Holly is the person whose child is Ben.\n5. The person whose mother's name is Holly is the person who loves classical music.\n6. The person who loves jazz music is the person whose mother's name is Sarah.\n7. The person whose child is named Gabe is somewhere to the right of the person whose mother's name is Aniya.\n8. The person who is super tall is the person whose mother's name is Holly.\n9. The person whose mother's name is Janelle is the mother of Evan.\n10. The person who is very short is somewhere to the left of the person whose mother's name is Aniya.\n11. Eric is the fish enthusiast.\n12. The person whose child is named Cody is somewhere to the right of the person who is very tall.\n13. The person who loves rock music is the person whose mother's name is Janelle.\n14. There is one house between the person who keeps horses and the person whose child is named Frank.\n15. The person whose child is named Derek is somewhere to the right of Peter.\n16. The fish enthusiast is somewhere to the left of the bird keeper.\n17. The fish enthusiast is somewhere to the right of the person whose child is named Ben.\n18. There is one house between the person whose child is named Derek and the person who loves rock music.\n19. The person who is short is the cat lover.\n20. Alice is directly left of the person who loves classical music.\n21. The person whose child is named Derek is the person whose mother's name is Aniya.\n22. There are two houses between the person whose mother's name is Penny and the person who is short.\n23. The person who loves hip hop music is in the first house.\n24. Carol is the person who is tall.\n\nSolve the puzzle: Who is in each house and what are their attributes?",
         "ground_truth_dict": {
-            "Alice": 1,
-            "Peter": 2,
-            "Carol": 3,
-            "Bob": 4,
-            "Eric": 5,
-            "Arnold": 6,
-            "hip hop": 1,
-            "classical": 2,
-            "country": 3,
-            "pop": 4,
-            "rock": 5,
-            "jazz": 6,
-            "Penny": 1,
-            "Holly": 2,
-            "Aniya": 3,
-            "Kailyn": 4,
-            "Janelle": 5,
-            "Sarah": 6,
-            "Ben": 1,
-            "Cody": 2,
-            "Derek": 3,
-            "Evan": 4,
-            "Frank": 5,
-            "Gabe": 6,
-            "very short": 1,
-            "super tall": 2,
-            "tall": 3,
-            "short": 4,
-            "very tall": 5,
-            "average": 6,
-            "dog": 1,
-            "rabbit": 2,
-            "horse": 3,
-            "cat": 4,
-            "fish": 5,
-            "bird": 6
-        },
-        "size": "6x6"
+        "Alice": 1,
+        "Peter": 2,
+        "Carol": 3,
+        "Bob": 4,
+        "Eric": 5,
+        "Arnold": 6,
+        "hip hop": 1,
+        "classical": 2,
+        "country": 3,
+        "pop": 4,
+        "rock": 5,
+        "jazz": 6,
+        "Penny": 1,
+        "Holly": 2,
+        "Aniya": 3,
+        "Kailyn": 4,
+        "Janelle": 5,
+        "Sarah": 6,
+        "Ben": 1,
+        "Cody": 2,
+        "Derek": 3,
+        "Evan": 4,
+        "Frank": 5,
+        "Gabe": 6,
+        "very short": 1,
+        "super tall": 2,
+        "tall": 3,
+        "short": 4,
+        "very tall": 5,
+        "average": 6,
+        "dog": 1,
+        "rabbit": 2,
+        "horse": 3,
+        "cat": 4,
+        "fish": 5,
+        "bird": 6
+        }
     },
     "puzzle_9": {
-        "text_description": "There are 5 houses, numbered 1 to 5 from left to right, as seen from across the street. Each house is occupied by a different person. Each house has a unique attribute for each characteristic:\n- Each person has a unique name: Alice, Bob, Arnold, Peter, Eric\n- People have unique favorite sports: tennis, baseball, soccer, basketball, swimming\n\n## Clues:\n1. The person who loves tennis is not in the fifth house.\n2. The person who loves swimming and Alice are next to each other.\n3. The person who loves swimming is directly left of the person who loves tennis.\n4. Eric is the person who loves soccer.\n5. Eric is in the first house.\n6. Arnold is in the second house.\n7. Peter is the person who loves baseball.\n8. Alice is not in the third house.",
+        "text_description": "There are 5 houses, numbered 1 to 5 from left to right, as seen from across the street. Each house is occupied by a different person. Each house has a unique attribute for each of the following characteristics:\n- Each person has a unique name: `Alice`, `Bob`, `Arnold`, `Peter`, `Eric`\n- People have unique favorite sports: `tennis`, `baseball`, `soccer`, `basketball`, `swimming`\n\n## Clues:\n1. The person who loves tennis is not in the fifth house.\n2. The person who loves swimming and Alice are next to each other.\n3. The person who loves swimming is directly left of the person who loves tennis.\n4. Eric is the person who loves soccer.\n5. Eric is in the first house.\n6. Arnold is in the second house.\n7. Peter is the person who loves baseball.\n8. Alice is not in the third house.",
         "ground_truth_dict": {
-            "Eric": 1,
-            "Arnold": 2,
-            "Bob": 3,
-            "Alice": 4,
-            "Peter": 5,
-            "soccer": 1,
-            "basketball": 2,
-            "swimming": 3,
-            "tennis": 4,
-            "baseball": 5
-        },
-        "size": "5x2"
+        "Eric": 1,
+        "Arnold": 2,
+        "Bob": 3,
+        "Alice": 4,
+        "Peter": 5,
+        "soccer": 1,
+        "basketball": 2,
+        "swimming": 3,
+        "tennis": 4,
+        "baseball": 5
+        }
     },
     "puzzle_10": {
-        "text_description": "There are 2 houses, numbered 1 to 2 from left to right, as seen from across the street. Each house is occupied by a different person. Each house has a unique attribute for each characteristic:\n- Each person has a unique name: Arnold, Eric\n- Each person has a unique level of education: high school, associate\n- The mothers' names in different houses are unique: Aniya, Holly\n\n## Clues:\n1. The person with an associate's degree is in the first house.\n2. The person whose mother's name is Holly is Arnold.\n3. The person whose mother's name is Holly is not in the second house.",
+        "text_description": "There are 2 houses, numbered 1 to 2 from left to right, as seen from across the street. Each house is occupied by a different person. Each house has a unique attribute for each of the following characteristics:\n- Each person has a unique name: `Arnold`, `Eric`\n- Each person has a unique level of education: `high school`, `associate`\n- The mothers' names in different houses are unique: `Aniya`, `Holly`\n\n## Clues:\n1. The person with an associate's degree is in the first house.\n2. The person whose mother's name is Holly is Arnold.\n3. The person whose mother's name is Holly is not in the second house.",
         "ground_truth_dict": {
-            "Arnold": 1,
-            "Eric": 2,
-            "associate": 1,
-            "high school": 2,
-            "Holly": 1,
-            "Aniya": 2
-        },
-        "size": "2x3"
+        "Arnold": 1,
+        "Eric": 2,
+        "associate": 1,
+        "high school": 2,
+        "Holly": 1,
+        "Aniya": 2
+        }
     },
     "puzzle_11": {
-        "text_description": "There are 4 houses, numbered 1 to 4 from left to right, as seen from across the street. Each house is occupied by a different person. Each house has a unique attribute for each characteristic:\n- Each person has a unique name: Arnold, Eric, Peter, Alice\n- Each person has an occupation: doctor, engineer, artist, teacher\n\n## Clues:\n1. There are two houses between Eric and Peter.\n2. The person who is a teacher is Peter.\n3. Peter is not in the first house.\n4. There is one house between the person who is a doctor and Alice.\n5. The person who is an artist is Alice.",
+        "text_description": "There are 4 houses, numbered 1 to 4 from left to right, as seen from across the street. Each house is occupied by a different person. Each house has a unique attribute for each of the following characteristics:\n- Each person has a unique name: `Arnold`, `Eric`, `Peter`, `Alice`\n- Each person has an occupation: `doctor`, `engineer`, `artist`, `teacher`\n\n## Clues:\n1. There are two houses between Eric and Peter.\n2. The person who is a teacher is Peter.\n3. Peter is not in the first house.\n4. There is one house between the person who is a doctor and Alice.\n5. The person who is an artist is Alice.",
         "ground_truth_dict": {
-            "Eric": 1,
-            "Arnold": 2,
-            "Alice": 3,
-            "Peter": 4,
-            "doctor": 1,
-            "engineer": 2,
-            "artist": 3,
-            "teacher": 4
-        },
-        "size": "4x2"
+        "Eric": 1,
+        "Arnold": 2,
+        "Alice": 3,
+        "Peter": 4,
+        "doctor": 1,
+        "engineer": 2,
+        "artist": 3,
+        "teacher": 4
+        }
     },
     "puzzle_12": {
-        "text_description": "There are 2 houses, numbered 1 to 2 from left to right, as seen from across the street. Each house is occupied by a different person. Each house has a unique attribute for each characteristic:\n- Each person has a unique name: Arnold, Eric\n- People use unique phone models: samsung galaxy s21, iphone 13\n- Each person has a unique type of pet: dog, cat\n\n## Clues:\n1. The person who owns a dog is directly left of Arnold.\n2. The person who uses an iPhone 13 is the person who has a cat.",
+        "text_description": "There are 2 houses, numbered 1 to 2 from left to right, as seen from across the street. Each house is occupied by a different person. Each house has a unique attribute for each of the following characteristics:\n- Each person has a unique name: `Arnold`, `Eric`\n- People use unique phone models: `samsung galaxy s21`, `iphone 13`\n- Each person has a unique type of pet: `dog`, `cat`\n\n## Clues:\n1. The person who owns a dog is directly left of Arnold.\n2. The person who uses an iPhone 13 is the person who has a cat.",
         "ground_truth_dict": {
-            "Eric": 1,
-            "Arnold": 2,
-            "samsung galaxy s21": 1,
-            "iphone 13": 2,
-            "dog": 1,
-            "cat": 2
-        },
-        "size": "2x3"
+        "Eric": 1,
+        "Arnold": 2,
+        "samsung galaxy s21": 1,
+        "iphone 13": 2,
+        "dog": 1,
+        "cat": 2
+        }
     },
     "puzzle_13": {
-        "text_description": "There are 3 houses, numbered 1 to 3 from left to right, as seen from across the street. Each house is occupied by a different person. Each house has a unique attribute for each characteristic:\n- Each person has a unique name: Eric, Peter, Arnold\n- Each person has a unique favorite drink: water, milk, tea\n- They all have a unique favorite flower: carnations, lilies, daffodils\n- Everyone has a unique favorite cigar: pall mall, prince, blue master\n\n## Clues:\n1. The person who smokes Blue Master is the person who loves a bouquet of daffodils.\n2. Arnold is somewhere to the right of the person who loves a carnations arrangement.\n3. Eric is somewhere to the right of the Prince smoker.\n4. The one who only drinks water is the person partial to Pall Mall.\n5. The person who loves the bouquet of lilies is Peter.\n6. The tea drinker is not in the third house.",
+        "text_description": "There are 3 houses, numbered 1 to 3 from left to right, as seen from across the street. Each house is occupied by a different person. Each house has a unique attribute for each of the following characteristics:\n- Each person has a unique name: `Eric`, `Peter`, `Arnold`\n- Each person has a unique favorite drink: `water`, `milk`, `tea`\n- They all have a unique favorite flower: `carnations`, `lilies`, `daffodils`\n- Everyone has a unique favorite cigar: `pall mall`, `prince`, `blue master`\n\n## Clues:\n1. The person who smokes Blue Master is the person who loves a bouquet of daffodils.\n2. Arnold is somewhere to the right of the person who loves a carnations arrangement.\n3. Eric is somewhere to the right of the Prince smoker.\n4. The one who only drinks water is the person partial to Pall Mall.\n5. The person who loves the bouquet of lilies is Peter.\n6. The tea drinker is not in the third house.",
         "ground_truth_dict": {
-            "Peter": 1,
-            "Eric": 2,
-            "Arnold": 3,
-            "tea": 1,
-            "water": 2,
-            "milk": 3,
-            "lilies": 1,
-            "carnations": 2,
-            "daffodils": 3,
-            "prince": 1,
-            "pall mall": 2,
-            "blue master": 3
-        },
-        "size": "3x4"
+        "Peter": 1,
+        "Eric": 2,
+        "Arnold": 3,
+        "tea": 1,
+        "water": 2,
+        "milk": 3,
+        "lilies": 1,
+        "carnations": 2,
+        "daffodils": 3,
+        "prince": 1,
+        "pall mall": 2,
+        "blue master": 3
+        }
     },
     "puzzle_14": {
-        "text_description": "There are 3 houses, numbered 1 to 3 from left to right, as seen from across the street. Each house is occupied by a different person. Each house has a unique attribute for each characteristic:\n- Each person has a unique name: Arnold, Peter, Eric\n- People have unique favorite sports: tennis, basketball, soccer\n- People have unique favorite music genres: classical, rock, pop\n\n## Clues:\n1. Arnold is the person who loves classical music.\n2. Arnold is in the third house.\n3. The person who loves tennis is Eric.\n4. Arnold is the person who loves soccer.\n5. The person who loves tennis is directly left of the person who loves rock music.",
+        "text_description": "There are 3 houses, numbered 1 to 3 from left to right, as seen from across the street. Each house is occupied by a different person. Each house has a unique attribute for each of the following characteristics:\n- Each person has a unique name: `Arnold`, `Peter`, `Eric`\n- People have unique favorite sports: `tennis`, `basketball`, `soccer`\n- People have unique favorite music genres: `classical`, `rock`, `pop`\n\n## Clues:\n1. Arnold is the person who loves classical music.\n2. Arnold is in the third house.\n3. The person who loves tennis is Eric.\n4. Arnold is the person who loves soccer.\n5. The person who loves tennis is directly left of the person who loves rock music.",
         "ground_truth_dict": {
-            "Arnold": 3,
-            "Peter": 2,
-            "Eric": 1,
-            "tennis": 1,
-            "basketball": 2,
-            "soccer": 3,
-            "pop": 1,
-            "rock": 2,
-            "classical": 3
-        },
-        "size": "3x3"
+        "Arnold": 3,
+        "Peter": 2,
+        "Eric": 1,
+        "tennis": 1,
+        "basketball": 2,
+        "soccer": 3,
+        "pop": 1,
+        "rock": 2,
+        "classical": 3
+        }
     },
     "puzzle_15": {
-        "text_description": "There are 2 houses, numbered 1 to 2 from left to right, as seen from across the street. Each house is occupied by a different person. Each house has a unique attribute for each characteristic:\n- Each person has a unique name: Arnold, Eric\n- They all have a unique favorite flower: carnations, daffodils\n- The people are of nationalities: brit, dane\n- Everyone has a favorite smoothie: desert, cherry\n- People have unique favorite sports: basketball, soccer\n\n## Clues:\n1. Arnold is the Desert smoothie lover.\n2. The person who loves a carnations arrangement is somewhere to the right of the Desert smoothie lover.\n3. The Dane is the person who loves soccer.\n4. The British person is not in the first house.",
+        "text_description": "There are 2 houses, numbered 1 to 2 from left to right, as seen from across the street. Each house is occupied by a different person. Each house has a unique attribute for each of the following characteristics:\n- Each person has a unique name: `Arnold`, `Eric`\n- They all have a unique favorite flower: `carnations`, `daffodils`\n- The people are of nationalities: `brit`, `dane`\n- Everyone has a favorite smoothie: `desert`, `cherry`\n- People have unique favorite sports: `basketball`, `soccer`\n\n## Clues:\n1. Arnold is the Desert smoothie lover.\n2. The person who loves a carnations arrangement is somewhere to the right of the Desert smoothie lover.\n3. The Dane is the person who loves soccer.\n4. The British person is not in the first house.",
         "ground_truth_dict": {
-            "Arnold": 1,
-            "Eric": 2,
-            "daffodils": 1,
-            "carnations": 2,
-            "dane": 1,
-            "brit": 2,
-            "desert": 1,
-            "cherry": 2,
-            "soccer": 1,
-            "basketball": 2
-        },
-        "size": "2x5"
+        "Arnold": 1,
+        "Eric": 2,
+        "daffodils": 1,
+        "carnations": 2,
+        "dane": 1,
+        "brit": 2,
+        "desert": 1,
+        "cherry": 2,
+        "soccer": 1,
+        "basketball": 2
+        }
     },
     "puzzle_16": {
-        "text_description": "There are 4 houses, numbered 1 to 4 from left to right, as seen from across the street. Each house is occupied by a different person. Each house has a unique attribute for each characteristic:\n- Each person has a unique name: Arnold, Peter, Alice, Eric\n- People have unique hair colors: black, red, blonde, brown\n- Each person has an occupation: engineer, artist, doctor, teacher\n- Each person has a unique favorite drink: coffee, water, tea, milk\n\n## Clues:\n1. The person who has brown hair is not in the second house.\n2. The person who is a doctor is Peter.\n3. The person who is a doctor is the one who only drinks water.\n4. The person who is an artist is somewhere to the left of the person who is an engineer.\n5. The person who likes milk is the person who has blonde hair.\n6. The person who has red hair is Alice.\n7. The person who is an artist and Arnold are next to each other.\n8. The person who is an artist is in the third house.\n9. The person who likes milk is somewhere to the left of the tea drinker.\n10. Arnold is somewhere to the right of Eric.\n11. The person who has black hair is the coffee drinker.\n",
+        "text_description": "There are 4 houses, numbered 1 to 4 from left to right, as seen from across the street. Each house is occupied by a different person. Each house has a unique attribute for each of the following characteristics:\n- Each person has a unique name: `Arnold`, `Peter`, `Alice`, `Eric`\n- People have unique hair colors: `black`, `red`, `blonde`, `brown`\n- Each person has an occupation: `engineer`, `artist`, `doctor`, `teacher`\n- Each person has a unique favorite drink: `coffee`, `water`, `tea`, `milk`\n\n## Clues:\n1. The person who has brown hair is not in the second house.\n2. The person who is a doctor is Peter.\n3. The person who is a doctor is the one who only drinks water.\n4. The person who is an artist is somewhere to the left of the person who is an engineer.\n5. The person who likes milk is the person who has blonde hair.\n6. The person who has red hair is Alice.\n7. The person who is an artist and Arnold are next to each other.\n8. The person who is an artist is in the third house.\n9. The person who likes milk is somewhere to the left of the tea drinker.\n10. Arnold is somewhere to the right of Eric.\n11. The person who has black hair is the coffee drinker.",
         "ground_truth_dict": {
-            "Peter": 1,
-            "Eric": 2,
-            "Alice": 3,
-            "Arnold": 4,
-            "brown": 1,
-            "blonde": 2,
-            "red": 3,
-            "black": 4,
-            "doctor": 1,
-            "teacher": 2,
-            "artist": 3,
-            "engineer": 4,
-            "water": 1,
-            "milk": 2,
-            "tea": 3,
-            "coffee": 4
-        },
-        "size": "4x4"
+        "Peter": 1,
+        "Eric": 2,
+        "Alice": 3,
+        "Arnold": 4,
+        "brown": 1,
+        "blonde": 2,
+        "red": 3,
+        "black": 4,
+        "doctor": 1,
+        "teacher": 2,
+        "artist": 3,
+        "engineer": 4,
+        "water": 1,
+        "milk": 2,
+        "tea": 3,
+        "coffee": 4
+        }
     },
     "puzzle_17": {
-        "text_description": "There are 2 houses, numbered 1 to 2 from left to right, as seen from across the street. Each house is occupied by a different person. Each house has a unique attribute for each characteristic:\n- Each person has a unique name: Eric, Arnold\n- Each person has a unique type of pet: cat, dog\n- They all have a unique favorite flower: carnations, daffodils\n- Each person has a unique hobby: photography, gardening\n- People have unique hair colors: brown, black\n- Each person prefers a unique type of vacation: mountain, beach\n\n## Clues:\n1. The person who enjoys gardening is directly left of the person who loves a carnations arrangement.\n2. Eric is somewhere to the left of the person who loves beach vacations.\n3. The person who owns a dog is not in the second house.\n4. The person who has brown hair is the photography enthusiast.",
+        "text_description": "There are 2 houses, numbered 1 to 2 from left to right, as seen from across the street. Each house is occupied by a different person. Each house has a unique attribute for each of the following characteristics:\n- Each person has a unique name: `Eric`, `Arnold`\n- Each person has a unique type of pet: `cat`, `dog`\n- They all have a unique favorite flower: `carnations`, `daffodils`\n- Each person has a unique hobby: `photography`, `gardening`\n- People have unique hair colors: `brown`, `black`\n- Each person prefers a unique type of vacation: `mountain`, `beach`\n\n## Clues:\n1. The person who enjoys gardening is directly left of the person who loves a carnations arrangement.\n2. Eric is somewhere to the left of the person who loves beach vacations.\n3. The person who owns a dog is not in the second house.\n4. The person who has brown hair is the photography enthusiast.",
         "ground_truth_dict": {
-            "Eric": 1,
-            "dog": 1,
-            "daffodils": 1,
-            "gardening": 1,
-            "black": 1,
-            "mountain": 1,
-            "Arnold": 2,
-            "cat": 2,
-            "carnations": 2,
-            "photography": 2,
-            "brown": 2,
-            "beach": 2
-        },
-        "size": "2x6"
+        "Eric": 1,
+        "dog": 1,
+        "daffodils": 1,
+        "gardening": 1,
+        "black": 1,
+        "mountain": 1,
+        "Arnold": 2,
+        "cat": 2,
+        "carnations": 2,
+        "photography": 2,
+        "brown": 2,
+        "beach": 2
+        }
     },
     "puzzle_18": {
-        "text_description": "There are 3 houses, numbered 1 to 3 from left to right, as seen from across the street. Each house is occupied by a different person. Each house has a unique attribute for each characteristic:\n- Each person has a unique name: Peter, Eric, Arnold\n- The people keep unique animals: cat, horse, bird\n- Each person has a favorite color: yellow, white, red\n- The people are of nationalities: brit, swede, dane\n- They all have a unique favorite flower: daffodils, lilies, carnations\n\n## Clues:\n1. The bird keeper and Eric are next to each other.\n2. The person whose favorite color is red is the Dane.\n3. The Dane is the person who loves a carnations arrangement.\n4. The person who loves the bouquet of lilies is the bird keeper.\n5. The Dane is somewhere to the left of the person who loves a bouquet of daffodils.\n6. The British person is somewhere to the left of the person who loves yellow.\n7. Arnold is the person who keeps horses.\n8. Eric is the Swedish person.\n",
+        "text_description": "There are 3 houses, numbered 1 to 3 from left to right, as seen from across the street. Each house is occupied by a different person. Each house has a unique attribute for each of the following characteristics:\n- Each person has a unique name: `Peter`, `Eric`, `Arnold`\n- The people keep unique animals: `cat`, `horse`, `bird`\n- Each person has a favorite color: `yellow`, `white`, `red`\n- The people are of nationalities: `brit`, `swede`, `dane`\n- They all have a unique favorite flower: `daffodils`, `lilies`, `carnations`\n\n## Clues:\n1. The bird keeper and Eric are next to each other.\n2. The person whose favorite color is red is the Dane.\n3. The Dane is the person who loves a carnations arrangement.\n4. The person who loves the bouquet of lilies is the bird keeper.\n5. The Dane is somewhere to the left of the person who loves a bouquet of daffodils.\n6. The British person is somewhere to the left of the person who loves yellow.\n7. Arnold is the person who keeps horses.\n8. Eric is the Swedish person.",
         "ground_truth_dict": {
-            "Arnold": 1,
-            "horse": 1,
-            "red": 1,
-            "dane": 1,
-            "carnations": 1,
-            "Peter": 2,
-            "bird": 2,
-            "white": 2,
-            "brit": 2,
-            "lilies": 2,
-            "Eric": 3,
-            "cat": 3,
-            "yellow": 3,
-            "swede": 3,
-            "daffodils": 3
-        },
-        "size": "3x5"
+        "Arnold": 1,
+        "horse": 1,
+        "red": 1,
+        "dane": 1,
+        "carnations": 1,
+        "Peter": 2,
+        "bird": 2,
+        "white": 2,
+        "brit": 2,
+        "lilies": 2,
+        "Eric": 3,
+        "cat": 3,
+        "yellow": 3,
+        "swede": 3,
+        "daffodils": 3
+        }
     },
     "puzzle_19": {
-        "text_description": "There are 3 houses, numbered 1 to 3 from left to right, as seen from across the street. Each house is occupied by a different person. Each house has a unique attribute for each characteristic:\n- Each person has a unique name: Arnold, Eric, Peter\n- Each person has a favorite color: white, yellow, red\n- Each person prefers a unique type of vacation: city, mountain, beach\n- Each person has a unique birthday month: sept, april, jan\n- Each mother is accompanied by their child: Meredith, Fred, Bella\n\n## Clues:\n1. The person whose birthday is in January is the person's child is named Bella.\n2. The person who loves white is Arnold.\n3. The person who loves beach vacations is Arnold.\n4. The person whose birthday is in September is somewhere to the left of Arnold.\n5. The person whose favorite color is red is directly left of the person who enjoys mountain retreats.\n6. Peter is somewhere to the right of the person's child is named Fred.\n7. The person who loves yellow is the person's child is named Bella.\n",
+        "text_description": "There are 3 houses, numbered 1 to 3 from left to right, as seen from across the street. Each house is occupied by a different person. Each house has a unique attribute for each characteristic:\n- Each person has a unique name: `Arnold`, `Eric`, `Peter`\n- Each person has a favorite color: `white`, `yellow`, `red`\n- Each person prefers a unique type of vacation: `city`, `mountain`, `beach`\n- Each person has a unique birthday month: `sept`, `april`, `jan`\n- Each mother is accompanied by their child: `Meredith`, `Fred`, `Bella`\n\n## Clues:\n1. The person whose birthday is in January is the person's child is named Bella.\n2. The person who loves white is Arnold.\n3. The person who loves beach vacations is Arnold.\n4. The person whose birthday is in September is somewhere to the left of Arnold.\n5. The person whose favorite color is red is directly left of the person who enjoys mountain retreats.\n6. Peter is somewhere to the right of the person's child is named Fred.\n7. The person who loves yellow is the person's child is named Bella.",
         "ground_truth_dict": {
-            "Eric": 1,
-            "red": 1,
-            "city": 1,
-            "sept": 1,
-            "Fred": 1,
-            "Peter": 2,
-            "yellow": 2,
-            "mountain": 2,
-            "jan": 2,
-            "Bella": 2,
-            "Arnold": 3,
-            "white": 3,
-            "beach": 3,
-            "april": 3,
-            "Meredith": 3
-        },
-        "size": "3x5"
+        "Eric": 1,
+        "red": 1,
+        "city": 1,
+        "sept": 1,
+        "Fred": 1,
+        "Peter": 2,
+        "yellow": 2,
+        "mountain": 2,
+        "jan": 2,
+        "Bella": 2,
+        "Arnold": 3,
+        "white": 3,
+        "beach": 3,
+        "april": 3,
+        "Meredith": 3
+        }
     },
     "puzzle_20": {
-        "text_description": "There are 2 houses, numbered 1 to 2 from left to right, as seen from across the street. Each house is occupied by a different person. Each house has a unique attribute for each characteristic:\n- Each person has a unique name: Arnold, Eric\n- Each person has a unique level of education: associate, high school\n- Everyone has something unique for lunch: grilled cheese, pizza\n- They all have a unique favorite flower: carnations, daffodils\n- People have unique favorite music genres: rock, pop\n\n## Clues:\n1. The person who loves a bouquet of daffodils is not in the first house.\n2. The person who is a pizza lover is the person who loves a bouquet of daffodils.\n3. The person who loves a bouquet of daffodils is Eric.\n4. The person with a high school diploma is the person who loves a bouquet of daffodils.\n5. The person who loves pop music is the person who loves a bouquet of daffodils.\n",
+        "text_description": "There are 2 houses, numbered 1 to 2 from left to right, as seen from across the street. Each house is occupied by a different person. Each house has a unique attribute for each of the following characteristics:\n- Each person has a unique name: `Arnold`, `Eric`\n- Each person has a unique level of education: `associate`, `high school`\n- Everyone has something unique for lunch: `grilled cheese`, `pizza`\n- They all have a unique favorite flower: `carnations`, `daffodils`\n- People have unique favorite music genres: `rock`, `pop`\n\n## Clues:\n1. The person who loves a bouquet of daffodils is not in the first house.\n2. The person who is a pizza lover is the person who loves a bouquet of daffodils.\n3. The person who loves a bouquet of daffodils is Eric.\n4. The person with a high school diploma is the person who loves a bouquet of daffodils.\n5. The person who loves pop music is the person who loves a bouquet of daffodils.",
         "ground_truth_dict": {
-            "Arnold": 1,
-            "associate": 1,
-            "grilled cheese": 1,
-            "carnations": 1,
-            "rock": 1,
-            "Eric": 2,
-            "high school": 2,
-            "pizza": 2,
-            "daffodils": 2,
-            "pop": 2
-        },
-        "size": "2x5"
+        "Arnold": 1,
+        "associate": 1,
+        "grilled cheese": 1,
+        "carnations": 1,
+        "rock": 1,
+        "Eric": 2,
+        "high school": 2,
+        "pizza": 2,
+        "daffodils": 2,
+        "pop": 2
+        }
     },
     "puzzle_21": {
-        "text_description": "There are 4 houses, numbered 1 to 4 from left to right, as seen from across the street. Each house is occupied by a different person. Each house has a unique attribute for each characteristic:\n- Each person has a unique name: Arnold, Peter, Alice, Eric\n- People have unique hair colors: black, red, blonde, brown\n- Each person has an occupation: doctor, engineer, artist, teacher\n- Each person has a unique favorite drink: coffee, water, tea, milk\n\n## Clues:\n1. The person who has brown hair is not in the second house.\n2. The person who is a doctor is Peter.\n3. The person who is a doctor is the one who only drinks water.\n4. The person who is an artist is somewhere to the left of the person who is an engineer.\n5. The person who likes milk is the person who has blonde hair.\n6. The person who has red hair is Alice.\n7. The person who is an artist and Arnold are next to each other.\n8. The person who is an artist is in the third house.\n9. The person who likes milk is somewhere to the left of the tea drinker.\n10. Arnold is somewhere to the right of Eric.\n11. The person who has black hair is the coffee drinker.\n",
+        "text_description": "There are 4 houses, numbered 1 to 4 from left to right, as seen from across the street. Each house is occupied by a different person. Each house has a unique attribute for each of the following characteristics:\n- Each person has a unique name: `Arnold`, `Peter`, `Alice`, `Eric`\n- People have unique hair colors: `black`, `red`, `blonde`, `brown`\n- Each person has an occupation: `doctor`, `engineer`, `artist`, `teacher`\n- Each person has a unique favorite drink: `coffee`, `water`, `tea`, `milk`\n\n## Clues:\n1. The person who has brown hair is not in the second house.\n2. The person who is a doctor is Peter.\n3. The person who is a doctor is the one who only drinks water.\n4. The person who is an artist is somewhere to the left of the person who is an engineer.\n5. The person who likes milk is the person who has blonde hair.\n6. The person who has red hair is Alice.\n7. The person who is an artist and Arnold are next to each other.\n8. The person who is an artist is in the third house.\n9. The person who likes milk is somewhere to the left of the tea drinker.\n10. Arnold is somewhere to the right of Eric.\n11. The person who has black hair is the coffee drinker.",
         "ground_truth_dict": {
-            "Peter": 1,
-            "brown": 1,
-            "doctor": 1,
-            "water": 1,
-            "Eric": 2,
-            "blonde": 2,
-            "teacher": 2,
-            "milk": 2,
-            "Alice": 3,
-            "red": 3,
-            "artist": 3,
-            "tea": 3,
-            "Arnold": 4,
-            "black": 4,
-            "engineer": 4,
-            "coffee": 4
-        },
-        "size": "4x4"
+        "Peter": 1,
+        "brown": 1,
+        "doctor": 1,
+        "water": 1,
+        "Eric": 2,
+        "blonde": 2,
+        "teacher": 2,
+        "milk": 2,
+        "Alice": 3,
+        "red": 3,
+        "artist": 3,
+        "tea": 3,
+        "Arnold": 4,
+        "black": 4,
+        "engineer": 4,
+        "coffee": 4
+        }
     },
     "puzzle_22": {
-        "text_description": "There are 3 houses, numbered 1 to 3 from left to right, as seen from across the street. Each house is occupied by a different person. Each house has a unique attribute for each of the following characteristics:\n- Each person has a unique name: Peter, Arnold, Eric\n- People have unique favorite sports: soccer, basketball, tennis\n- The people keep unique animals: cat, bird, horse\n- Each person has a unique favorite drink: water, tea, milk\n- The people are of nationalities: swede, dane, brit\n\n## Clues:\n1. The person who likes milk is not in the first house.\n2. The person who keeps horses is somewhere to the left of Eric.\n3. The person who loves basketball is Peter.\n4. The Swedish person is somewhere to the left of the one who only drinks water.\n5. The person who loves tennis is the tea drinker.\n6. The person who loves soccer is the bird keeper.\n7. The cat lover is the British person.\n8. Peter is not in the third house.\n9. The person who likes milk is the person who loves soccer.\n",
+        "text_description": "There are 3 houses, numbered 1 to 3 from left to right, as seen from across the street. Each house is occupied by a different person. Each house has a unique attribute for each of the following characteristics:\n- Each person has a unique name: Peter, Arnold, Eric\n- People have unique favorite sports: soccer, basketball, tennis\n- The people keep unique animals: cat, bird, horse\n- Each person has a unique favorite drink: water, tea, milk\n- The people are of nationalities: swede, dane, brit\n\n## Clues:\n1. The person who likes milk is not in the first house.\n2. The person who keeps horses is somewhere to the left of Eric.\n3. The person who loves basketball is Peter.\n4. The Swedish person is somewhere to the left of the one who only drinks water.\n5. The person who loves tennis is the tea drinker.\n6. The person who loves soccer is the bird keeper.\n7. The cat lover is the British person.\n8. Peter is not in the third house.\n9. The person who likes milk is the person who loves soccer.",
         "ground_truth_dict": {
             "Arnold": 1,
             "Peter": 2,
@@ -469,8 +537,7 @@
             "swede": 1,
             "brit": 2,
             "dane": 3
-        },
-        "size": "3x5"
+        }
     },
     "puzzle_23": {
         "text_description": "There are 4 houses, numbered 1 to 4 from left to right, as seen from across the street. Each house is occupied by a different person. Each house has a unique attribute for each of the following characteristics:\n- Each person has a unique name: Alice, Eric, Peter, Arnold\n- People use unique phone models: samsung galaxy s21, iphone 13, oneplus 9, google pixel 6\n- They all have a unique favorite flower: lilies, roses, carnations, daffodils\n\n## Clues:\n1. The person who loves a carnations arrangement is somewhere to the left of the person who uses a Samsung Galaxy S21.\n2. The person who loves the bouquet of lilies is the person who uses an iPhone 13.\n3. The person who uses a Google Pixel 6 is somewhere to the right of the person who loves the rose bouquet.\n4. The person who uses a Samsung Galaxy S21 is Eric.\n5. The person who uses a Samsung Galaxy S21 is somewhere to the left of the person who uses an iPhone 13.\n6. Alice is in the first house.\n7. Peter is the person who loves a carnations arrangement.",
@@ -487,11 +554,10 @@
             "carnations": 2,
             "daffodils": 3,
             "lilies": 4
-        },
-        "size": "4x3"
+        }
     },
     "puzzle_24": {
-        "text_description": "There are 6 houses, numbered 1 to 6 from left to right, as seen from across the street. Each house is occupied by a different person. Each house has a unique attribute for each of the following characteristics:\n- Each person has a unique name: Peter, Eric, Alice, Arnold, Carol, Bob\n- People have unique heights: very tall, very short, tall, super tall, short, average\n- Each person prefers a unique type of vacation: cruise, mountain, camping, beach, city, cultural\n- People have unique hair colors: blonde, red, gray, brown, auburn, black\n- Each person has a unique favorite drink: tea, boba tea, milk, water, coffee, root beer\n- They all have a unique favorite flower: lilies, carnations, iris, tulips, roses, daffodils\n\n## Clues:\n1. The person who loves the vase of tulips is the person who has auburn hair.\n2. The person who is short is somewhere to the right of Arnold.\n3. The person who goes on cultural tours is Arnold.\n4. The person who has auburn hair is Bob.\n5. The person who is very short is the person who loves a bouquet of daffodils.\n6. The person who loves the bouquet of iris is the person who is very tall.\n7. Peter is somewhere to the right of the root beer lover.\n8. The person who loves beach vacations is directly left of the person who prefers city breaks.\n9. Bob is directly left of the coffee drinker.\n10. The person who is very short is the person who has gray hair.\n\nSolve the puzzle: Who is in each house and what are their attributes?",
+        "text_description": "There are 6 houses, numbered 1 to 6 from left to right, as seen from across the street. Each house is occupied by a different person. Each house has a unique attribute for each of the following characteristics:\n- Each person has a unique name: Peter, Eric, Alice, Arnold, Carol, Bob\n- People have unique heights: very tall, very short, tall, super tall, short, average\n- Each person prefers a unique type of vacation: cruise, mountain, camping, beach, city, cultural\n- People have unique hair colors: blonde, red, gray, brown, auburn, black\n- Each person has a unique favorite drink: tea, boba tea, milk, water, coffee, root beer\n- They all have a unique favorite flower: lilies, carnations, iris, tulips, roses, daffodils\n\n## Clues:\n1. The person who loves the vase of tulips is the person who has auburn hair.\n2. The person who is short is somewhere to the right of Arnold.\n3. The person who goes on cultural tours is Arnold.\n4. The person who has auburn hair is Bob.\n5. The person who is very short is the person who loves a bouquet of daffodils.\n6. The person who loves the bouquet of iris is the person who is very tall.\n7. Peter is somewhere to the right of the root beer lover.\n8. The person who loves beach vacations is directly left of the person who prefers city breaks.\n9. Bob is directly left of the coffee drinker.\n10. The person who is very short is the person who has gray hair.",
         "ground_truth_dict": {
             "Alice": 1,
             "Carol": 2,
@@ -501,10 +567,10 @@
             "Eric": 6,
             "very short": 1,
             "super tall": 2,
-            "tall": 3,
+            "average": 3,
             "short": 4,
             "very tall": 5,
-            "average": 6,
+            "tall": 6,
             "beach": 1,
             "city": 2,
             "cultural": 3,
@@ -529,11 +595,10 @@
             "tulips": 4,
             "iris": 5,
             "carnations": 6
-        },
-        "size": "6x6"
+        }
     },
     "puzzle_25": {
-        "text_description": "There are 4 houses, numbered 1 to 4 from left to right, as seen from across the street. Each house is occupied by a different person. Each house has a unique attribute for each characteristic:\n- Each person has a unique name: Arnold, Peter, Alice, Eric\n- Each person has a favorite color: yellow, red, white, green\n- Everyone has a unique favorite cigar: dunhill, blue master, pall mall, prince\n- Each person has a unique level of education: high school, associate, master, bachelor\n\n## Clues:\n1. The person whose favorite color is green is somewhere to the left of the person with a high school diploma.\n2. Eric is the person whose favorite color is red.\n3. There are two houses between Alice and the person who loves white.\n4. The person who smokes Blue Master and the person partial to Pall Mall are next to each other.\n5. The person who loves white is the person with a master's degree.\n6. Arnold is in the fourth house.\n7. The person who loves yellow is the person who smokes Blue Master.\n8. The Dunhill smoker is Alice.\n9. The person partial to Pall Mall is the person with a master's degree.\n10. The person who loves yellow is the person with a bachelor's degree.\n",
+        "text_description": "There are 4 houses, numbered 1 to 4 from left to right, as seen from across the street. Each house is occupied by a different person. Each house has a unique attribute for each of the following characteristics:\n- Each person has a unique name: Arnold, Peter, Alice, Eric\n- Each person has a favorite color: yellow, red, white, green\n- Everyone has a unique favorite cigar: dunhill, blue master, pall mall, prince\n- Each person has a unique level of education: high school, associate, master, bachelor\n\n## Clues:\n1. The person whose favorite color is green is somewhere to the left of the person with a high school diploma.\n2. Eric is the person whose favorite color is red.\n3. There are two houses between Alice and the person who loves white.\n4. The person who smokes Blue Master and the person partial to Pall Mall are next to each other.\n5. The person who loves white is the person with a master's degree.\n6. Arnold is in the fourth house.\n7. The person who loves yellow is the person who smokes Blue Master.\n8. The Dunhill smoker is Alice.\n9. The person partial to Pall Mall is the person with a master's degree.\n10. The person who loves yellow is the person with a bachelor's degree.",
         "ground_truth_dict": {
             "Alice": 1,
             "Eric": 2,
@@ -551,7 +616,7 @@
             "high school": 2,
             "bachelor": 3,
             "master": 4
-        },
-        "size": "4x4"
+        }
     }
 }
+
