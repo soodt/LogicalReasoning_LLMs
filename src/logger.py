@@ -130,6 +130,7 @@ class Logger:
 
     def log_run(
         self,
+        llm_provider,
         puzzle_name,
         puzzle_size,
         variant,  # "solve", "convert", or "full_test"
@@ -218,6 +219,7 @@ class Logger:
 
         entry = {
             "timestamp": time.strftime("%Y-%m-%d %H:%M:%S"),
+            "llm_provider": llm_provider,
             "puzzle": puzzle_name,
             "puzzle_size": puzzle_size, 
             "variant": variant,

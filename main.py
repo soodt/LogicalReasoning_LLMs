@@ -5,6 +5,8 @@ from src.mistral_solver import MistralSolver
 from src.logger import Logger
 from src.prompt_generator import get_prompt
 import argparse
+from src.openai_solver import OpenAISolver
+from src.deepseek_solver import DeepSeekSolver
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Solve or convert puzzles with an optional puzzle, action, and strategy.")
@@ -14,6 +16,8 @@ def parse_args():
                         help="What to do: 'solve', 'convert', or 'both'. Default=both.")
     parser.add_argument("--strategy", choices=["baseline", "cot", "multishot"], default="baseline",
                         help="Prompt strategy. Default=baseline.")
+    parser.add_argument("--llm", choices=["mistral", "openai", "deepseek"], default="mistral",
+                        help="Which LLM to use: 'mistral', 'openai' or 'deepseek'. Default=mistral.")
     return parser.parse_args()
 
 def main():
@@ -40,8 +44,15 @@ def main():
     print(f"Running puzzle(s): {puzzle_selected if puzzle_selected else 'ALL'}")
     print(f"Action: {action}")
     print(f"Strategy: {strategy}")
+    print(f"LLM Provider: {args.llm}")
 
-    mistral_solver = MistralSolver()
+    if args.llm == "openai":
+        llm_solver = OpenAISolver()
+    elif args.llm == "deepseek":
+        llm_solver = DeepSeekSolver()
+    else:
+        llm_solver = MistralSolver()
+    
     logger = Logger()
 
     for puzzle_name, puzzle_data in puzzles.items():
@@ -81,7 +92,7 @@ def main():
         # 1) If solving: get direct solution using the chosen prompt strategy.
         if do_solve:
             prompt_solve = get_prompt("solve", strategy) + "\n" + text_description
-            llm_sol_text, rtime, tokens = mistral_solver.query_llm(prompt_solve)
+            llm_sol_text, rtime, tokens = llm_solver.query_llm(prompt_solve)
             if llm_sol_text:
                 solve_dict_str = llm_sol_text
                 solve_time = rtime
@@ -104,7 +115,7 @@ def main():
         # 2) If converting: get Z3 constraints using the chosen prompt strategy and feed them to the solver.
         if do_convert:
             prompt_convert = get_prompt("convert", strategy) + "\n" + text_description
-            llm_constraints_str, conv_time, conv_tokens = mistral_solver.query_llm(prompt_convert)
+            llm_constraints_str, conv_time, conv_tokens = llm_solver.query_llm(prompt_convert)
             if llm_constraints_str:
                 convert_time = conv_time
                 convert_tokens = conv_tokens
@@ -151,6 +162,7 @@ def main():
         combined_chain_of_thought = "Solve: " + chain_of_thought_solve + "; Convert: " + chain_of_thought_convert
 
         logger.log_run(
+            llm_provider=args.llm,
             puzzle_name=puzzle_name,
             puzzle_size=puzzle_size,
             variant=variant,
