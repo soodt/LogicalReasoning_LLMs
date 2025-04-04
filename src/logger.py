@@ -133,6 +133,8 @@ class Logger:
         puzzle_name,
         puzzle_size,
         variant,  # "solve", "convert", or "full_test"
+        strategy,            # NEW dedicated field for strategy: "baseline", "cot", "multishot", etc.
+        chain_of_thought,    # NEW field to store explanation if CoT
         prompt,
         puzzle_ground_truth_dict,
         solve_dict_str,      # LLM’s direct solution dictionary as string or "N/A"
@@ -219,6 +221,8 @@ class Logger:
             "puzzle": puzzle_name,
             "puzzle_size": puzzle_size, 
             "variant": variant,
+            "strategy": strategy,    # store the chosen strategy
+            "chain_of_thought": chain_of_thought, 
             "prompt": prompt,
             "puzzle_ground_truth_dict": puzzle_ground_truth_dict,
             # Direct solution logging

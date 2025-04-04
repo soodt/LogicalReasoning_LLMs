@@ -3,113 +3,174 @@ import sys
 from src.z3_solver import ZebraSolver
 from src.mistral_solver import MistralSolver
 from src.logger import Logger
+from src.prompt_generator import get_prompt
+import argparse
 
-with open("data/puzzles.json", "r") as f:
-    puzzles = json.load(f)
+def parse_args():
+    parser = argparse.ArgumentParser(description="Solve or convert puzzles with an optional puzzle, action, and strategy.")
+    parser.add_argument("--puzzle", type=str, default=None,
+                        help="Puzzle key from puzzles.json. If not provided, runs for ALL puzzles.")
+    parser.add_argument("--action", choices=["solve", "convert", "both"], default="both",
+                        help="What to do: 'solve', 'convert', or 'both'. Default=both.")
+    parser.add_argument("--strategy", choices=["baseline", "cot", "multishot"], default="baseline",
+                        help="Prompt strategy. Default=baseline.")
+    return parser.parse_args()
 
-mistral_solver = MistralSolver()
-logger = Logger()
+def main():
+    args = parse_args()
+    
+    # Load puzzles
+    with open("data/puzzles.json", "r") as f:
+        puzzles_dict = json.load(f)
 
-action = "both"
-puzzle_selected = None
-
-# e.g.: python main.py puzzle_2 solve
-if len(sys.argv) > 1:
-    puzzle_selected = sys.argv[1]
-    if puzzle_selected in puzzles:
-        if len(sys.argv) > 2:
-            action = sys.argv[2].lower()
+    # If puzzle is specified, run just that puzzle. Otherwise run them all
+    if args.puzzle is not None:
+        if args.puzzle not in puzzles_dict:
+            print(f"Error: Puzzle '{args.puzzle}' not found in puzzles.json.")
+            sys.exit(1)
+        puzzles = {args.puzzle: puzzles_dict[args.puzzle]}
     else:
-        print(f"Error: Puzzle '{puzzle_selected}' not found in puzzles.json.")
-        sys.exit(1)
+        puzzles = puzzles_dict
 
-if puzzle_selected:
-    puzzles = {puzzle_selected: puzzles[puzzle_selected]}
+    # The rest is your existing logic:
+    puzzle_selected = args.puzzle
+    action = args.action.lower()        # solve, convert, or both
+    strategy = args.strategy.lower()    # baseline, cot, or multishot
 
-for puzzle_name, puzzle_data in puzzles.items():
-    text_description = puzzle_data["text_description"]
-    puzzle_z3 = puzzle_data.get("z3_format", None)  # official constraints if present
-    puzzle_ground_truth_dict = puzzle_data["ground_truth_dict"]
-    puzzle_size = puzzle_data["size"]
+    print(f"Running puzzle(s): {puzzle_selected if puzzle_selected else 'ALL'}")
+    print(f"Action: {action}")
+    print(f"Strategy: {strategy}")
 
-    print(f"\nProcessing puzzle: {puzzle_name}")
-    print("-" * 50)
+    mistral_solver = MistralSolver()
+    logger = Logger()
 
-    do_solve = (action in ["solve", "both"])
-    do_convert = (action in ["convert", "both"])
+    for puzzle_name, puzzle_data in puzzles.items():
+        text_description = puzzle_data["text_description"]
+        puzzle_z3 = puzzle_data.get("z3_format", None)
+        puzzle_ground_truth_dict = puzzle_data["ground_truth_dict"]
+        puzzle_size = puzzle_data["size"]
 
-    # Set variant for logging
-    if do_solve and do_convert:
-        variant = "full_test"
-    elif do_solve:
-        variant = "solve"
-    elif do_convert:
-        variant = "convert"
+        print(f"\nProcessing puzzle: {puzzle_name}")
+        print("-" * 50)
 
-    solve_dict_str = "N/A"
-    solve_time = 0
-    solve_tokens = "N/A"
+        do_solve = (action in ["solve", "both"])
+        do_convert = (action in ["convert", "both"])
 
-    convert_constraints = "N/A"
-    convert_solver_str = "N/A"
-    convert_time = 0
-    convert_tokens = "N/A"
-
-    error_msg = None
-
-    # 1) If solving: get LLM direct solution dictionary
-    if do_solve:
-        llm_sol_text, rtime, tokens = mistral_solver.solve_puzzle(text_description)
-        if llm_sol_text:
-            solve_dict_str = llm_sol_text
-            solve_time = rtime
-            solve_tokens = tokens
-            print("\nLLM dictionary solution:\n", llm_sol_text)
+        if do_solve and do_convert:
+            variant = "full_test"
+        elif do_solve:
+            variant = "solve"
+        elif do_convert:
+            variant = "convert"
         else:
-            print("No LLM puzzle solution or error from API.")
-            if llm_sol_text is None:
-                error_msg = "LLM puzzle solution is None (API error or rate limit)."
+            variant = "unknown"
 
-    # 2) If converting: get LLM Z3 constraints and feed to solver
-    if do_convert:
-        llm_constraints, conv_time, conv_tokens = mistral_solver.convert_to_z3_format(text_description)
-        if isinstance(llm_constraints, dict):
-            convert_constraints = json.dumps(llm_constraints)
-            convert_time = conv_time
-            convert_tokens = conv_tokens
-            print("\nLLM-Generated Z3 Constraints:\n", llm_constraints)
-            try:
-                solver_llm = ZebraSolver(llm_constraints)
-                solver_result = solver_llm.solve()
-                if solver_result:
-                    convert_solver_str = str(solver_result)
-                    print("Z3 solver result from LLM constraints:", convert_solver_str)
+        solve_dict_str = "N/A"
+        solve_time = 0
+        solve_tokens = "N/A"
+
+        convert_constraints = "N/A"
+        convert_solver_str = "N/A"
+        convert_time = 0
+        convert_tokens = "N/A"
+
+        error_msg = None
+        chain_of_thought_solve = "N/A"
+        chain_of_thought_convert = "N/A"
+
+        # 1) If solving: get direct solution using the chosen prompt strategy.
+        if do_solve:
+            prompt_solve = get_prompt("solve", strategy) + "\n" + text_description
+            llm_sol_text, rtime, tokens = mistral_solver.query_llm(prompt_solve)
+            if llm_sol_text:
+                solve_dict_str = llm_sol_text
+                solve_time = rtime
+                solve_tokens = tokens
+                print("\nLLM dictionary solution:\n", llm_sol_text)
+                if strategy == "cot":
+                    try:
+                        sol_obj = json.loads(llm_sol_text)
+                        chain_of_thought_solve = sol_obj.get("explanation", "N/A")
+                        if "solution" in sol_obj:
+                            # keep it as JSON string for logging
+                            solve_dict_str = json.dumps(sol_obj["solution"])
+                    except Exception as e:
+                        print("Error parsing CoT response for puzzle solve:", e)
+            else:
+                print("No LLM puzzle solution or error from API.")
+                if llm_sol_text is None:
+                    error_msg = "LLM puzzle solution is None (API error or rate limit)."
+
+        # 2) If converting: get Z3 constraints using the chosen prompt strategy and feed them to the solver.
+        if do_convert:
+            prompt_convert = get_prompt("convert", strategy) + "\n" + text_description
+            llm_constraints_str, conv_time, conv_tokens = mistral_solver.query_llm(prompt_convert)
+            if llm_constraints_str:
+                convert_time = conv_time
+                convert_tokens = conv_tokens
+
+                # If user chose "cot" for convert, expect {"explanation":..., "z3":...}
+                if strategy == "cot":
+                    try:
+                        constraints_obj = json.loads(llm_constraints_str)
+                        chain_of_thought_convert = constraints_obj.get("explanation", "N/A")
+                        z3_obj = constraints_obj.get("z3", {})
+                        convert_constraints = json.dumps(z3_obj)
+                    except Exception as e:
+                        print(f"Error parsing CoT convert response: {e}")
+                        # fallback: store the raw text
+                        convert_constraints = llm_constraints_str
                 else:
-                    print("No solver result or puzzle unsatisfiable from LLM constraints.")
-                    error_msg = error_msg or "Z3 solver returned no solution for LLM constraints."
-            except Exception as e:
-                error_msg = error_msg or f"Error feeding LLM constraints to solver: {str(e)}"
-        else:
-            print("No valid LLM constraints or error from API.")
-            if llm_constraints is None:
-                error_msg = error_msg or "LLM constraints is None (API error)."
+                    # baseline or multishot: assume direct JSON of constraints
+                    convert_constraints = llm_constraints_str
 
-    logger.log_run(
-        puzzle_name=puzzle_name,
-        puzzle_size=puzzle_size,
-        variant=variant,
-        prompt=text_description,
-        puzzle_ground_truth_dict=puzzle_ground_truth_dict,
-        solve_dict_str=solve_dict_str,
-        solve_time=solve_time,
-        solve_tokens=solve_tokens,
-        convert_constraints=convert_constraints,
-        convert_solver_str=convert_solver_str,
-        convert_time=convert_time,
-        convert_tokens=convert_tokens,
-        puzzle_z3=puzzle_z3,
-        error_msg=error_msg
-    )
+                try:
+                    # Parse the final constraints as JSON for the solver
+                    llm_constraints_json = json.loads(convert_constraints)
+                    print("\nLLM-Generated Z3 Constraints:\n", llm_constraints_json)
+                    try:
+                        solver_llm = ZebraSolver(llm_constraints_json)
+                        solver_result = solver_llm.solve()
+                        if solver_result:
+                            convert_solver_str = json.dumps(solver_result)
+                            print("Z3 solver result from LLM constraints:", solver_result)
+                        else:
+                            print("No solver result or puzzle unsatisfiable from LLM constraints.")
+                            error_msg = error_msg or "Z3 solver returned no solution for LLM constraints."
+                    except Exception as e:
+                        error_msg = error_msg or f"Error feeding LLM constraints to solver: {str(e)}"
+                except Exception as e:
+                    print("Error: Could not parse LLM constraints as JSON.", str(e))
+                    error_msg = error_msg or f"Error parsing LLM constraints: {str(e)}"
+            else:
+                print("No valid LLM constraints or error from API.")
+                if llm_constraints_str is None:
+                    error_msg = error_msg or "LLM constraints is None (API error)."
 
-    print("\nDone. Stopping now.")
-    print("=" * 50)
+        print(chain_of_thought_solve+chain_of_thought_convert)
+        combined_chain_of_thought = "Solve: " + chain_of_thought_solve + "; Convert: " + chain_of_thought_convert
+
+        logger.log_run(
+            puzzle_name=puzzle_name,
+            puzzle_size=puzzle_size,
+            variant=variant,
+            strategy=strategy,
+            chain_of_thought=combined_chain_of_thought,
+            prompt=text_description,
+            puzzle_ground_truth_dict=puzzle_ground_truth_dict,
+            solve_dict_str=solve_dict_str,
+            solve_time=solve_time,
+            solve_tokens=solve_tokens,
+            convert_constraints=convert_constraints,
+            convert_solver_str=convert_solver_str,
+            convert_time=convert_time,
+            convert_tokens=convert_tokens,
+            puzzle_z3=puzzle_z3,
+            error_msg=error_msg
+        )
+
+        print("\nDone. Stopping now.")
+        print("=" * 50)
+
+if __name__ == "__main__":
+    main()
