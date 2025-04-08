@@ -331,7 +331,12 @@ def get_prompt(mode, strategy):
                 and we know Red=1 (left), Blue=2 (right). If the puzzle also says PersonA=1, PersonB=2,
                 the final dictionary is exactly:
 
-                {'Red':1,'Blue':2,'PersonA':1,'PersonB':2}
+                {
+                    "Red": 1,
+                    "Blue": 2,
+                    "PersonA": 1,
+                    "PersonB": 2
+                }
 
                 No extra text, just that dictionary structure.
                 """

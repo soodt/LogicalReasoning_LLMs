@@ -29,9 +29,9 @@ class DeepSeekSolver:
                 )
                 # Debug: print full response for troubleshooting
                 print(f"DeepSeek API Response: {response}")
-                llm_response = response["choices"][0]["message"]["content"]
+                llm_response = response.choices[0].message.content
                 response_time = round(time.time() - start_time, 2)
-                token_usage = response.get("usage", {}).get("total_tokens", "N/A")
+                token_usage = response.usage.total_tokens if hasattr(response, 'usage') and response.usage.total_tokens is not None else "N/A"
                 return llm_response, response_time, token_usage
             except Exception as e:
                 print(f"DeepSeek API error on attempt {attempt+1}: {e}")

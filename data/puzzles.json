@@ -73,13 +73,13 @@
     },
 
     "puzzle_2": {
-        "text_description": "There are two houses. One is red, the other is blue. Person A lives in the red house, and Person B lives in the blue house. Who lives in each house?",
+        "text_description": "There are two houses. One is red, the other is blue. PersonA lives in the red house, and PersonB lives in the blue house. Who lives in each house?",
         "size": "2x2",
         "z3_format": {
             "houses_count": 2,
             "categories": {
                 "colors": ["Red", "Blue"],
-                "people": ["A", "B"]
+                "people": ["PersonA", "PersonB"]
             },
             "constraints": [
                 {

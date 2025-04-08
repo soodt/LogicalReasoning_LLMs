@@ -20,6 +20,21 @@ def parse_args():
                         help="Which LLM to use: 'mistral', 'openai' or 'deepseek'. Default=mistral.")
     return parser.parse_args()
 
+def clean_response(text):
+    # Remove any leading/trailing whitespace
+    text = text.strip()
+    # If the text starts with a code fence (and possibly a language hint), remove those lines.
+    if text.startswith("```"):
+        lines = text.splitlines()
+        # Remove the first line if it starts with ```
+        if lines[0].strip().startswith("```"):
+            lines = lines[1:]
+        # Remove the last line if it starts with ```
+        if lines and lines[-1].strip().startswith("```"):
+            lines = lines[:-1]
+        text = "\n".join(lines)
+    return text.strip()
+
 def main():
     args = parse_args()
     
@@ -94,13 +109,15 @@ def main():
             prompt_solve = get_prompt("solve", strategy) + "\n" + text_description
             llm_sol_text, rtime, tokens = llm_solver.query_llm(prompt_solve)
             if llm_sol_text:
-                solve_dict_str = llm_sol_text
+                cleaned_text = clean_response(llm_sol_text)
+                solve_dict_str = cleaned_text
                 solve_time = rtime
                 solve_tokens = tokens
+                print("Cleaned response for solve:", cleaned_text)
                 print("\nLLM dictionary solution:\n", llm_sol_text)
                 if strategy == "cot":
                     try:
-                        sol_obj = json.loads(llm_sol_text)
+                        sol_obj = json.loads(cleaned_text)
                         chain_of_thought_solve = sol_obj.get("explanation", "N/A")
                         if "solution" in sol_obj:
                             # keep it as JSON string for logging
@@ -109,7 +126,7 @@ def main():
                         print("Error parsing CoT response for puzzle solve:", e)
             else:
                 print("No LLM puzzle solution or error from API.")
-                if llm_sol_text is None:
+                if cleaned_text is None:
                     error_msg = "LLM puzzle solution is None (API error or rate limit)."
 
         # 2) If converting: get Z3 constraints using the chosen prompt strategy and feed them to the solver.
@@ -119,21 +136,21 @@ def main():
             if llm_constraints_str:
                 convert_time = conv_time
                 convert_tokens = conv_tokens
-
+                cleaned_constraints = clean_response(llm_constraints_str)
                 # If user chose "cot" for convert, expect {"explanation":..., "z3":...}
                 if strategy == "cot":
                     try:
-                        constraints_obj = json.loads(llm_constraints_str)
+                        constraints_obj = json.loads(cleaned_constraints)
                         chain_of_thought_convert = constraints_obj.get("explanation", "N/A")
                         z3_obj = constraints_obj.get("z3", {})
                         convert_constraints = json.dumps(z3_obj)
                     except Exception as e:
                         print(f"Error parsing CoT convert response: {e}")
                         # fallback: store the raw text
-                        convert_constraints = llm_constraints_str
+                        convert_constraints = cleaned_constraints
                 else:
                     # baseline or multishot: assume direct JSON of constraints
-                    convert_constraints = llm_constraints_str
+                    convert_constraints = cleaned_constraints
 
                 try:
                     # Parse the final constraints as JSON for the solver
@@ -155,7 +172,7 @@ def main():
                     error_msg = error_msg or f"Error parsing LLM constraints: {str(e)}"
             else:
                 print("No valid LLM constraints or error from API.")
-                if llm_constraints_str is None:
+                if cleaned_constraints is None:
                     error_msg = error_msg or "LLM constraints is None (API error)."
 
         print(chain_of_thought_solve+chain_of_thought_convert)
