@@ -1,4 +1,5 @@
-from z3 import Solver, Distinct, Int, Or, sat
+from z3 import Solver, Distinct, Int, Or, sat, Abs
+import json
 
 class ZebraSolver:
     def __init__(self, puzzle):
@@ -110,21 +111,46 @@ class ZebraSolver:
                     continue
                 self.solver.add(self.item_vars[var1] != var2int)
 
-            elif ctype == "left":
+            elif ctype == "ImmediateLeft":
                 var1 = c.get("var1")
                 var2 = c.get("var2")
                 if not var1 or not var2 or var1 not in self.item_vars or var2 not in self.item_vars:
                     self.errors.append(f"left referencing unknown items: {c}")
                     continue
-                self.solver.add(self.item_vars[var1] < self.item_vars[var2])
+                self.solver.add(self.item_vars[var1] == self.item_vars[var2] - 1)
 
-            elif ctype == "right":
+            elif ctype == "ImmediateRight":
                 var1 = c.get("var1")
                 var2 = c.get("var2")
                 if not var1 or not var2 or var1 not in self.item_vars or var2 not in self.item_vars:
                     self.errors.append(f"right referencing unknown items: {c}")
                     continue
+                self.solver.add(self.item_vars[var1] == self.item_vars[var2] + 1)
+            elif ctype == "rightOf":
+                var1 = c.get("var1")
+                var2 = c.get("var2")
+                if not var1 or not var2 or var1 not in self.item_vars or var2 not in self.item_vars:
+                    self.errors.append(f"gt referencing unknown items: {c}")
+                    continue
                 self.solver.add(self.item_vars[var1] > self.item_vars[var2])
+
+            elif ctype == "leftOf":
+                var1 = c.get("var1")
+                var2 = c.get("var2")
+                if not var1 or not var2 or var1 not in self.item_vars or var2 not in self.item_vars:
+                    self.errors.append(f"lt referencing unknown items: {c}")
+                    continue
+                self.solver.add(self.item_vars[var1] < self.item_vars[var2])
+
+            elif ctype == "abs_diff":
+                var1 = c.get("var1")
+                var2 = c.get("var2")
+                diff = c.get("diff")
+                if not var1 or not var2 or diff is None or var1 not in self.item_vars or var2 not in self.item_vars:
+                    self.errors.append(f"abs_diff missing/unknown var1/var2/diff: {c}")
+                    continue
+                self.solver.add(Abs(self.item_vars[var1] - self.item_vars[var2]) == diff)
+
 
             else:
                 self.errors.append(f"Unknown constraint type '{ctype}': {c}")
@@ -155,3 +181,28 @@ class ZebraSolver:
 
         print("No solution found.")
         return None
+# puzzle_6 = {
+#     "houses_count": 2,
+#     "categories": {
+#         "names": ["Arnold", "Eric"],
+#         "education": ["high school", "associate"],
+#         "mothers": ["Aniya", "Holly"]
+#     },
+#     "constraints": [
+#         {"type": "distinct_categories", "categories": ["names", "education", "mothers"]},
+#         {"type": "range", "from": 1, "to": 2},
+#         {"type": "eq", "var1": "associate", "var2int": 1},
+#         {"type": "eq", "var1": "Holly", "var2": "Arnold"},
+#         {"type": "neq", "var1": "Holly", "var2int": 2}
+#     ]
+# }
+# # --- Main block ---
+# if __name__ == "__main__":
+#     print("Solving Puzzle 6 using ZebraSolver...\n")
+#     solver = ZebraSolver(puzzle_6)
+#     solution = solver.solve()
+#     if solution is not None:
+#         print("\nSolution found:")
+#         print(json.dumps(solution, indent=4))
+#     else:
+#         print("\nNo solution could be found or there were errors.")

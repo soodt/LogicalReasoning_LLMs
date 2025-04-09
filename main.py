@@ -103,6 +103,7 @@ def main():
         error_msg = None
         chain_of_thought_solve = "N/A"
         chain_of_thought_convert = "N/A"
+        cleaned_text = ""
 
         # 1) If solving: get direct solution using the chosen prompt strategy.
         if do_solve:

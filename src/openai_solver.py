@@ -1,4 +1,4 @@
-import openai
+from openai import OpenAI
 import time
 import os
 import json
@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-openai.api_key = OPENAI_API_KEY
+client = OpenAI(api_key=OPENAI_API_KEY)
 
 class OpenAISolver:
     def __init__(self):
@@ -18,19 +18,17 @@ class OpenAISolver:
         retries = 3  # Maximum number of retries
         for attempt in range(retries):
             try:
-                response = openai.ChatCompletion.create(
-                    model=self.model,
-                    messages=[
-                        {"role": "system", "content": "You are an expert puzzle solver. Output only valid JSON with no extra commentary."},
-                        {"role": "user", "content": prompt}
-                    ],
-                    temperature=0.3
-                )
+                response = client.chat.completions.create(model=self.model,
+                messages=[
+                    {"role": "system", "content": "You are an expert puzzle solver. Output only valid JSON with no extra commentary."},
+                    {"role": "user", "content": prompt}
+                ],
+                temperature=0.3)
                 # Debug: print full response for troubleshooting
                 print(f"OpenAI API Response: {response}")
-                llm_response = response["choices"][0]["message"]["content"]
+                llm_response = response.choices[0].message.content
                 response_time = round(time.time() - start_time, 2)
-                token_usage = response.get("usage", {}).get("total_tokens", "N/A")
+                token_usage = response.usage.total_tokens if hasattr(response, 'usage') and response.usage.total_tokens is not None else "N/A"
                 return llm_response, response_time, token_usage
             except Exception as e:
                 print(f"OpenAI API error on attempt {attempt+1}: {e}")
