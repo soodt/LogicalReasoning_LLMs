@@ -5,6 +5,8 @@ from src.mistral_solver import MistralSolver
 from src.logger import Logger
 from src.prompt_generator import get_prompt
 import argparse
+from src.openai_solver import OpenAISolver
+from src.deepseek_solver import DeepSeekSolver
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Solve or convert puzzles with an optional puzzle, action, and strategy.")
@@ -14,7 +16,24 @@ def parse_args():
                         help="What to do: 'solve', 'convert', or 'both'. Default=both.")
     parser.add_argument("--strategy", choices=["baseline", "cot", "multishot"], default="baseline",
                         help="Prompt strategy. Default=baseline.")
+    parser.add_argument("--llm", choices=["mistral", "openai", "deepseek"], default="mistral",
+                        help="Which LLM to use: 'mistral', 'openai' or 'deepseek'. Default=mistral.")
     return parser.parse_args()
+
+def clean_response(text):
+    # Remove any leading/trailing whitespace
+    text = text.strip()
+    # If the text starts with a code fence (and possibly a language hint), remove those lines.
+    if text.startswith("```"):
+        lines = text.splitlines()
+        # Remove the first line if it starts with ```
+        if lines[0].strip().startswith("```"):
+            lines = lines[1:]
+        # Remove the last line if it starts with ```
+        if lines and lines[-1].strip().startswith("```"):
+            lines = lines[:-1]
+        text = "\n".join(lines)
+    return text.strip()
 
 def main():
     args = parse_args()
@@ -40,8 +59,15 @@ def main():
     print(f"Running puzzle(s): {puzzle_selected if puzzle_selected else 'ALL'}")
     print(f"Action: {action}")
     print(f"Strategy: {strategy}")
+    print(f"LLM Provider: {args.llm}")
 
-    mistral_solver = MistralSolver()
+    if args.llm == "openai":
+        llm_solver = OpenAISolver()
+    elif args.llm == "deepseek":
+        llm_solver = DeepSeekSolver()
+    else:
+        llm_solver = MistralSolver()
+    
     logger = Logger()
 
     for puzzle_name, puzzle_data in puzzles.items():
@@ -77,19 +103,22 @@ def main():
         error_msg = None
         chain_of_thought_solve = "N/A"
         chain_of_thought_convert = "N/A"
+        cleaned_text = ""
 
         # 1) If solving: get direct solution using the chosen prompt strategy.
         if do_solve:
             prompt_solve = get_prompt("solve", strategy) + "\n" + text_description
-            llm_sol_text, rtime, tokens = mistral_solver.query_llm(prompt_solve)
+            llm_sol_text, rtime, tokens = llm_solver.query_llm(prompt_solve)
             if llm_sol_text:
-                solve_dict_str = llm_sol_text
+                cleaned_text = clean_response(llm_sol_text)
+                solve_dict_str = cleaned_text
                 solve_time = rtime
                 solve_tokens = tokens
+                print("Cleaned response for solve:", cleaned_text)
                 print("\nLLM dictionary solution:\n", llm_sol_text)
                 if strategy == "cot":
                     try:
-                        sol_obj = json.loads(llm_sol_text)
+                        sol_obj = json.loads(cleaned_text)
                         chain_of_thought_solve = sol_obj.get("explanation", "N/A")
                         if "solution" in sol_obj:
                             # keep it as JSON string for logging
@@ -98,31 +127,31 @@ def main():
                         print("Error parsing CoT response for puzzle solve:", e)
             else:
                 print("No LLM puzzle solution or error from API.")
-                if llm_sol_text is None:
+                if cleaned_text is None:
                     error_msg = "LLM puzzle solution is None (API error or rate limit)."
 
         # 2) If converting: get Z3 constraints using the chosen prompt strategy and feed them to the solver.
         if do_convert:
             prompt_convert = get_prompt("convert", strategy) + "\n" + text_description
-            llm_constraints_str, conv_time, conv_tokens = mistral_solver.query_llm(prompt_convert)
+            llm_constraints_str, conv_time, conv_tokens = llm_solver.query_llm(prompt_convert)
             if llm_constraints_str:
                 convert_time = conv_time
                 convert_tokens = conv_tokens
-
+                cleaned_constraints = clean_response(llm_constraints_str)
                 # If user chose "cot" for convert, expect {"explanation":..., "z3":...}
                 if strategy == "cot":
                     try:
-                        constraints_obj = json.loads(llm_constraints_str)
+                        constraints_obj = json.loads(cleaned_constraints)
                         chain_of_thought_convert = constraints_obj.get("explanation", "N/A")
                         z3_obj = constraints_obj.get("z3", {})
                         convert_constraints = json.dumps(z3_obj)
                     except Exception as e:
                         print(f"Error parsing CoT convert response: {e}")
                         # fallback: store the raw text
-                        convert_constraints = llm_constraints_str
+                        convert_constraints = cleaned_constraints
                 else:
                     # baseline or multishot: assume direct JSON of constraints
-                    convert_constraints = llm_constraints_str
+                    convert_constraints = cleaned_constraints
 
                 try:
                     # Parse the final constraints as JSON for the solver
@@ -144,13 +173,14 @@ def main():
                     error_msg = error_msg or f"Error parsing LLM constraints: {str(e)}"
             else:
                 print("No valid LLM constraints or error from API.")
-                if llm_constraints_str is None:
+                if cleaned_constraints is None:
                     error_msg = error_msg or "LLM constraints is None (API error)."
 
         print(chain_of_thought_solve+chain_of_thought_convert)
         combined_chain_of_thought = "Solve: " + chain_of_thought_solve + "; Convert: " + chain_of_thought_convert
 
         logger.log_run(
+            llm_provider=args.llm,
             puzzle_name=puzzle_name,
             puzzle_size=puzzle_size,
             variant=variant,

@@ -73,13 +73,13 @@
     },
 
     "puzzle_2": {
-        "text_description": "There are two houses. One is red, the other is blue. Person A lives in the red house, and Person B lives in the blue house. Who lives in each house?",
+        "text_description": "There are two houses. One is red, the other is blue. PersonA lives in the red house, and PersonB lives in the blue house. Who lives in each house?",
         "size": "2x2",
         "z3_format": {
             "houses_count": 2,
             "categories": {
                 "colors": ["Red", "Blue"],
-                "people": ["A", "B"]
+                "people": ["PersonA", "PersonB"]
             },
             "constraints": [
                 {
@@ -241,6 +241,36 @@
     "puzzle_6": {
         "text_description": "There are 3 houses, numbered 1 to 3 from left to right, as seen from across the street. Each house is occupied by a different person. Each house has a unique attribute for each of the following characteristics:\n- Each person has a unique name: Peter, Eric, Arnold\n- Each person has a favorite color: white, red, yellow\n- People use unique phone models: google pixel 6, samsung galaxy s21, iphone 13\n- People have unique favorite music genres: classical, rock, pop\n- Each person has a unique level of education: high school, bachelor, associate\n\n## Clues:\n1. The person who loves pop music is Peter.\n2. Arnold is the person who loves classical music.\n3. The person with a bachelor's degree is not in the first house.\n4. The person who loves white is in the second house.\n5. The person who loves pop music is in the first house.\n6. The person who uses a Samsung Galaxy S21 is the person with an associate's degree.\n7. The person with a bachelor's degree is the person whose favorite color is red.\n8. The person with a high school diploma is the person who uses a Google Pixel 6.\n9. The person who uses a Samsung Galaxy S21 is the person who loves rock music.\n",
         "size": "3x5",
+        "z3_format": {
+        "houses_count": 3,
+        "categories": {
+            "names": ["Peter", "Eric", "Arnold"],
+            "colors": ["white", "red", "yellow"],
+            "phones": ["google pixel 6", "samsung galaxy s21", "iphone 13"],
+            "music": ["classical", "rock", "pop"],
+            "education": ["high school", "bachelor", "associate"]
+        },
+        "constraints": [
+            {
+                "type": "distinct_categories",
+                "categories": ["names", "colors", "phones", "music", "education"]
+            },
+            {
+                "type": "range",
+                "from": 1,
+                "to": 3
+            },
+            {"type": "eq", "var1": "pop", "var2": "Peter"},
+            {"type": "eq", "var1": "Arnold", "var2": "classical"},
+            {"type": "neq", "var1": "bachelor", "var2int": 1},
+            {"type": "eq", "var1": "white", "var2int": 2},
+            {"type": "eq", "var1": "pop", "var2int": 1},
+            {"type": "eq", "var1": "samsung galaxy s21", "var2": "associate"},
+            {"type": "eq", "var1": "bachelor", "var2": "red"},
+            {"type": "eq", "var1": "high school", "var2": "google pixel 6"},
+            {"type": "eq", "var1": "samsung galaxy s21", "var2": "rock"}
+        ]
+        },
         "ground_truth_dict": {
           "Peter": 1,
           "Arnold": 3,
@@ -266,6 +296,21 @@
     "puzzle_7": {
         "text_description": "There are 2 houses, numbered 1 to 2 from left to right, as seen from across the street. Each house is occupied by a different person. Each house has a unique attribute for each of the following characteristics:\n- Each person has a unique name: `Eric`, `Arnold`\n- Everyone has something unique for lunch: `pizza`, `grilled cheese`\n- People own unique car models: `tesla model 3`, `ford f150`\n\n## Clues:\n1. Eric is in the first house.\n2. The person who loves eating grilled cheese is not in the second house.\n3. The person who owns a Ford F-150 is the person who is a pizza lover.\n\nSolve the puzzle: Who is in each house and what are their lunch and car model assignments?",
         "size": "2x3",
+        "z3_format": {
+        "houses_count": 2,
+        "categories": {
+            "names": ["Eric", "Arnold"],
+            "lunch": ["grilled cheese", "pizza"],
+            "cars": ["tesla model 3", "ford f150"]
+        },
+        "constraints": [
+            {"type": "distinct_categories", "categories": ["names", "lunch", "cars"]},
+            {"type": "range", "from": 1, "to": 2},
+            {"type": "eq", "var1": "Eric", "var2int": 1},
+            {"type": "neq", "var1": "grilled cheese", "var2int": 2},
+            {"type": "eq", "var1": "ford f150", "var2": "pizza"}
+        ]
+        },
         "ground_truth_dict": {
         "Eric": 1,
         "Arnold": 2,
@@ -276,50 +321,108 @@
         }
   },
     "puzzle_8": {
-        "text_description": "There are 6 houses, numbered 1 to 6 from left to right, as seen from across the street. Each house is occupied by a different person. Each house has a unique attribute for each of the following characteristics:\n- Each person has a unique name: `Alice`, `Carol`, `Eric`, `Peter`, `Bob`, `Arnold`\n- People have unique favorite music genres: `hip hop`, `classical`, `country`, `pop`, `rock`, `jazz`\n- The mothers' names in different houses are unique: `Penny`, `Holly`, `Aniya`, `Kailyn`, `Janelle`, `Sarah`\n- Each mother is accompanied by their child: `Ben`, `Cody`, `Derek`, `Evan`, `Frank`, `Gabe`\n- People have unique heights: `very short`, `super tall`, `tall`, `short`, `very tall`, `average`\n- The people keep unique animals: `dog`, `rabbit`, `horse`, `cat`, `fish`, `bird`\n\n## Clues:\n1. The person who loves pop music is the cat lover.\n2. The rabbit owner is directly left of the person whose mother's name is Aniya.\n3. The person whose mother's name is Holly is directly left of Carol.\n4. The person whose mother's name is Holly is the person whose child is Ben.\n5. The person whose mother's name is Holly is the person who loves classical music.\n6. The person who loves jazz music is the person whose mother's name is Sarah.\n7. The person whose child is named Gabe is somewhere to the right of the person whose mother's name is Aniya.\n8. The person who is super tall is the person whose mother's name is Holly.\n9. The person whose mother's name is Janelle is the mother of Evan.\n10. The person who is very short is somewhere to the left of the person whose mother's name is Aniya.\n11. Eric is the fish enthusiast.\n12. The person whose child is named Cody is somewhere to the right of the person who is very tall.\n13. The person who loves rock music is the person whose mother's name is Janelle.\n14. There is one house between the person who keeps horses and the person whose child is named Frank.\n15. The person whose child is named Derek is somewhere to the right of Peter.\n16. The fish enthusiast is somewhere to the left of the bird keeper.\n17. The fish enthusiast is somewhere to the right of the person whose child is named Ben.\n18. There is one house between the person whose child is named Derek and the person who loves rock music.\n19. The person who is short is the cat lover.\n20. Alice is directly left of the person who loves classical music.\n21. The person whose child is named Derek is the person whose mother's name is Aniya.\n22. There are two houses between the person whose mother's name is Penny and the person who is short.\n23. The person who loves hip hop music is in the first house.\n24. Carol is the person who is tall.\n\nSolve the puzzle: Who is in each house and what are their attributes?",
+        "text_description": "There are 6 houses, numbered 1 to 6 from left to right, as seen from across the street. Each house is occupied by a different person. Each house has a unique attribute for each of the following characteristics:\n- Each person has a unique name: `Alice`, `Carol`, `Eric`, `Peter`, `Bob`, `Arnold`\n- People have unique favorite music genres: `classical`, `hip hop`, `jazz`, `pop`, `rock`, `country`\n- The mothers' names in different houses are unique: `Sarah`, `Penny`, `Aniya`, `Janelle`, `Kailyn`, `Holly`\n- Each mother is accompanied by their child: `Ali`, `Fred`, `Bella`, `Timothy`, `Meredith`, `Samantha`\n- People have unique heights: `very short`, `tall`, `short`, `very tall`, `super tall`, `average`\n- The people keep unique animals: `bird`, `dog`, `horse`, `rabbit`, `cat`, `fish`\n\n## Clues:\n1. The person who loves pop music is the cat lover.\n2. The rabbit owner is directly left of The person whose mother's name is Aniya.\n3. The person whose mother's name is Holly is directly left of Carol.\n4. The person whose mother's name is Holly is the person's child is named Ali.\n5. The person whose mother's name is Holly is the person who loves classical music.\n6. The person who loves jazz music is The person whose mother's name is Sarah.\n7. The person's child is named Meredith is somewhere to the right of The person whose mother's name is Aniya.\n8. The person who is super tall is The person whose mother's name is Holly.\n9. The person who is the mother of Timothy is Bob.\n10. The person who is very short is somewhere to the left of The person whose mother's name is Aniya.\n11. Eric is the fish enthusiast.\n12. The person's child is named Samantha is somewhere to the right of the person who is very tall.\n13. The person who loves rock music is The person whose mother's name is Janelle.\n14. There is one house between the person who keeps horses and the person's child is named Meredith.\n15. The person's child is named Bella is somewhere to the right of Peter.\n16. The fish enthusiast is somewhere to the left of the bird keeper.\n17. The fish enthusiast is somewhere to the right of the person's child is named Ali.\n18. There is one house between the person's child is named Bella and the person who loves rock music.\n19. The person who is short is the cat lover.\n20. Alice is directly left of the person who loves classical music.\n21. The person's child is named Bella is The person whose mother's name is Aniya.\n22. There are two houses between The person whose mother's name is Penny and the person who is short.\n23. The person who loves hip-hop music is in the first house.\n24. Carol is the person who is tall.\n\nSolve the puzzle: Who is in each house and what are their attributes?",
         "size": "6x6",
+        "z3_format": {
+            "houses_count": 6,
+            "categories": {
+                "names": ["Alice", "Carol", "Eric", "Peter", "Bob", "Arnold"],
+                "music": ["hip hop", "classical", "country", "pop", "rock", "jazz"],
+                "mothers": ["Penny", "Holly", "Aniya", "Kailyn", "Janelle", "Sarah"],
+                "children": ["Ali", "Timothy", "Bella", "Samantha", "Fred", "Meredith"],
+                "heights": ["very short", "super tall", "tall", "short", "very tall", "average"],
+                "animals": ["dog", "rabbit", "horse", "cat", "fish", "bird"]
+            },
+            "constraints": [
+                {"type": "distinct_categories", "categories": ["names", "music", "mothers", "children", "heights", "animals"]},
+                {"type": "range", "from": 1, "to": 6},
+                {"type": "eq", "var1": "pop", "var2": "cat"},
+                {"type": "ImmediateLeft", "var1": "rabbit", "var2": "Aniya"},
+                {"type": "ImmediateLeft", "var1": "Holly", "var2": "Carol"},
+                {"type": "eq", "var1": "Holly", "var2": "Ali"},
+                {"type": "eq", "var1": "Holly", "var2": "classical"},
+                {"type": "eq", "var1": "jazz", "var2": "Sarah"},
+                {"type": "rightOf", "var1": "Meredith", "var2": "Aniya"},
+                {"type": "eq", "var1": "super tall", "var2": "Holly"},
+                {"type": "eq", "var1": "Timothy", "var2": "Bob"},
+                {"type": "leftOf", "var1": "very short", "var2": "Aniya"},
+                {"type": "eq", "var1": "Eric", "var2": "fish"},
+                {"type": "rightOf", "var1": "Samantha", "var2": "very tall"},
+                {"type": "eq", "var1": "rock", "var2": "Janelle"},
+                {"type": "abs_diff", "var1": "horse", "var2": "Meredith", "diff": 2},
+                {"type": "rightOf", "var1": "Bella", "var2": "Peter"},
+                {"type": "leftOf", "var1": "fish", "var2": "bird"},
+                {"type": "rightOf", "var1": "fish", "var2": "Ali"},
+                {"type": "abs_diff", "var1": "Bella", "var2": "rock", "diff": 2},
+                {"type": "eq", "var1": "short", "var2": "cat"},
+                {"type": "ImmediateLeft", "var1": "Alice", "var2": "classical"},
+                {"type": "eq", "var1": "Bella", "var2": "Aniya"},
+                {"type": "abs_diff", "var1": "Penny", "var2": "short", "diff": 3},
+                {"type": "eq", "var1": "hip hop", "var2int": 1},
+                {"type": "eq", "var1": "Carol", "var2": "tall"}
+            ]
+        },
         "ground_truth_dict": {
-        "Alice": 1,
-        "Peter": 2,
-        "Carol": 3,
-        "Bob": 4,
-        "Eric": 5,
-        "Arnold": 6,
-        "hip hop": 1,
-        "classical": 2,
-        "country": 3,
-        "pop": 4,
-        "rock": 5,
-        "jazz": 6,
-        "Penny": 1,
-        "Holly": 2,
-        "Aniya": 3,
-        "Kailyn": 4,
-        "Janelle": 5,
-        "Sarah": 6,
-        "Ben": 1,
-        "Cody": 2,
-        "Derek": 3,
-        "Evan": 4,
-        "Frank": 5,
-        "Gabe": 6,
-        "very short": 1,
-        "super tall": 2,
-        "tall": 3,
-        "short": 4,
-        "very tall": 5,
-        "average": 6,
-        "dog": 1,
-        "rabbit": 2,
-        "horse": 3,
-        "cat": 4,
-        "fish": 5,
-        "bird": 6
+            "Carol": 3,
+            "Eric": 5,
+            "Peter": 2,
+            "Bob": 4,
+            "Arnold": 6,
+            "classical": 2,
+            "hip hop": 1,
+            "jazz": 6,
+            "pop": 4,
+            "rock": 5,
+            "country": 3,
+            "Sarah": 6,
+            "Penny": 1,
+            "Aniya": 3,
+            "Janelle": 5,
+            "Kailyn": 4,
+            "Holly": 2,
+            "Fred": 1,
+            "Alice": 1,
+            "Bella": 3,
+            "Timothy": 4,
+            "Meredith": 5,
+            "Samantha": 6,
+            "very short": 1,
+            "tall": 3,
+            "short": 4,
+            "very tall": 5,
+            "super tall": 2,
+            "average": 6,
+            "bird": 6,
+            "dog": 1,
+            "horse": 3,
+            "rabbit": 2,
+            "cat": 4,
+            "fish": 5,
+            "Ali": 2
         }
     },
     "puzzle_9": {
         "text_description": "There are 5 houses, numbered 1 to 5 from left to right, as seen from across the street. Each house is occupied by a different person. Each house has a unique attribute for each of the following characteristics:\n- Each person has a unique name: `Alice`, `Bob`, `Arnold`, `Peter`, `Eric`\n- People have unique favorite sports: `tennis`, `baseball`, `soccer`, `basketball`, `swimming`\n\n## Clues:\n1. The person who loves tennis is not in the fifth house.\n2. The person who loves swimming and Alice are next to each other.\n3. The person who loves swimming is directly left of the person who loves tennis.\n4. Eric is the person who loves soccer.\n5. Eric is in the first house.\n6. Arnold is in the second house.\n7. Peter is the person who loves baseball.\n8. Alice is not in the third house.",
         "size": "5x2",
+        "z3_format": {
+            "houses_count": 5,
+            "categories": {
+                "names": ["Alice", "Bob", "Arnold", "Peter", "Eric"],
+                "sports": ["tennis", "baseball", "soccer", "basketball", "swimming"]
+            },
+            "constraints": [
+                {"type": "distinct_categories", "categories": ["names", "sports"]},
+                {"type": "range", "from": 1, "to": 5},
+                {"type": "neq", "var1": "tennis", "var2int": 5},
+                {"type": "neighbor", "var1": "swimming", "var2": "Alice"},
+                {"type": "eq_offset", "var1": "tennis", "var2": "swimming", "offset": 1},
+                {"type": "eq", "var1": "soccer", "var2": "Eric"},
+                {"type": "eq", "var1": "Eric", "var2int": 1},
+                {"type": "eq", "var1": "Arnold", "var2int": 2},
+                {"type": "eq", "var1": "baseball", "var2": "Peter"},
+                {"type": "neq", "var1": "Alice", "var2int": 3}
+            ]
+        },
         "ground_truth_dict": {
         "Eric": 1,
         "Arnold": 2,
@@ -336,6 +439,21 @@
     "puzzle_10": {
         "text_description": "There are 2 houses, numbered 1 to 2 from left to right, as seen from across the street. Each house is occupied by a different person. Each house has a unique attribute for each of the following characteristics:\n- Each person has a unique name: `Arnold`, `Eric`\n- Each person has a unique level of education: `high school`, `associate`\n- The mothers' names in different houses are unique: `Aniya`, `Holly`\n\n## Clues:\n1. The person with an associate's degree is in the first house.\n2. The person whose mother's name is Holly is Arnold.\n3. The person whose mother's name is Holly is not in the second house.",
         "size": "2x3",
+        "z3_format": {
+            "houses_count": 2,
+            "categories": {
+                "names": ["Arnold", "Eric"],
+                "education": ["high school", "associate"],
+                "mothers": ["Aniya", "Holly"]
+            },
+            "constraints": [
+                {"type": "distinct_categories", "categories": ["names", "education", "mothers"]},
+                {"type": "range", "from": 1, "to": 2},
+                {"type": "eq", "var1": "associate", "var2int": 1},
+                {"type": "eq", "var1": "Holly", "var2": "Arnold"},
+                {"type": "neq", "var1": "Holly", "var2int": 2}
+            ]
+        },
         "ground_truth_dict": {
         "Arnold": 1,
         "Eric": 2,

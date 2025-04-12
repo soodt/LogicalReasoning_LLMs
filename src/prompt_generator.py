@@ -46,25 +46,34 @@ def get_prompt(mode, strategy):
 
                     Convert this puzzle into a JSON structure usable by a Z3 solver:
                     - The JSON must have: "houses_count", "categories", and "constraints".
-                    - "categories" is a dict of category_name -> list of items (strings).
-                    - "constraints" is a list of objects describing each constraint, strictly using:
-                        - "type": one of ["eq","eq_offset","neighbor","neq","left","right","distinct_categories","range"]
-                        - "var1","var2","offset","var2int","categories" as needed
+                    - "categories" is a dictionary mapping each category name to a list of items (strings).
+                    - "constraints" is a list of objects describing each constraint. Each constraint must use exactly one of the following types:
+                        - "eq"
+                        - "eq_offset"
+                        - "neighbor"
+                        - "neq"
+                        - "ImmediateLeft"
+                        - "ImmediateRight"
+                        - "distinct_categories"
+                        - "range"
+                        - "rightOf"    (means var1 is to the right of var2)
+                        - "leftOf"     (means var1 is to the left of var2)
+                        - "abs_diff"   (means the absolute difference between var1 and var2 equals a given number)
+                        - Use only the following keys for each constraint as needed: "type", "var1", "var2", "offset", "var2int", "diff", and "categories".
                     - For "distinct_categories", ALWAYS use the format:
-                        {
+                        {{
                         "type":"distinct_categories",
                         "categories":["colors","names",...]
+                        }}
+                    Do not include "var1" or "var2" in this constraint.
+                    -Include exactly one "range" constraint with keys "from" and "to".
+                        For instance, if the puzzle has 5 houses, the range constraint is:
+                        {
+                            "type": "range",
+                            "from": 1,
+                            "to": 5
                         }
-                    Do not produce var1/var2 for distinct_categories.
-
-                            - **Important**: Include exactly one "range" constraint with keys "from" and "to".
-                            For instance, if the puzzle has 5 houses, the range constraint is:
-                            {
-                                "type": "range",
-                                "from": 1,
-                                "to": 5
-                            }
-                            This ensures each item is an integer from 1..5.
+                        This ensures each item is an integer from 1..5.
                     - Do NOT invent new constraint types or items that aren't in the puzzle's categories.
                     - Do NOT include explanations, reasoning, or extraneous text. Only output valid JSON.
                     - If referencing a numeric house index for a 'neq' or 'eq' constraint, use 'var2int'. For example:
@@ -188,17 +197,27 @@ def get_prompt(mode, strategy):
 
         Convert this puzzle into a JSON structure usable by a Z3 solver:
         - The JSON must have: "houses_count", "categories", and "constraints".
-        - "categories" is a dict of category_name -> list of items (strings).
-        - "constraints" is a list of objects describing each constraint, strictly using:
-            - "type": one of ["eq","eq_offset","neighbor","neq","left","right","distinct_categories","range"]
-            - "var1","var2","offset","var2int","categories" as needed
+        - "categories" is a dictionary mapping each category name to a list of items (strings).
+        - "constraints" is a list of objects describing each constraint. Each constraint must use exactly one of the following types:
+            - "eq"
+            - "eq_offset"
+            - "neighbor"
+            - "neq"
+            - "ImmediateLeft"
+            - "ImmediateRight"
+            - "distinct_categories"
+            - "range"
+            - "rightOf"    (means var1 is to the right of var2)
+            - "leftOf"     (means var1 is to the left of var2)
+            - "abs_diff"   (means the absolute difference between var1 and var2 equals a given number)
+            - Use only the following keys for each constraint as needed: "type", "var1", "var2", "offset", "var2int", "diff", and "categories".
         - For "distinct_categories", ALWAYS use the format:
             {{
             "type":"distinct_categories",
             "categories":["colors","names",...]
             }}
-        Do not produce var1/var2 for distinct_categories.
-        - **Important**: Include exactly one "range" constraint with keys "from" and "to".
+        Do not include "var1" or "var2" in this constraint.
+        -Include exactly one "range" constraint with keys "from" and "to".
             For instance, if the puzzle has 5 houses, the range constraint is:
             {
                 "type": "range",
@@ -331,7 +350,12 @@ def get_prompt(mode, strategy):
                 and we know Red=1 (left), Blue=2 (right). If the puzzle also says PersonA=1, PersonB=2,
                 the final dictionary is exactly:
 
-                {'Red':1,'Blue':2,'PersonA':1,'PersonB':2}
+                {
+                    "Red": 1,
+                    "Blue": 2,
+                    "PersonA": 1,
+                    "PersonB": 2
+                }
 
                 No extra text, just that dictionary structure.
                 """
@@ -340,17 +364,27 @@ def get_prompt(mode, strategy):
 
         Convert this puzzle into a JSON structure usable by a Z3 solver:
         - The JSON must have: "houses_count", "categories", and "constraints".
-        - "categories" is a dict of category_name -> list of items (strings).
-        - "constraints" is a list of objects describing each constraint, strictly using:
-            - "type": one of ["eq","eq_offset","neighbor","neq","left","right","distinct_categories","range"]
-            - "var1","var2","offset","var2int","categories" as needed
+        - "categories" is a dictionary mapping each category name to a list of items (strings).
+        - "constraints" is a list of objects describing each constraint. Each constraint must use exactly one of the following types:
+            - "eq"
+            - "eq_offset"
+            - "neighbor"
+            - "neq"
+            - "ImmediateLeft"
+            - "ImmediateRight"
+            - "distinct_categories"
+            - "range"
+            - "rightOf"    (means var1 is to the right of var2)
+            - "leftOf"     (means var1 is to the left of var2)
+            - "abs_diff"   (means the absolute difference between var1 and var2 equals a given number)
+            - Use only the following keys for each constraint as needed: "type", "var1", "var2", "offset", "var2int", "diff", and "categories".
         - For "distinct_categories", ALWAYS use the format:
             {{
             "type":"distinct_categories",
             "categories":["colors","names",...]
             }}
-        Do not produce var1/var2 for distinct_categories.
-        - **Important**: Include exactly one "range" constraint with keys "from" and "to".
+        Do not include "var1" or "var2" in this constraint.
+        -Include exactly one "range" constraint with keys "from" and "to".
             For instance, if the puzzle has 5 houses, the range constraint is:
             {
                 "type": "range",

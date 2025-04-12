@@ -1,0 +1,3 @@
+export DEEPSEEK_API_KEY="sk-8013254daf8d4a08affa19c3a194c9b1"
+export MISTRAL_API_KEY="BkNfQldBaOg4l7n0SAGEFuq0w0Up6xJh"
+export OPENAI_API_KEY="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"

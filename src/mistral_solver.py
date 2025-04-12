@@ -17,7 +17,7 @@ class MistralSolver:
         headers = {"Authorization": f"Bearer {self.api_key}", "Content-Type": "application/json"}
 
         data = {
-            "model": "mistral-tiny",
+            "model": "mistral-small-latest",
             "messages": [
                 {"role": "system", "content": "You are an expert puzzle solver. Output only the final dictionary or JSON, "
                         "with no extra commentary or explanations."},
