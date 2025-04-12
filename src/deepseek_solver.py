@@ -16,7 +16,7 @@ class DeepSeekSolver:
 
     def query_llm(self, prompt):
         start_time = time.time()
-        retries = 3  # Maximum number of retries
+        retries = 10  # Maximum number of retries
         for attempt in range(retries):
             try:
                 response = client.chat.completions.create(

@@ -26,7 +26,7 @@ class MistralSolver:
             "temperature": 0.3
         }
 
-        retries = 3  # Max number of retries
+        retries = 10  # Max number of retries
         for attempt in range(retries):
             response = requests.post(self.url, json=data, headers=headers)
             response_json = response.json()
