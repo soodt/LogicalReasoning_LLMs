@@ -36,6 +36,10 @@ def aggregate_stats(log_entries):
         "solve": {"count": 0, "accuracy_sum": 0.0, "weighted_sum": 0.0, "total_fields": 0},
         "convert": {"count": 0, "accuracy_sum": 0.0, "weighted_sum": 0.0, "total_fields": 0},
         "constraints": {"count": 0, "accuracy_sum": 0.0, "weighted_sum": 0.0, "total_fields": 0},
+        "total_solve_tokens": 0.0,
+        "total_convert_tokens": 0.0,
+        "total_all_tokens": 0.0,
+
         "by_difficulty": {}
     }
     
@@ -74,6 +78,15 @@ def aggregate_stats(log_entries):
         except Exception:
             pass
 
+        solve_tokens_str = entry.get("solve_token_usage", "N/A")
+        if solve_tokens_str != "N/A":
+            try:
+                stokens = float(solve_tokens_str)
+                overall["total_solve_tokens"] += stokens
+                overall["total_all_tokens"] += stokens
+            except ValueError:
+                pass
+
         # Process CONVERT data: using convert_solver_accuracy, convert_correct_fields, convert_total_fields
         try:
             conv_total = float(entry.get("convert_total_fields", 0))
@@ -91,6 +104,15 @@ def aggregate_stats(log_entries):
                 overall["by_difficulty"][diff]["convert"]["total_fields"] += conv_total
         except Exception:
             pass
+
+        convert_tokens_str = entry.get("convert_token_usage", "N/A")
+        if convert_tokens_str != "N/A":
+            try:
+                ctokens = float(convert_tokens_str)
+                overall["total_convert_tokens"] += ctokens
+                overall["total_all_tokens"] += ctokens
+            except ValueError:
+                pass
 
         # Process CONSTRAINTS data: using constraints_accuracy, constraints_correct_fields, constraints_total_fields
         try:
