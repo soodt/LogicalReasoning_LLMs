@@ -7,6 +7,7 @@ from src.prompt_generator import get_prompt
 import argparse
 from src.openai_solver import OpenAISolver
 from src.deepseek_solver import DeepSeekSolver
+import re
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Solve or convert puzzles with an optional puzzle, action, and strategy.")
@@ -21,19 +22,64 @@ def parse_args():
     return parser.parse_args()
 
 def clean_response(text):
-    # Remove any leading/trailing whitespace
+    """
+    1) Ensure 'text' is a string (convert if not).
+    2) Strip leading/trailing whitespace.
+    3) Extract JSON from triple-backtick code fences (```json { ... } ```) if present.
+    4) Remove leftover triple backticks if the text starts with them.
+    5) Escape problematic characters in the "explanation" field only.
+    6) Return the resulting string for json.loads(...) in your main code.
+    """
+
+    # 1) If 'text' isn't a string, force it to a string
+    #    (prevents .replace or regex calls on dict/other objects)
+    if not isinstance(text, str):
+        text = str(text)
+
+    # 2) Strip whitespace
     text = text.strip()
-    # If the text starts with a code fence (and possibly a language hint), remove those lines.
-    if text.startswith("```"):
-        lines = text.splitlines()
-        # Remove the first line if it starts with ```
-        if lines[0].strip().startswith("```"):
-            lines = lines[1:]
-        # Remove the last line if it starts with ```
-        if lines and lines[-1].strip().startswith("```"):
-            lines = lines[:-1]
-        text = "\n".join(lines)
-    return text.strip()
+
+    # 3) Look for code fence: ```json ... ```
+    fence_pattern = r"```(?:json)?\s*(\{.*?\})\s*```"
+    fence_match = re.search(fence_pattern, text, flags=re.DOTALL)
+    if fence_match:
+        # Replace text with just the captured JSON block
+        text = fence_match.group(1).strip()
+    else:
+        # 4) If text starts with triple backticks, remove them line by line
+        if text.startswith("```"):
+            lines = text.splitlines()
+            if lines[0].strip().startswith("```"):
+                lines = lines[1:]
+            if lines and lines[-1].strip().startswith("```"):
+                lines = lines[:-1]
+            text = "\n".join(lines).strip()
+
+    # 5) Fix unescaped quotes/newlines in "explanation" field
+    #    We search for:  "explanation": "<text>"
+    #    Then escape quotes, backslashes, newlines, etc. in <text>.
+    explanation_pattern = re.compile(r'("explanation"\s*:\s*")(.*?)(")', flags=re.DOTALL)
+
+    def fix_explanation(m):
+        start = m.group(1)   # e.g.  "explanation": "
+        middle = m.group(2)  # the raw explanation text
+        end = m.group(3)     # the closing quote
+
+        # Escape special characters that break JSON
+        middle_escaped = (middle
+                          .replace('\\', '\\\\')   # escape backslashes first
+                          .replace('"', '\\"')      # escape double quotes
+                          .replace('\n', '\\n')     # escape newlines
+                          .replace('\r', '\\r')
+                          .replace('\t', '\\t'))
+
+        return f'{start}{middle_escaped}{end}'
+
+    text = explanation_pattern.sub(fix_explanation, text)
+
+    # 6) Return the cleaned-up string.
+    #    The rest of your code calls json.loads(...) on this.
+    return text
 
 def main():
     args = parse_args()

@@ -5,9 +5,18 @@ def get_prompt(mode, strategy):
     """
     if strategy == "cot":
         if mode == "solve":
-            return """Think critically and, show your step-by-step chain-of-thought reasoning (explanation) to solve the puzzle below.
-                    Then, produce a final JSON with two keys: "explanation" for your reasoning, and
-                    "solution" for the final dictionary mapping items to house indexes.
+            return """Think critically and show your step-by-step reasoning in the "explanation" field to solve the puzzle below. 
+                        Then produce a final JSON with exactly these two fields:
+
+                        {
+                        "explanation": "...",
+                        "solution": { ... }
+                        }
+
+                        **Do not** use triple-backticks or any code fences. 
+                        **Do not** include any extra text outside the JSON.
+                        **Do not** add Markdown headings or bullet points.
+                        Your entire response must be valid JSON, period.
 
                     Below are the rules for solving:
                     -------------------------------------------------------------------
