@@ -11,7 +11,7 @@ client = OpenAI(api_key=OPENAI_API_KEY)
 class OpenAISolver:
     def __init__(self):
         # Choose a model; adjust as needed
-        self.model = "gpt-4o-mini"
+        self.model = "o3-mini"
 
     def query_llm(self, prompt):
         start_time = time.time()
@@ -23,7 +23,7 @@ class OpenAISolver:
                     {"role": "system", "content": "You are an expert puzzle solver. Output only valid JSON with no extra commentary."},
                     {"role": "user", "content": prompt}
                 ],
-                temperature=0.3)
+                )
                 # Debug: print full response for troubleshooting
                 print(f"OpenAI API Response: {response}")
                 llm_response = response.choices[0].message.content
