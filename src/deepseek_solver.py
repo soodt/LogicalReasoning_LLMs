@@ -12,7 +12,7 @@ client = OpenAI(api_key=DEEPSEEK_API_KEY, base_url="https://api.deepseek.com")
 class DeepSeekSolver:
     def __init__(self):
         # Set the model as described in the DeepSeek documentation.
-        self.model = "deepseek-chat"
+        self.model = "deepseek-reasoner"
 
     def query_llm(self, prompt):
         start_time = time.time()
