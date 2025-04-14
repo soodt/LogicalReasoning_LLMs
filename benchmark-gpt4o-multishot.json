@@ -1,65 +1,65 @@
 {
     "solve": {
         "count": 50,
-        "accuracy_sum": 39.0,
-        "weighted_sum": 43.34722222222222,
+        "accuracy_sum": 16.0,
+        "weighted_sum": 29.88194444444444,
         "total_fields": 750.0,
         "averages": {
-            "average_accuracy": 0.78,
-            "weighted_accuracy": 0.8669444444444444,
+            "average_accuracy": 0.32,
+            "weighted_accuracy": 0.5976388888888888,
             "total_fields": 750.0,
             "entries": 50
         }
     },
     "convert": {
         "count": 50,
-        "accuracy_sum": 40.0,
-        "weighted_sum": 44.56388888888889,
+        "accuracy_sum": 38.0,
+        "weighted_sum": 43.24722222222222,
         "total_fields": 750.0,
         "averages": {
-            "average_accuracy": 0.8,
-            "weighted_accuracy": 0.8912777777777778,
+            "average_accuracy": 0.76,
+            "weighted_accuracy": 0.8649444444444444,
             "total_fields": 750.0,
             "entries": 50
         }
     },
     "constraints": {
         "count": 50,
-        "accuracy_sum": 4.0,
-        "weighted_sum": 8.6835326953748,
+        "accuracy_sum": 5.0,
+        "weighted_sum": 9.044685577580315,
         "total_fields": 206.0,
         "averages": {
-            "average_accuracy": 0.08,
-            "weighted_accuracy": 0.17367065390749603,
+            "average_accuracy": 0.1,
+            "weighted_accuracy": 0.1808937115516063,
             "total_fields": 206.0,
             "entries": 50
         }
     },
-    "total_solve_tokens": 219729.0,
-    "total_convert_tokens": 232398.0,
-    "total_all_tokens": 452127.0,
+    "total_solve_tokens": 54836.0,
+    "total_convert_tokens": 117263.0,
+    "total_all_tokens": 172099.0,
     "by_difficulty": {
         "X-Large": {
             "solve": {
                 "count": 9,
-                "accuracy_sum": 2.0,
-                "weighted_sum": 5.188888888888889,
+                "accuracy_sum": 1.0,
+                "weighted_sum": 3.291666666666667,
                 "total_fields": 278.0,
                 "averages": {
-                    "average_accuracy": 0.2222222222222222,
-                    "weighted_accuracy": 0.5765432098765433,
+                    "average_accuracy": 0.1111111111111111,
+                    "weighted_accuracy": 0.36574074074074076,
                     "total_fields": 278.0,
                     "entries": 9
                 }
             },
             "convert": {
                 "count": 9,
-                "accuracy_sum": 5.0,
-                "weighted_sum": 6.605555555555555,
+                "accuracy_sum": 4.0,
+                "weighted_sum": 5.594444444444445,
                 "total_fields": 278.0,
                 "averages": {
-                    "average_accuracy": 0.5555555555555556,
-                    "weighted_accuracy": 0.7339506172839506,
+                    "average_accuracy": 0.4444444444444444,
+                    "weighted_accuracy": 0.621604938271605,
                     "total_fields": 278.0,
                     "entries": 9
                 }
@@ -67,11 +67,11 @@
             "constraints": {
                 "count": 9,
                 "accuracy_sum": 1.0,
-                "weighted_sum": 1.973684210526316,
+                "weighted_sum": 1.8157894736842106,
                 "total_fields": 71.0,
                 "averages": {
                     "average_accuracy": 0.1111111111111111,
-                    "weighted_accuracy": 0.2192982456140351,
+                    "weighted_accuracy": 0.2017543859649123,
                     "total_fields": 71.0,
                     "entries": 9
                 }
@@ -80,24 +80,24 @@
         "Small": {
             "solve": {
                 "count": 19,
-                "accuracy_sum": 19.0,
-                "weighted_sum": 19.0,
+                "accuracy_sum": 15.0,
+                "weighted_sum": 16.125,
                 "total_fields": 132.0,
                 "averages": {
-                    "average_accuracy": 1.0,
-                    "weighted_accuracy": 1.0,
+                    "average_accuracy": 0.7894736842105263,
+                    "weighted_accuracy": 0.8486842105263158,
                     "total_fields": 132.0,
                     "entries": 19
                 }
             },
             "convert": {
                 "count": 19,
-                "accuracy_sum": 18.0,
-                "weighted_sum": 18.833333333333336,
+                "accuracy_sum": 17.0,
+                "weighted_sum": 17.75,
                 "total_fields": 132.0,
                 "averages": {
-                    "average_accuracy": 0.9473684210526315,
-                    "weighted_accuracy": 0.9912280701754387,
+                    "average_accuracy": 0.8947368421052632,
+                    "weighted_accuracy": 0.9342105263157895,
                     "total_fields": 132.0,
                     "entries": 19
                 }
@@ -118,36 +118,36 @@
         "Medium": {
             "solve": {
                 "count": 15,
-                "accuracy_sum": 11.0,
-                "weighted_sum": 12.158333333333333,
+                "accuracy_sum": 0.0,
+                "weighted_sum": 7.015277777777778,
                 "total_fields": 215.0,
                 "averages": {
-                    "average_accuracy": 0.7333333333333333,
-                    "weighted_accuracy": 0.8105555555555556,
+                    "average_accuracy": 0.0,
+                    "weighted_accuracy": 0.4676851851851852,
                     "total_fields": 215.0,
                     "entries": 15
                 }
             },
             "convert": {
                 "count": 15,
-                "accuracy_sum": 11.0,
-                "weighted_sum": 12.425,
+                "accuracy_sum": 12.0,
+                "weighted_sum": 13.902777777777779,
                 "total_fields": 215.0,
                 "averages": {
-                    "average_accuracy": 0.7333333333333333,
-                    "weighted_accuracy": 0.8283333333333334,
+                    "average_accuracy": 0.8,
+                    "weighted_accuracy": 0.9268518518518519,
                     "total_fields": 215.0,
                     "entries": 15
                 }
             },
             "constraints": {
                 "count": 15,
-                "accuracy_sum": 0.0,
-                "weighted_sum": 2.0166666666666666,
+                "accuracy_sum": 1.0,
+                "weighted_sum": 2.5357142857142856,
                 "total_fields": 67.0,
                 "averages": {
-                    "average_accuracy": 0.0,
-                    "weighted_accuracy": 0.13444444444444445,
+                    "average_accuracy": 0.06666666666666667,
+                    "weighted_accuracy": 0.16904761904761903,
                     "total_fields": 67.0,
                     "entries": 15
                 }
@@ -156,24 +156,24 @@
         "Large": {
             "solve": {
                 "count": 7,
-                "accuracy_sum": 7.0,
-                "weighted_sum": 7.0,
+                "accuracy_sum": 0.0,
+                "weighted_sum": 3.4500000000000006,
                 "total_fields": 125.0,
                 "averages": {
-                    "average_accuracy": 1.0,
-                    "weighted_accuracy": 1.0,
+                    "average_accuracy": 0.0,
+                    "weighted_accuracy": 0.49285714285714294,
                     "total_fields": 125.0,
                     "entries": 7
                 }
             },
             "convert": {
                 "count": 7,
-                "accuracy_sum": 6.0,
-                "weighted_sum": 6.7,
+                "accuracy_sum": 5.0,
+                "weighted_sum": 6.0,
                 "total_fields": 125.0,
                 "averages": {
-                    "average_accuracy": 0.8571428571428571,
-                    "weighted_accuracy": 0.9571428571428572,
+                    "average_accuracy": 0.7142857142857143,
+                    "weighted_accuracy": 0.8571428571428571,
                     "total_fields": 125.0,
                     "entries": 7
                 }
@@ -193,7 +193,7 @@
         }
     },
     "time_range": {
-        "earliest": "2025-04-14 00:15:34",
-        "latest": "2025-04-14 19:45:53"
+        "earliest": "2025-04-14 02:09:47",
+        "latest": "2025-04-14 02:14:34"
     }
 }

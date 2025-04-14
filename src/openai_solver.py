@@ -11,7 +11,7 @@ client = OpenAI(api_key=OPENAI_API_KEY)
 class OpenAISolver:
     def __init__(self):
         # Choose a model; adjust as needed
-        self.model = "o3-mini"
+        self.model = "gpt-4o"
 
     def query_llm(self, prompt):
         start_time = time.time()
