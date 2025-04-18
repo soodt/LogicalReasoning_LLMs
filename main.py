@@ -27,13 +27,13 @@ def clean_response(text):
 
     text = text.strip()
 
-    # 3) Look for code fence
+    # Look for code fence
     fence_pattern = r"```(?:json)?\s*(\{.*?\})\s*```"
     fence_match = re.search(fence_pattern, text, flags=re.DOTALL)
     if fence_match:
         text = fence_match.group(1).strip()
     else:
-        # if text starts with triple backticks, remove them line by line
+        # remove triple backticks
         if text.startswith("```"):
             lines = text.splitlines()
             if lines[0].strip().startswith("```"):
@@ -42,7 +42,6 @@ def clean_response(text):
                 lines = lines[:-1]
             text = "\n".join(lines).strip()
 
-    # unescaped quotes/newlines in explanation field
     explanation_pattern = re.compile(r'("explanation"\s*:\s*")(.*?)(")', flags=re.DOTALL)
 
     def fix_explanation(m):
@@ -52,9 +51,9 @@ def clean_response(text):
 
         # Escape special characters
         middle_escaped = (middle
-                          .replace('\\', '\\\\')   # escape backslashes first
-                          .replace('"', '\\"')      # escape double quotes
-                          .replace('\n', '\\n')     # escape newlines
+                          .replace('\\', '\\\\') 
+                          .replace('"', '\\"')  
+                          .replace('\n', '\\n')    
                           .replace('\r', '\\r')
                           .replace('\t', '\\t'))
 
@@ -68,7 +67,6 @@ def main():
     with open("data/puzzles.json", "r") as f:
         puzzles_dict = json.load(f)
 
-    # If puzzle is specified, run just that puzzle. Otherwise run them all
     if args.puzzle is not None:
         if args.puzzle not in puzzles_dict:
             print(f"Error: Puzzle '{args.puzzle}' not found in puzzles.json.")
@@ -154,7 +152,6 @@ def main():
                 if cleaned_text is None:
                     error_msg = "LLM puzzle solution is None (API error or rate limit)."
 
-        # 2) If converting: get Z3 constraints using the chosen prompt strategy and feed them to the solver.
         if do_convert:
             prompt_convert = get_prompt("convert", strategy) + "\n" + text_description
             llm_constraints_str, conv_time, conv_tokens = llm_solver.query_llm(prompt_convert)
@@ -170,14 +167,14 @@ def main():
                         convert_constraints = json.dumps(z3_obj)
                     except Exception as e:
                         print(f"Error parsing CoT convert response: {e}")
-                        # fallback: store the raw text
+                        # fallback
                         convert_constraints = cleaned_constraints
                 else:
                     # baseline or multishot: 
                     convert_constraints = cleaned_constraints
 
                 try:
-                    # Parse the final constraints as JSON for the solver
+                    # Parse the final constraints to solver
                     llm_constraints_json = json.loads(convert_constraints)
                     print("\nLLM-Generated Z3 Constraints:\n", llm_constraints_json)
                     try:

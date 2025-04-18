@@ -138,10 +138,6 @@ class ZebraSolver:
                 self.errors.append(f"Unknown constraint type '{ctype}': {c}")
 
     def solve(self):
-        """
-        Add constraints (collecting errors in self.errors). If no errors, run solver.check().
-        If errors exist or unsatisfiable, return None.
-        """
         self.add_constraints()
 
         if self.errors:
