@@ -4,3 +4,9 @@ As part of my final year project, this application uses LLM's to convert constra
 To run the project, simply type:
 
 python main.py --puzzle_name --strategy --variant --llm
+
+or 
+
+python main.py 
+
+for a default run.
