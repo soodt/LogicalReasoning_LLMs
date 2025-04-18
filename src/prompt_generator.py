@@ -348,7 +348,6 @@ def get_prompt(mode, strategy):
         
         """
     else:
-        # Fallback to baseline
         if mode == "solve":
             return """Solve this puzzle by returning a Python/JSON dictionary
                 that maps each distinct item (like colors or names) to an integer house index,

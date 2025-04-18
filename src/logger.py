@@ -13,12 +13,6 @@ class Logger:
                 json.dump([], f)
 
     def compare_dict_solution(self, llm_sol, puzzle_sol):
-        """
-        Compare a dictionary solution from LLM or solver to puzzle's ground truth dictionary.
-        For example, if puzzle_sol is {"Red":1, "Blue":2, "PersonA":1, "PersonB":2}
-        and llm_sol is the LLM's final mapping, award +1 for each key whose value matches.
-        Total is the number of keys in puzzle_sol.
-        """
         if not isinstance(llm_sol, dict) or not isinstance(puzzle_sol, dict):
             return 0, 1
         matches = 0
@@ -29,10 +23,6 @@ class Logger:
         return matches, total
 
     def canonicalize_constraint(self, c):
-        """
-        Convert a constraint dict to a canonical string for set-based comparison.
-        This is used for comparing the official puzzle constraints with the LLM–generated ones.
-        """
         ctype = c.get("type", "unknown")
         if ctype == "range":
             low = c.get("from", None)
@@ -57,10 +47,6 @@ class Logger:
             return f"{ctype}({c})"
 
     def compare_categories(self, puzzle_cats, llm_cats):
-        """
-        Compare two category dictionaries (e.g., {"colors": ["Red","Blue"], ...}).
-        Award 2 points per category if present and matching exactly.
-        """
         matches = 0
         total = 0
         puzzle_keys = set(puzzle_cats.keys())
@@ -77,11 +63,6 @@ class Logger:
         return matches, total
 
     def compare_z3_data(self, puzzle_z3, llm_z3):
-        """
-        Compare the official puzzle Z3 data with the LLM–generated Z3 data.
-        Score 1 point for houses_count match, use compare_categories for categories,
-        and compare the constraints via set intersection (ignoring "distinct_categories").
-        """
         if not isinstance(llm_z3, dict):
             return 0, 1
 
@@ -96,7 +77,7 @@ class Logger:
         matches = 0
         total = 0
 
-        # Compare houses_count (1 point)
+        # Compare houses_count
         total += 1
         if llm_houses == puzzle_houses:
             matches += 1
@@ -106,7 +87,6 @@ class Logger:
         matches += cat_m
         total += cat_t
 
-        # Compare constraints (set-based)
         puzzle_set = set()
         for pc in puzzle_constr:
             cstr = self.canonicalize_constraint(pc)
@@ -133,30 +113,21 @@ class Logger:
         llm_provider,
         puzzle_name,
         puzzle_size,
-        variant,  # "solve", "convert", or "full_test"
-        strategy,            # NEW dedicated field for strategy: "baseline", "cot", "multishot", etc.
-        chain_of_thought,    # NEW field to store explanation if CoT
+        variant,
+        strategy,
+        chain_of_thought,
         prompt,
         puzzle_ground_truth_dict,
-        solve_dict_str,      # LLM’s direct solution dictionary as string or "N/A"
+        solve_dict_str,
         solve_time,
         solve_tokens,
-        convert_constraints, # LLM’s constraints as JSON string or "N/A"
-        convert_solver_str,  # Numeric assignment (as string) from feeding LLM constraints to solver, or "N/A"
+        convert_constraints,
+        convert_solver_str,
         convert_time,
         convert_tokens,
-        puzzle_z3=None,      # Official Z3 format constraints (if provided)
-        error_msg=None       # Optional error message string
+        puzzle_z3=None,
+        error_msg=None
     ):
-        """
-        Log a run that may include:
-         - Direct solution from LLM ("solve")
-         - Numeric assignment from feeding LLM constraints to solver ("convert")
-         - Constraint-level comparison (if official Z3 is provided)
-        Each of these parts is compared with the ground truth.
-        If a part was not executed, log "N/A" or appropriate default values.
-        """
-        # Parse and compare direct solution
         if solve_dict_str == "N/A":
             direct_sol_acc = 0.0
             direct_sol_correct = 0
@@ -164,7 +135,6 @@ class Logger:
             direct_sol_parsed = "N/A"
         else:
             try:
-                # Replace single quotes with double quotes to help JSON parsing if needed
                 parse_text = solve_dict_str.replace("'", "\"")
                 direct_sol_parsed = json.loads(parse_text)
             except Exception as e:
@@ -179,7 +149,6 @@ class Logger:
                 direct_sol_correct = m1
                 direct_sol_total = t1
 
-        # Parse and compare numeric assignment from LLM-converted constraints (convert_solver)
         if convert_solver_str == "N/A":
             convert_sol_acc = 0.0
             convert_sol_correct = 0
@@ -201,7 +170,6 @@ class Logger:
                 convert_sol_correct = m2
                 convert_sol_total = len(puzzle_ground_truth_dict)
 
-        # If official Z3 constraints were provided and we obtained LLM constraints, compare them
         if puzzle_z3 and convert_constraints != "N/A":
             try:
                 constraints_parsed = json.loads(convert_constraints)
@@ -223,7 +191,7 @@ class Logger:
             "puzzle": puzzle_name,
             "puzzle_size": puzzle_size, 
             "variant": variant,
-            "strategy": strategy,    # store the chosen strategy
+            "strategy": strategy,
             "chain_of_thought": chain_of_thought, 
             "prompt": prompt,
             "puzzle_ground_truth_dict": puzzle_ground_truth_dict,
@@ -249,7 +217,6 @@ class Logger:
             "constraints_accuracy": constraints_acc,
             "constraints_correct_fields": c_m,
             "constraints_total_fields": c_t,
-            # Error messages encountered
             "error": error_msg if error_msg else "N/A"
         }
 

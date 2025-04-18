@@ -4,14 +4,13 @@ import os
 import datetime
 import sys
 
-# Define difficulty buckets based on the puzzle size string.
+#difficulty buckets.
 SMALL_SIZES = {"2x2", "2x3", "2x4", "2x5", "2x6", "3x2", "3x3", "4x2"}
 MEDIUM_SIZES = {"3x4", "3x5", "3x6", "4x3", "4x4", "5x2", "6x2"}
 LARGE_SIZES = {"4x5", "5x3", "4x6", "5x4", "6x3"}
 XLARGE_SIZES = {"5x5", "6x4", "5x6", "6x5", "6x6"}
 
 def get_difficulty(size_str):
-    """Return difficulty bucket as a string given a size string."""
     s = size_str.lower().strip()
     if s in SMALL_SIZES:
         return "Small"
@@ -25,7 +24,6 @@ def get_difficulty(size_str):
         return "Unknown"
 
 def parse_timestamp(ts_str):
-    """Parse a timestamp string in the format 'YYYY-MM-DD HH:MM:SS'."""
     try:
         return datetime.datetime.strptime(ts_str, "%Y-%m-%d %H:%M:%S")
     except Exception:
@@ -50,7 +48,6 @@ def aggregate_stats(log_entries):
         if ts:
             timestamps.append(ts)
         
-        # Use the "puzzle_size" field already stored in the log
         puzzle_size = entry.get("puzzle_size", "Unknown")
         diff = get_difficulty(puzzle_size)
         if diff not in overall["by_difficulty"]:
@@ -60,7 +57,6 @@ def aggregate_stats(log_entries):
                 "constraints": {"count": 0, "accuracy_sum": 0.0, "weighted_sum": 0.0, "total_fields": 0}
             }
         
-        # Process SOLVE data: using solve_accuracy, solve_correct_fields, solve_total_fields
         try:
             solve_total = float(entry.get("solve_total_fields", 0))
             solve_correct = float(entry.get("solve_correct_fields", 0))
@@ -87,7 +83,6 @@ def aggregate_stats(log_entries):
             except ValueError:
                 pass
 
-        # Process CONVERT data: using convert_solver_accuracy, convert_correct_fields, convert_total_fields
         try:
             conv_total = float(entry.get("convert_total_fields", 0))
             conv_correct = float(entry.get("convert_correct_fields", 0))
@@ -114,7 +109,6 @@ def aggregate_stats(log_entries):
             except ValueError:
                 pass
 
-        # Process CONSTRAINTS data: using constraints_accuracy, constraints_correct_fields, constraints_total_fields
         try:
             constr_total = float(entry.get("constraints_total_fields", 0))
             constr_correct = float(entry.get("constraints_correct_fields", 0))
@@ -176,7 +170,6 @@ if __name__ == "__main__":
         logs = json.load(f)
     
     stats = aggregate_stats(logs)
-    # Write the aggregated statistics to a JSON file
     with open("benchmarks_stats.json", "w") as out_file:
         json.dump(stats, out_file, indent=4)
     print("Benchmark statistics have been written to benchmarks_stats.json")

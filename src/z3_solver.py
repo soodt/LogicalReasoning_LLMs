@@ -3,34 +3,19 @@ import json
 
 class ZebraSolver:
     def __init__(self, puzzle):
-        """
-        puzzle must have:
-          - houses_count (int)
-          - categories (dict of {category_name: list_of_items})
-          - constraints (list of dicts describing constraints)
-        """
         self.solver = Solver()
         self.houses_count = puzzle["houses_count"]
         self.categories = puzzle["categories"]
         self.constraints = puzzle["constraints"]
-        
-        # Create an Int variable for each item in each category
+
         self.item_vars = {}
         for cat_name, items in self.categories.items():
             for item in items:
                 self.item_vars[item] = Int(item)
 
-        # We'll store a list of errors encountered
         self.errors = []
 
     def add_constraints(self):
-        """
-        Load constraints into self.solver. We collect errors in self.errors for
-        unknown or malformed constraints. We'll keep going, so we accumulate
-        all possible errors.
-        """
-
-        # 1) distinct_categories & range
         for c in self.constraints:
             ctype = c["type"]
             if ctype == "distinct_categories":
@@ -43,7 +28,6 @@ class ZebraSolver:
                     self.errors.append(f"'categories' not a list in distinct_categories: {c}")
                     continue
 
-                # For each category, add a Distinct(...) statement
                 for cat_name in cat_list:
                     if cat_name not in self.categories:
                         self.errors.append(f"Unknown category '{cat_name}' in distinct_categories: {c}")
@@ -60,10 +44,8 @@ class ZebraSolver:
                 for it in self.item_vars:
                     self.solver.add(self.item_vars[it] >= low, self.item_vars[it] <= high)
 
-        # 2) eq, eq_offset, neighbor, neq, left, right
         for c in self.constraints:
             ctype = c["type"]
-            # skip distinct_categories, range again (already processed)
             if ctype in ("distinct_categories", "range"):
                 continue
 
@@ -166,10 +148,10 @@ class ZebraSolver:
             print("Constraint loading encountered errors:")
             for e in self.errors:
                 print(f"  - {e}")
-            return None  # let caller handle it
+            return None
 
         print("Z3 Constraints Added:")
-        print(self.solver)  # for debugging
+        print(self.solver)
 
         result = self.solver.check()
         if result == sat:

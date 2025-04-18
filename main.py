@@ -22,31 +22,18 @@ def parse_args():
     return parser.parse_args()
 
 def clean_response(text):
-    """
-    1) Ensure 'text' is a string (convert if not).
-    2) Strip leading/trailing whitespace.
-    3) Extract JSON from triple-backtick code fences (```json { ... } ```) if present.
-    4) Remove leftover triple backticks if the text starts with them.
-    5) Escape problematic characters in the "explanation" field only.
-    6) Return the resulting string for json.loads(...) in your main code.
-    """
-
-    # 1) If 'text' isn't a string, force it to a string
-    #    (prevents .replace or regex calls on dict/other objects)
     if not isinstance(text, str):
         text = str(text)
 
-    # 2) Strip whitespace
     text = text.strip()
 
-    # 3) Look for code fence: ```json ... ```
+    # 3) Look for code fence
     fence_pattern = r"```(?:json)?\s*(\{.*?\})\s*```"
     fence_match = re.search(fence_pattern, text, flags=re.DOTALL)
     if fence_match:
-        # Replace text with just the captured JSON block
         text = fence_match.group(1).strip()
     else:
-        # 4) If text starts with triple backticks, remove them line by line
+        # if text starts with triple backticks, remove them line by line
         if text.startswith("```"):
             lines = text.splitlines()
             if lines[0].strip().startswith("```"):
@@ -55,17 +42,15 @@ def clean_response(text):
                 lines = lines[:-1]
             text = "\n".join(lines).strip()
 
-    # 5) Fix unescaped quotes/newlines in "explanation" field
-    #    We search for:  "explanation": "<text>"
-    #    Then escape quotes, backslashes, newlines, etc. in <text>.
+    # unescaped quotes/newlines in explanation field
     explanation_pattern = re.compile(r'("explanation"\s*:\s*")(.*?)(")', flags=re.DOTALL)
 
     def fix_explanation(m):
-        start = m.group(1)   # e.g.  "explanation": "
+        start = m.group(1)   # "explanation"
         middle = m.group(2)  # the raw explanation text
         end = m.group(3)     # the closing quote
 
-        # Escape special characters that break JSON
+        # Escape special characters
         middle_escaped = (middle
                           .replace('\\', '\\\\')   # escape backslashes first
                           .replace('"', '\\"')      # escape double quotes
@@ -76,15 +61,10 @@ def clean_response(text):
         return f'{start}{middle_escaped}{end}'
 
     text = explanation_pattern.sub(fix_explanation, text)
-
-    # 6) Return the cleaned-up string.
-    #    The rest of your code calls json.loads(...) on this.
     return text
 
 def main():
     args = parse_args()
-    
-    # Load puzzles
     with open("data/puzzles.json", "r") as f:
         puzzles_dict = json.load(f)
 
@@ -97,7 +77,6 @@ def main():
     else:
         puzzles = puzzles_dict
 
-    # The rest is your existing logic:
     puzzle_selected = args.puzzle
     action = args.action.lower()        # solve, convert, or both
     strategy = args.strategy.lower()    # baseline, cot, or multishot
@@ -151,7 +130,6 @@ def main():
         chain_of_thought_convert = "N/A"
         cleaned_text = ""
 
-        # 1) If solving: get direct solution using the chosen prompt strategy.
         if do_solve:
             prompt_solve = get_prompt("solve", strategy) + "\n" + text_description
             llm_sol_text, rtime, tokens = llm_solver.query_llm(prompt_solve)
@@ -167,7 +145,7 @@ def main():
                         sol_obj = json.loads(cleaned_text)
                         chain_of_thought_solve = sol_obj.get("explanation", "N/A")
                         if "solution" in sol_obj:
-                            # keep it as JSON string for logging
+                            # keeping it for logging
                             solve_dict_str = json.dumps(sol_obj["solution"])
                     except Exception as e:
                         print("Error parsing CoT response for puzzle solve:", e)
@@ -184,7 +162,6 @@ def main():
                 convert_time = conv_time
                 convert_tokens = conv_tokens
                 cleaned_constraints = clean_response(llm_constraints_str)
-                # If user chose "cot" for convert, expect {"explanation":..., "z3":...}
                 if strategy == "cot":
                     try:
                         constraints_obj = json.loads(cleaned_constraints)
@@ -196,7 +173,7 @@ def main():
                         # fallback: store the raw text
                         convert_constraints = cleaned_constraints
                 else:
-                    # baseline or multishot: assume direct JSON of constraints
+                    # baseline or multishot: 
                     convert_constraints = cleaned_constraints
 
                 try:

@@ -10,12 +10,11 @@ client = OpenAI(api_key=OPENAI_API_KEY)
 
 class OpenAISolver:
     def __init__(self):
-        # Choose a model; adjust as needed
         self.model = "gpt-4o"
 
     def query_llm(self, prompt):
         start_time = time.time()
-        retries = 10  # Maximum number of retries
+        retries = 10
         for attempt in range(retries):
             try:
                 response = client.chat.completions.create(model=self.model,
@@ -24,7 +23,7 @@ class OpenAISolver:
                     {"role": "user", "content": prompt}
                 ],
                 )
-                # Debug: print full response for troubleshooting
+                # Debug
                 print(f"OpenAI API Response: {response}")
                 llm_response = response.choices[0].message.content
                 response_time = round(time.time() - start_time, 2)

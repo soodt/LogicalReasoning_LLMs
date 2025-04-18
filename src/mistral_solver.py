@@ -26,7 +26,7 @@ class MistralSolver:
             "temperature": 0.3
         }
 
-        retries = 10  # Max number of retries
+        retries = 10 
         for attempt in range(retries):
             response = requests.post(self.url, json=data, headers=headers)
             response_json = response.json()
@@ -36,23 +36,23 @@ class MistralSolver:
 
             # Handle rate limit errors
             if "message" in response_json and "rate limit exceeded" in response_json["message"].lower():
-                wait_time = (2 ** attempt)  # Exponential backoff (2, 4, 8 sec)
+                wait_time = (2 ** attempt)
                 print(f"Rate limit exceeded. Retrying in {wait_time} seconds...")
                 time.sleep(wait_time)
-                continue  # Retry the request
+                continue
 
             if "choices" not in response_json:
                 print("Error: Mistral API did not return 'choices'. Full response:", response_json)
-                return None, None, None  # Avoid crashing, return None values
+                return None, None, None
 
             llm_response = response_json["choices"][0]["message"]["content"]
             response_time = round(time.time() - start_time, 2)
             token_usage = response_json.get("usage", {}).get("total_tokens", "N/A")
 
-            return llm_response, response_time, token_usage  # Return everything for logging in main.py
+            return llm_response, response_time, token_usage
 
         print("Error: Exceeded max retries due to rate limits.")
-        return None, None, None  # Return None if all retries fail
+        return None, None, None
 
     def solve_puzzle(self, prompt):
         return self.query_llm(prompt)
@@ -61,7 +61,6 @@ class MistralSolver:
 
         llm_response, response_time, token_usage = self.query_llm(prompt)
 
-        # Attempt to parse the response as JSON
         if llm_response:
             try:
                 llm_z3_constraints = json.loads(llm_response)

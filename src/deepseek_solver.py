@@ -6,17 +6,15 @@ from dotenv import load_dotenv
 
 load_dotenv()
 DEEPSEEK_API_KEY = os.getenv("DEEPSEEK_API_KEY")
-# Initialize the DeepSeek client with the custom base_url.
 client = OpenAI(api_key=DEEPSEEK_API_KEY, base_url="https://api.deepseek.com")
 
 class DeepSeekSolver:
     def __init__(self):
-        # Set the model as described in the DeepSeek documentation.
         self.model = "deepseek-reasoner"
 
     def query_llm(self, prompt):
         start_time = time.time()
-        retries = 10  # Maximum number of retries
+        retries = 10 
         for attempt in range(retries):
             try:
                 response = client.chat.completions.create(
@@ -27,7 +25,6 @@ class DeepSeekSolver:
                     ],
                     stream=False
                 )
-                # Debug: print full response for troubleshooting
                 print(f"DeepSeek API Response: {response}")
                 llm_response = response.choices[0].message.content
                 response_time = round(time.time() - start_time, 2)
